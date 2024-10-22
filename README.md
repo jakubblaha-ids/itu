@@ -13,6 +13,7 @@
 - The user can easily add items they've recently interacted with.
 - The user can see who checked off an item.
 - The user can bulk delete checked-off items from the list.
+- The user can sort their shopping list by categories or alphabetically.
 
 **Maybe add later:**
 
