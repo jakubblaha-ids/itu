@@ -1,18 +1,23 @@
 # Požadavky
 
- - Uživatel může vytvořit nákupní seznam.
- - Uživatel může sdílet nákupní seznam.
- - Uživatel může odstranit nákupní seznam ze své instance aplikace.
- - Uživatel může rychle, na co nejmíň kliků, zobrazit položky v seznamu.
- - Uživatel může snadno odškrtnout položku v seznamu.
- - Uživatel může přidat položku do seznamu ze seznamu předpřipravených položek.
- - Uživatel může upravit počet položky v seznamu. (Možná i odškrtnuté.)
- - Uživatel může smazat položku ze seznamu.
- - Uživatel může snadno přidat položky, se kterými nedávno interagoval.
- - Uživatel může přidat všechny položky z receptu. Bude vidět, že položky patří k receptu.
- - Uživatel může odstranit položky patřící k receptu.
- - Uživatel vidí, kdo odškrtnul položku.
- - Uživatel může hromadně smazat odškrtnuté položky.
+- The user can create a shopping list.
+- The user can share a shopping list.
+- The user can duplicate a shopping list.
+- The user can import a shopping list using its ID, which will be a six-digit number.
+- The user can remove a shopping list from their instance of the app.
+- The user can quickly, with as few clicks as possible, view items in the list.
+- The user can easily check off an item in the list.
+- The user can add an item to the list from a pre-prepared list of items.
+- The user can edit the quantity of an item in the list.
+- The user can delete an item from the list.
+- The user can easily add items they've recently interacted with.
+- The user can see who checked off an item.
+- The user can bulk delete checked-off items from the list.
+
+**Maybe add later:**
+
+- The user can add all items from a recipe. It will be visible that the items belong to the recipe.
+- The user can remove items that belong to a recipe.
 
 
 # Review podobných aplikací
