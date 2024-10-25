@@ -61,3 +61,16 @@
  - Nelze přidat více položek najednou do seznamu.
  - Musím zadat jméno nákupního seznamu předtím, než ho vytvořím.
 
+## ToBuy (xcalko00)
+
+### Pro
+
+- Tlačítko pro přidání produktů je výrazné a dobře umístěné
+- Pro přidání stačí jen kliknout na jonkrétní produkt - nemusí se nijak potvrzovat
+- Položky, které jsou již v seznamu jsou viditelně označené
+- 
+
+### Proti
+
+- Při otevření se zobrazí poslední seznam. Není hned vidět seznam existujících seznamů
+- 
