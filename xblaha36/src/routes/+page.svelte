@@ -11,33 +11,13 @@
 	import QuantityChangeBar from '$lib/QuantityChangeBar.svelte';
 	import SideListsMenu from '$lib/SideListsMenu.svelte';
 	import SideMenu from '$lib/SideMenu.svelte';
-	import type { InListItem } from '$ts/types';
+	import { listManager } from '$ts/stores';
+	import { get } from 'svelte/store';
 
 	let listsOpen = false;
 	let menuOpen = false;
 
 	$: contentTranslate = listsOpen ? -300 : menuOpen ? 300 : 0;
-
-	const testItems: InListItem[] = [
-		{
-			itemId: 1,
-			itemAmount: 2,
-			itemChecked: false,
-			itemText: 'Test item 1'
-		},
-		{
-			itemId: 2,
-			itemAmount: 1,
-			itemChecked: true,
-			itemText: 'Test item 2'
-		},
-		{
-			itemId: 3,
-			itemAmount: 3,
-			itemChecked: false,
-			itemText: 'Test item 3'
-		}
-	];
 
 	function onListClick() {
 		const url = $page.url;
@@ -66,20 +46,37 @@
 		}
 	});
 
+	let titleValue = '';
+
+	listManager?.selectedListData.subscribe((data) => {
+		titleValue = data?.listTitle ?? '';
+	});
+
 	let showQuantityBar = false;
+
+	const _selectedListData = listManager?.selectedListData;
+	$: selectedListData = $_selectedListData;
+
+	const displayedListHighlightIndex = listManager?.displayedListHighlightIndex;
 </script>
 
 <div
 	class="w-[80vw] h-full translate-x-20 absolute right-full top-0 duration-200"
 	style="transform: translateX({contentTranslate}px);"
 >
-	<SideMenu />
+	<SideMenu on:item-clicked={() => (menuOpen = false)} />
 </div>
 
 <div class="h-full flex flex-col duration-200" style="transform: translateX({contentTranslate}px);">
-	<div class="bg-darker text-2xl py-4 text-center">Title</div>
+	<input class="bg-darker text-2xl py-4 text-center outline-none" value={titleValue} />
 
-	<ItemList items={testItems} />
+	<ItemList
+		on:highlight-index={(e) => {
+			listManager?.setListHighlightIndex(e.detail);
+		}}
+		items={selectedListData?.listItems}
+		highlightIndex={$displayedListHighlightIndex}
+	/>
 
 	{#if showQuantityBar}
 		<QuantityChangeBar />
@@ -87,7 +84,7 @@
 
 	<BottomNavContainer>
 		<button on:click={onMenuClick}> <Menu /> </button>
-		<button> <Check /> </button>
+		<button on:click={() => listManager?.checkHighlighted()}> <Check /> </button>
 		<button on:click={onListClick}> <Lists /> </button>
 	</BottomNavContainer>
 

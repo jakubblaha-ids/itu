@@ -4,7 +4,11 @@
 	import Import from '$icons/import.icon.svelte';
 	import Plus from '$icons/plus.icon.svelte';
 	import Share from '$icons/share.icon.svelte';
+	import { createEventDispatcher } from 'svelte';
 	import MenuButton from './MenuButton.svelte';
+	import { listManager } from '$ts/stores';
+
+	const dispatch = createEventDispatcher();
 </script>
 
 <div class="h-full flex flex-col bg-darker">
@@ -13,7 +17,14 @@
 	<div class="rounded-t-xl bg-lighter flex flex-col shadow-lg overflow-hidden">
 		<div class="text-sm px-4 bg-light py-3">Manipulate list</div>
 
-		<MenuButton title="New List" icon={Plus} />
+		<MenuButton
+			on:click={() => {
+				listManager.createList();
+				dispatch('item-clicked');
+			}}
+			title="New List"
+			icon={Plus}
+		/>
 		<MenuButton title="Remove list" icon={Bin} />
 		<MenuButton title="Duplicate" icon={Duplicate} />
 		<MenuButton title="Share" icon={Share} />

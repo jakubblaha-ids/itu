@@ -1,35 +1,22 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import Back from '$icons/back.icon.svelte';
-	import type { InListItem } from '$ts/types';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import SimplifiedItemButton from './SimplifiedItemButton.svelte';
 	import BottomNavContainer from './BottomNavContainer.svelte';
+	import { itemManager, listManager } from '$ts/stores';
+	import { ListManager } from '$ts/ListManager';
 
 	const dispatch = createEventDispatcher();
 
-	const testItems: InListItem[] = [
-		{
-			itemId: 1,
-			itemAmount: 2,
-			itemChecked: false,
-			itemText: 'Test item 1'
-		},
-		{
-			itemId: 2,
-			itemAmount: 1,
-			itemChecked: true,
-			itemText: 'Test item 2'
-		},
-		{
-			itemId: 3,
-			itemAmount: 3,
-			itemChecked: false,
-			itemText: 'Test item 3'
-		}
-	];
+	const availableItems = itemManager.availableItems;
 
 	let input: HTMLInputElement;
+
+	let searchValue = '';
+
+	$: filtItems = $availableItems.filter((item) =>
+		item.name.toLowerCase().includes(searchValue.toLowerCase())
+	);
 
 	onMount(() => {
 		input.focus();
@@ -37,11 +24,27 @@
 </script>
 
 <div class="h-full bg-darkest flex flex-col">
-	<input bind:this={input} type="text" class="h-20 px-8 w-full bg-darker outline-none text-xl" />
+	<input
+		bind:this={input}
+		type="text"
+		class="h-20 px-8 w-full bg-darker outline-none text-xl flex-shrink-0"
+		bind:value={searchValue}
+	/>
 
-	<div class="flex flex-col px-3 gap-y-3 py-3 flex-grow">
-		{#each testItems as item, index}
-			<SimplifiedItemButton {item} highlight={index === 0} subtitle="3 already on list" />
+	<div class="flex flex-col px-3 gap-y-3 py-3 flex-grow overflow-scroll">
+		{#each filtItems as item, index}
+			{@const amountOnList = listManager?.getAmountOnList(item.id) || ''}
+
+			<SimplifiedItemButton
+				on:click={() => {
+					listManager?.addItemToList(item.id, null);
+					listManager?.selectLastToAdd();
+					dispatch('back-click');
+				}}
+				{item}
+				highlight={index === 0}
+				subtitle={amountOnList ? amountOnList + ' already on list' : ''}
+			/>
 		{/each}
 	</div>
 
@@ -50,8 +53,23 @@
 			<Back />
 		</button>
 
-		<button>Add custom</button>
-		<button>Add first</button>
+		<button
+			on:click={() => {
+				listManager?.addItemToList(null, searchValue);
+				dispatch('back-click');
+			}}
+		>
+			Add custom
+		</button>
+
+		<button
+			on:click={() => {
+				listManager?.addItemToList(filtItems[0].id, null);
+				dispatch('back-click');
+			}}
+		>
+			Add first
+		</button>
 	</BottomNavContainer>
 </div>
 

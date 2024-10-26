@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 button {
-    @apply active:brightness-90 duration-100;
+  @apply enabled:active:brightness-90 duration-100 disabled:opacity-50 disabled:!brightness-100;
 }
 
 @layer utilities {
