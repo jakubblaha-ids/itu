@@ -66,11 +66,12 @@
 ### Pro
 
 - Tlačítko pro přidání produktů je výrazné a dobře umístěné
-- Pro přidání stačí jen kliknout na jonkrétní produkt - nemusí se nijak potvrzovat
+- Pro přidání stačí jen kliknout na konkrétní produkt - nemusí se nijak potvrzovat
 - Položky, které jsou již v seznamu jsou viditelně označené
-- 
 
 ### Proti
 
-- Při otevření se zobrazí poslední seznam. Není hned vidět seznam existujících seznamů
-- 
+- Při otevření se zobrazí naposledy otevřený seznam. Není hned vidět seznam existujících seznamů
+- Nikde není stránka se všemi seznamy. Všechny seznamy se zobrazí pokud chci změnit seznam.
+- Nelze upravit množství konkrétní položky, pokud je již v seznamu. Musí se ze seznamu odstranit a poté znovu vyhledat a přidat s požadovaným množstvím.
+- Pří kliknutí na tlačítko "+" se dostanu do stejné nabídky jako při kliknutí na textové pole - jedno je tedy zbytečné.
