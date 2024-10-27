@@ -1,10 +1,6 @@
-import { ItemManagerBase } from './base/ItemManagerBase';
+import { ItemManagerBase } from 'backend';
 
 export class ItemManager extends ItemManagerBase {
-	constructor() {
-		super();
-	}
-
 	getSuggestedQuantities(itemId: string | null) {
 		return [
 			{ amount: 3, unit: '' },

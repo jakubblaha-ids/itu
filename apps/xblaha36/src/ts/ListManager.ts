@@ -1,6 +1,6 @@
 import { writable, type Writable } from 'svelte/store';
-import { ListManagerBase, type ListManagerBaseOptions } from './base/ListManagerBase';
-import type { InListItem, List } from './types';
+import { ListManagerBase, type ListManagerBaseOptions } from 'backend';
+import type { InListItem, List } from 'backend';
 
 export class ListManager extends ListManagerBase {
 	selectedListDataStore: Writable<List | null> = writable(null);
