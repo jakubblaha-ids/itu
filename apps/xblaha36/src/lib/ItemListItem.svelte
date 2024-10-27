@@ -2,7 +2,7 @@
 	import Bin from '$icons/bin.icon.svelte';
 	import Edit from '$icons/edit.icon.svelte';
 	import { itemManager } from '$ts/stores';
-	import type { InListItem } from '$ts/types';
+	import type { InListItem } from 'backend';
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	const dispatch = createEventDispatcher();
@@ -67,14 +67,6 @@
 	class:!opacity-50={checked && !highlight}
 	class:highlight
 >
-	<button
-		on:click={() => dispatch('delete-click')}
-		class="bg-[#9F3232] h-full grid place-items-center absolute left-0"
-		style="width: {buttonWidth}px; transform: translateX({deleteButtonTranslateX}px);"
-	>
-		<Bin />
-	</button>
-
 	<div class="flex py-4 px-4 w-full flex-shrink-0">
 		<div
 			class="flex-grow duration-100"
@@ -110,7 +102,21 @@
 	</div>
 
 	<button
-		on:click={() => dispatch('edit-click', { resetShowButton })}
+		on:click|stopPropagation={() => {
+			dispatch('delete-click', { item });
+			resetShowButton();
+		}}
+		class="bg-[#9F3232] h-full grid place-items-center absolute left-0"
+		style="width: {buttonWidth}px; transform: translateX({deleteButtonTranslateX}px);"
+	>
+		<Bin />
+	</button>
+
+	<button
+		on:click|stopPropagation={() => {
+			dispatch('edit-click');
+			resetShowButton();
+		}}
 		class="bg-lighter h-full grid place-items-center absolute right-0"
 		style="width: {buttonWidth}px; transform: translateX({editButtonTranslateX}px);"
 	>

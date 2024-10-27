@@ -87,8 +87,8 @@
 						on:click={() => dispatch('item-click', { item })}
 						on:edit-click={(e) => {
 							scrollToIndex(index);
-							e.detail.resetShowButton();
 						}}
+						on:delete-click
 						highlight={index === highlightIndex}
 						checked={item.itemChecked}
 					/>

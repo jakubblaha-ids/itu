@@ -83,6 +83,10 @@
 		on:highlight-index={(e) => {
 			listManager?.setListHighlightIndex(e.detail);
 		}}
+		on:delete-click={(e) => {
+			listManager?.deleteItemFromList(listManager.selectedListId!, e.detail.item.id);
+			showUndoDelete = true;
+		}}
 		items={selectedListData?.listItems}
 		bind:highlightItemId={highlightedItemId}
 	/>
@@ -102,10 +106,10 @@
 	{#if !showQuantityBar && listManager}
 		{#key selectedListData}
 			<!-- Delete checked off -->
-			{#if listManager.deletedCheckedOffItems.length > 0 && showUndoDelete}
+			{#if listManager.lastDeletedItems.length > 0 && showUndoDelete}
 				<button
 					transition:fade
-					on:click={() => listManager!.undoDeleteAllCheckedItems(listManager!.selectedListId!)}
+					on:click={() => listManager.undoDelete()}
 					class="bg-light absolute bottom-28 translate-y-2 left-2 px-4 py-2 rounded-lg flex gap-x-2 pr-6"
 				>
 					<div class="rotate-90 scale-75">

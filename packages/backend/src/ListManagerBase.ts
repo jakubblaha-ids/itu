@@ -136,6 +136,12 @@ export class ListManagerBase extends ResourceManagerBase {
         return newItem;
     }
 
+    removeItemToAdd(inListItemId: number) {
+        this.itemsToAdd = this.itemsToAdd.filter((item) => item.id !== inListItemId);
+
+        this.options.onItemsToAddChange?.(this.itemsToAdd);
+    }
+
     async commitAddingItems(): Promise<void> {
         const listData = this.selectedListData;
 
@@ -253,26 +259,38 @@ export class ListManagerBase extends ResourceManagerBase {
         await this.setListData(listId, data);
     }
 
-    deletedCheckedOffItems: InListItem[] = [];
+    lastDeletedItems: InListItem[] = [];
+    lastDeletedListId: string | null = null;
 
     async deleteAllCheckedItems(listId: string): Promise<void> {
         const data = await this.getListData(listId);
-
         const checkedOffItems = data.listItems.filter((item) => item.itemChecked);
 
-        this.deletedCheckedOffItems = checkedOffItems;
+        this.lastDeletedItems = checkedOffItems;
+        this.lastDeletedListId = listId;
 
         data.listItems = data.listItems.filter((item) => !item.itemChecked);
 
         await this.setListData(listId, data);
     }
 
-    async undoDeleteAllCheckedItems(listId: string): Promise<void> {
+    async undoDelete(): Promise<void> {
+        const data = await this.getListData(this.lastDeletedListId);
+
+        data.listItems = data.listItems.concat(this.lastDeletedItems);
+        this.lastDeletedItems = [];
+
+        await this.setListData(this.lastDeletedListId, data);
+    }
+
+    lastDeletedItem: InListItem | null = null;
+
+    async deleteItemFromList(listId: string, inListItemId: number): Promise<void> {
         const data = await this.getListData(listId);
 
-        data.listItems = data.listItems.concat(this.deletedCheckedOffItems);
-
-        this.deletedCheckedOffItems = [];
+        this.lastDeletedItems = data.listItems.filter((item) => item.id === inListItemId);
+        this.lastDeletedListId = listId;
+        data.listItems = data.listItems.filter((item) => item.id !== inListItemId);
 
         await this.setListData(listId, data);
     }
