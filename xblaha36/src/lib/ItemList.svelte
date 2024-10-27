@@ -1,30 +1,33 @@
 <script lang="ts">
 	import type { InListItem } from '$ts/types';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 	import ItemListItem from './ItemListItem.svelte';
 
 	const dispatch = createEventDispatcher();
 
 	export let items: InListItem[] = [];
 	export let highlightIndex = 0;
+	export let highlightItemId: number | null;
 
 	let container: HTMLDivElement;
 	const itemContainers: HTMLDivElement[] = [];
 
 	function onScroll() {
 		for (const [index, itemContainer] of itemContainers.entries()) {
-			// console.log(itemContainer.offsetTop, container.scrollTop);
-			// break;
-
 			if (itemContainer.offsetTop - 40 > container.scrollTop) {
 				highlightIndex = index;
 				dispatch('highlight-index', index);
+				dispatch('highlight-item', { item: items[index] });
 				break;
 			}
 		}
 	}
 
-	function scrollToIndex(index: number) {
+	async function scrollToIndex(index: number) {
+		console.log({ index });
+
+		await tick();
+
 		itemContainers[index].scrollIntoView({
 			behavior: 'smooth',
 			block: 'start'
@@ -43,8 +46,13 @@
 		});
 	}
 
+	// $: highlightItemId &&
+	// 	items &&
+	// 	scrollToIndex(items.findIndex((item) => item.id === highlightItemId));
+
 	$: items && sortItems();
 	$: allChecked = items.every((item) => item.itemChecked);
+	$: highlightItemId = items[highlightIndex]?.id;
 </script>
 
 <div
@@ -76,12 +84,7 @@
 				>
 					<ItemListItem
 						{item}
-						on:item-click={() => {
-							item.itemChecked = !item.itemChecked;
-							items = items;
-							// dispatch('highlight-index', index);
-							// scrollToIndex(index);
-						}}
+						on:click={() => dispatch('item-click', { item })}
 						on:edit-click={(e) => {
 							scrollToIndex(index);
 							e.detail.resetShowButton();

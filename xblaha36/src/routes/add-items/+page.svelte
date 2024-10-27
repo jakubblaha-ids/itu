@@ -7,27 +7,28 @@
 	import ItemList from '$lib/ItemList.svelte';
 	import QuantityChangeBar from '$lib/QuantityChangeBar.svelte';
 	import SearchModal from '$lib/SearchModal.svelte';
-	import SimplifiedItemButton from '$lib/SimplifiedItemButton.svelte';
 	import { itemManager, listManager } from '$ts/stores';
 	import { expoOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
 
 	let showSearchModal = false;
 
-	const _itemsToAdd = listManager?.itemsToAdd;
+	const _itemsToAdd = listManager?.itemsToAddStore;
 	$: itemsToAdd = $_itemsToAdd || [];
 
-	const addItemHighlightIndex = listManager?.addItemHighlightIndex;
+	let addItemHighlightId = listManager?.addItemHighlightId;
+
+	$: highlightedItem = itemsToAdd.find((item) => item.id === $addItemHighlightId);
 </script>
 
 <div class="flex flex-col h-full">
 	<div class="bg-darker px-2 py-2">Will be added</div>
 
 	<ItemList
-		highlightIndex={$addItemHighlightIndex}
+		highlightItemId={$addItemHighlightId || null}
 		items={itemsToAdd}
-		on:highlight-index={(e) => {
-			listManager?.addItemHighlightIndex.set(e.detail);
+		on:highlight-item={(e) => {
+			listManager!.addItemHighlightId.set(e.detail.id);
 		}}
 	/>
 
@@ -41,7 +42,7 @@
 
 	<QuantityChangeBar
 		disabled={itemsToAdd.length < 1}
-		disableDecreaseButton={itemsToAdd[$addItemHighlightIndex || 0]?.itemAmount === 1}
+		disableDecreaseButton={highlightedItem?.itemAmount === 1}
 		suggestedQuantities={itemManager?.getSuggestedQuantities(null) || []}
 	/>
 

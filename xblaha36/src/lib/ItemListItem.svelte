@@ -20,7 +20,7 @@
 	$: editButtonTranslateX = translateX + buttonWidth;
 
 	function onClick() {
-		dispatch('item-click');
+		dispatch('click');
 	}
 
 	let container: HTMLDivElement;

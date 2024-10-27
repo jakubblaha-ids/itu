@@ -4,19 +4,14 @@
 	import SimplifiedItemButton from './SimplifiedItemButton.svelte';
 	import BottomNavContainer from './BottomNavContainer.svelte';
 	import { itemManager, listManager } from '$ts/stores';
-	import { ListManager } from '$ts/ListManager';
 
 	const dispatch = createEventDispatcher();
-
-	const availableItems = itemManager.availableItems;
 
 	let input: HTMLInputElement;
 
 	let searchValue = '';
 
-	$: filtItems = $availableItems.filter((item) =>
-		item.name.toLowerCase().includes(searchValue.toLowerCase())
-	);
+	$: filtItems = itemManager?.getAvailableItems(searchValue) || [];
 
 	onMount(() => {
 		input.focus();
@@ -37,8 +32,9 @@
 
 			<SimplifiedItemButton
 				on:click={() => {
-					listManager?.addItemToList(item.id, null);
-					listManager?.selectLastToAdd();
+					const newItem = listManager!.addItemToList(item.id, null);
+					listManager!.addItemHighlightId.set(newItem.id);
+
 					dispatch('back-click');
 				}}
 				{item}

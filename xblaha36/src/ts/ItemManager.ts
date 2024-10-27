@@ -1,34 +1,8 @@
-import { get, writable } from 'svelte/store';
-import type { Item } from './types';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from './stores';
+import { ItemManagerBase } from './base/ItemManagerBase';
 
-export class ItemManager {
-	availableItems = writable<Item[]>([]);
-
-	async refreshAvailableItems() {
-		const coll = collection(get(db), 'items');
-		const items = await getDocs(coll);
-
-		this.availableItems.set(
-			items.docs.map((doc) => {
-				return {
-					id: doc.id,
-					...doc.data()
-				} as Item;
-			})
-		);
-	}
-
-	getNameOfitemId(itemId: string): string {
-		const items = get(this.availableItems);
-		const item = items.find((i) => i.id === itemId);
-
-		if (item) {
-			return item.name;
-		}
-
-		return 'Unknown item';
+export class ItemManager extends ItemManagerBase {
+	constructor() {
+		super();
 	}
 
 	getSuggestedQuantities(itemId: string | null) {

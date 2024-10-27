@@ -12,7 +12,6 @@
 	import SideListsMenu from '$lib/SideListsMenu.svelte';
 	import SideMenu from '$lib/SideMenu.svelte';
 	import { listManager } from '$ts/stores';
-	import { get } from 'svelte/store';
 
 	let listsOpen = false;
 	let menuOpen = false;
@@ -48,16 +47,16 @@
 
 	let titleValue = '';
 
-	listManager?.selectedListData.subscribe((data) => {
-		titleValue = data?.listTitle ?? '';
+	listManager?.selectedListDataStore.subscribe((data) => {
+		titleValue = data?.listTitle ?? 'Untitled';
 	});
 
 	let showQuantityBar = false;
 
-	const _selectedListData = listManager?.selectedListData;
+	const _selectedListData = listManager?.selectedListDataStore;
 	$: selectedListData = $_selectedListData;
 
-	const displayedListHighlightIndex = listManager?.displayedListHighlightIndex;
+	let highlightedItemId = listManager?.highlightedItemId;
 </script>
 
 <div
@@ -71,11 +70,14 @@
 	<input class="bg-darker text-2xl py-4 text-center outline-none" value={titleValue} />
 
 	<ItemList
+		on:item-click={(e) => {
+			listManager?.toggleItemChecked(listManager!.selectedListId!, e.detail.item.id);
+		}}
 		on:highlight-index={(e) => {
 			listManager?.setListHighlightIndex(e.detail);
 		}}
 		items={selectedListData?.listItems}
-		highlightIndex={$displayedListHighlightIndex}
+		bind:highlightItemId={highlightedItemId}
 	/>
 
 	{#if showQuantityBar}
@@ -84,7 +86,12 @@
 
 	<BottomNavContainer>
 		<button on:click={onMenuClick}> <Menu /> </button>
-		<button on:click={() => listManager?.checkHighlighted()}> <Check /> </button>
+		<button
+			on:click={() =>
+				listManager!.toggleItemChecked(listManager!.selectedListId!, highlightedItemId)}
+		>
+			<Check />
+		</button>
 		<button on:click={onListClick}> <Lists /> </button>
 	</BottomNavContainer>
 

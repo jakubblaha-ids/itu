@@ -2,6 +2,7 @@
 	import Minus from '$icons/minus.icon.svelte';
 	import Plus from '$icons/plus.icon.svelte';
 	import { listManager } from '$ts/stores';
+	import { get } from 'svelte/store';
 
 	export let disabled = false;
 	export let disableDecreaseButton = false;
@@ -14,9 +15,14 @@
 	<div id="large-btn-container" class="grid grid-cols-3 h-14 w-full px-2 gap-x-2">
 		<button
 			disabled={disableDecreaseButton || disabled}
-			on:click={() => listManager?.decreaseAmountToAdd()}><Minus /></button
+			on:click={() => listManager?.decreaseAmountToAdd(get(listManager.addItemHighlightId))}
+			><Minus /></button
 		>
-		<button {disabled} on:click={() => listManager?.increaseAmountToAdd()}><Plus /></button>
+		<button
+			{disabled}
+			on:click={() => listManager?.increaseAmountToAdd(get(listManager.addItemHighlightId))}
+			><Plus /></button
+		>
 		<button {disabled}>Other</button>
 	</div>
 
@@ -24,7 +30,8 @@
 		{#each suggestedQuantities as q}
 			<button
 				{disabled}
-				on:click={() => listManager?.setAmountToAdd(q.amount, q.unit)}
+				on:click={() =>
+					listManager?.setAmountToAdd(get(listManager.addItemHighlightId), q.amount, q.unit)}
 				class="min-w-12 bg-light grid place-items-center rounded px-4 flex-shrink-0 py-2"
 			>
 				{q.amount + q.unit}

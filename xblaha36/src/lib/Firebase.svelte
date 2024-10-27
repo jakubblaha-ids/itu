@@ -1,7 +1,6 @@
-<script>
-	import { db } from '$ts/stores';
+<script lang="ts">
+	import { itemManager, listManager } from '$ts/stores';
 	import { initializeApp } from 'firebase/app';
-	import { getFirestore } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 
 	const firebaseConfig = {
@@ -14,10 +13,9 @@
 	};
 
 	onMount(() => {
-		const app = initializeApp(firebaseConfig);
+		initializeApp(firebaseConfig);
 
-		db.set(getFirestore(app));
-
-		console.log(app);
+		itemManager!.refreshAvailableItems();
+		listManager!.selectLastSelectedOrFirstList();
 	});
 </script>

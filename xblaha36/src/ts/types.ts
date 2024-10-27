@@ -1,4 +1,5 @@
 export type InListItem = {
+	id: number;
 	itemId: string | null;
 	customItemName: string | null;
 	itemAmount: number;

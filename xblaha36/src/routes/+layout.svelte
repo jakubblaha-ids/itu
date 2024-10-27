@@ -5,10 +5,6 @@
 	import { itemManager } from '$ts/stores';
 
 	let screenHeight: number;
-
-	onMount(() => {
-		itemManager.refreshAvailableItems();
-	});
 </script>
 
 <svelte:window bind:innerHeight={screenHeight} />
