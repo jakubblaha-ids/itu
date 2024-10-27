@@ -252,4 +252,28 @@ export class ListManagerBase extends ResourceManagerBase {
 
         await this.setListData(listId, data);
     }
+
+    deletedCheckedOffItems: InListItem[] = [];
+
+    async deleteAllCheckedItems(listId: string): Promise<void> {
+        const data = await this.getListData(listId);
+
+        const checkedOffItems = data.listItems.filter((item) => item.itemChecked);
+
+        this.deletedCheckedOffItems = checkedOffItems;
+
+        data.listItems = data.listItems.filter((item) => !item.itemChecked);
+
+        await this.setListData(listId, data);
+    }
+
+    async undoDeleteAllCheckedItems(listId: string): Promise<void> {
+        const data = await this.getListData(listId);
+
+        data.listItems = data.listItems.concat(this.deletedCheckedOffItems);
+
+        this.deletedCheckedOffItems = [];
+
+        await this.setListData(listId, data);
+    }
 }
