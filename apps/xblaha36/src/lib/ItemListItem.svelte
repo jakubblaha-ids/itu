@@ -80,7 +80,7 @@
 			style="transform: translateX({showButton === 'edit' ? translateX : 0}px);"
 		>
 			<div>
-				{item.itemAmount + item.itemUnit}
+				{item.customItemAmount || item.itemAmount + item.itemUnit}
 			</div>
 
 			<div class="">

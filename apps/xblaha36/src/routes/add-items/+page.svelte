@@ -52,6 +52,9 @@
 		setQuantity={(amount, unit) => {
 			listManager?.setAmountToAdd(highlightItem!.id, amount, unit);
 		}}
+		setCustomAmount={(customAmount) => {
+			listManager?.setCustomAmountToAdd(highlightItem!.id, customAmount);
+		}}
 	/>
 
 	<BottomNavContainer>

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import Check from '$icons/check.icon.svelte';
 	import Plus from '$icons/plus.icon.svelte';
 	import Undo from '$icons/undo.icon.svelte';
 	import BottomNavContainer from '$lib/BottomNavContainer.svelte';
@@ -8,7 +7,7 @@
 	import QuantityChangeBar from '$lib/QuantityChangeBar.svelte';
 	import { itemManager, listManager } from '$ts/stores';
 	import type { InListItem } from 'backend';
-	import { fade, fly, slide } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 
 	export let showEdit = false;
 
@@ -35,7 +34,7 @@
 	}
 </script>
 
-<div class="h-full flex flex-col duration-200 flex-grow">
+<div class="h-full flex flex-col duration-200 flex-grow overflow-hidden">
 	<input class="bg-darker text-2xl py-4 text-center outline-none" value={titleValue} />
 
 	<ItemList
@@ -62,6 +61,8 @@
 			minusClick={() => listManager.decreaseItemAmountInSelected(highlightItem!.id)}
 			setQuantity={(amount, unit) =>
 				listManager.setItemAmountInSelected(highlightItem!.id, amount, unit)}
+			setCustomAmount={(customAmount) =>
+				listManager.setCustomItemAmountInSelected(highlightItem!.id, customAmount)}
 		/>
 	{/if}
 
@@ -87,7 +88,7 @@
 						listManager!.deleteAllCheckedItems(listManager!.selectedListId!);
 						showUndoDelete = true;
 					}}
-					class="bg-light absolute bottom-28 translate-y-2 left-2 px-4 py-2 rounded-lg"
+					class="bg-light absolute bottom-28 translate-y-2 left-2 px-4 py-2 rounded-lg z-20"
 				>
 					Delete checked-off
 				</button>
@@ -96,7 +97,7 @@
 			<!-- Plus button -->
 			<button
 				on:click={() => goto('add-items')}
-				class="rounded-lg bg-light w-20 h-20 absolute right-2 bottom-28 shadow-xl grid place-items-center translate-y-2 active:brightness-90 duration-100"
+				class="rounded-lg bg-light w-20 h-20 absolute right-2 bottom-28 shadow-xl grid place-items-center translate-y-2 active:brightness-90 duration-100 z-20"
 			>
 				<div class="scale-125">
 					<Plus />
@@ -108,7 +109,7 @@
 
 {#if showEdit}
 	<div
-		class="absolute bottom-0 inset-x-0 shadow-[0_0_12px] shadow-black/30"
+		class="absolute bottom-0 inset-x-0 shadow-[0_0_12px] shadow-black/30 z-40"
 		transition:fly={{ y: 200 }}
 	>
 		<BottomNavContainer>

@@ -2,6 +2,7 @@
 	import Minus from '$icons/minus.icon.svelte';
 	import Plus from '$icons/plus.icon.svelte';
 	import { slide } from 'svelte/transition';
+	import CustomQuantityModal from './CustomQuantityModal.svelte';
 
 	interface Props {
 		disabled?: boolean;
@@ -10,6 +11,7 @@
 		plusClick: () => void;
 		minusClick: () => void;
 		setQuantity: (amount: number, unit: string) => void;
+		setCustomAmount: (customAmount: string) => void;
 	}
 
 	let {
@@ -18,11 +20,14 @@
 		suggestedQuantities,
 		plusClick,
 		minusClick,
-		setQuantity
+		setQuantity,
+		setCustomAmount
 	}: Props = $props();
+
+	let showCustomQuantityModal = $state(false);
 </script>
 
-<div class="bg-darker flex flex-col items-center pb-3 z-20" transition:slide>
+<div class="bg-darker flex flex-col items-center pb-3 z-30" transition:slide>
 	<div class="h-12 flex items-center">Quantity</div>
 
 	<div id="large-btn-container" class="grid grid-cols-3 h-14 w-full px-2 gap-x-2">
@@ -34,7 +39,7 @@
 			<Plus />
 		</button>
 
-		<button {disabled}>Other</button>
+		<button onclick={() => (showCustomQuantityModal = true)} {disabled}>Other</button>
 	</div>
 
 	<div class="flex items-center px-2 gap-x-2 text-sm pt-2 w-full overflow-x-scroll no-scrollbar">
@@ -49,6 +54,15 @@
 		{/each}
 	</div>
 </div>
+
+{#if showCustomQuantityModal}
+	<CustomQuantityModal
+		onConfirm={(amount) => {
+			showCustomQuantityModal = false;
+			setCustomAmount(amount);
+		}}
+	/>
+{/if}
 
 <style>
 	#large-btn-container > button {

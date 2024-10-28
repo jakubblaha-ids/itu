@@ -135,6 +135,7 @@ export class ListManagerBase extends ResourceManagerBase {
             itemChecked: false,
             itemCheckedByUserId: "",
             itemUnit: "",
+            customItemAmount: null,
         };
 
         this.itemsToAdd.push(newItem);
@@ -170,6 +171,7 @@ export class ListManagerBase extends ResourceManagerBase {
         });
 
         this.itemsToAdd = [];
+        this.options.onItemsToAddChange?.(this.itemsToAdd);
 
         this.refreshSelectedListData();
     }
@@ -245,12 +247,19 @@ export class ListManagerBase extends ResourceManagerBase {
     }
 
     setAmountToAdd(inListItemId: number, amount: number, unit: string) {
-        console.log({ inListItemId });
-
         const item = this.#findItemToAdd(inListItemId);
 
         item.itemAmount = amount;
         item.itemUnit = unit;
+        item.customItemAmount = null;
+
+        this.options.onItemsToAddChange?.(this.itemsToAdd);
+    }
+
+    setCustomAmountToAdd(inListItemId: number, amount: string) {
+        const item = this.#findItemToAdd(inListItemId);
+
+        item.customItemAmount = amount;
 
         this.options.onItemsToAddChange?.(this.itemsToAdd);
     }
@@ -274,6 +283,15 @@ export class ListManagerBase extends ResourceManagerBase {
 
         item.itemAmount = amount;
         item.itemUnit = unit;
+        item.customItemAmount = null;
+
+        await this.#pushSelectedListData();
+    }
+
+    async setCustomItemAmountInSelected(inListItemId: number, amount: string) {
+        const item = this.#findInSelectedListItem(inListItemId);
+
+        item.customItemAmount = amount;
 
         await this.#pushSelectedListData();
     }
