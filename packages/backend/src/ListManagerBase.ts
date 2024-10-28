@@ -18,6 +18,7 @@ export interface ListManagerBaseOptions {
     onSelectedListChange?: (listId: string) => void;
     onSelectedListDataChange?: (listData: List) => void;
     onItemsToAddChange?: (items: InListItem[]) => void;
+    onAvailableListsChange?: (lists: List[]) => void;
 }
 
 export class ListManagerBase extends ResourceManagerBase {
@@ -25,6 +26,7 @@ export class ListManagerBase extends ResourceManagerBase {
 
     selectedListId: string | null = null;
     selectedListData: List | null = null;
+    availableLists: List[] = [];
 
     #selectedListUnsub: Unsubscribe | null = null;
     #itemManager: ItemManagerBase;
@@ -36,6 +38,15 @@ export class ListManagerBase extends ResourceManagerBase {
         this.#itemManager = itemManager;
         this.#userManager = userManager;
         this.options = options;
+    }
+
+    async refreshAvailableLists() {
+        const coll = collection(this.firestore, "lists");
+        const lists = await getDocs(coll);
+
+        this.availableLists = lists.docs.map((doc) => ({ ...doc.data(), id: doc.id }) as List);
+
+        this.options.onAvailableListsChange?.(this.availableLists);
     }
 
     async setSelectedListId(listId: string) {
@@ -50,9 +61,7 @@ export class ListManagerBase extends ResourceManagerBase {
         const listRef = doc(coll, listId);
 
         this.#selectedListUnsub = onSnapshot(listRef, (snap) => {
-            const data = snap.data();
-
-            this.selectedListData = data as List;
+            this.selectedListData = { ...snap.data(), id: snap.id } as List;
 
             this.options.onSelectedListDataChange?.(this.selectedListData);
         });
@@ -84,10 +93,10 @@ export class ListManagerBase extends ResourceManagerBase {
     async createList() {
         const coll = collection(this.firestore, "lists");
 
-        const newList: List = {
+        const newList = {
             listTitle: "New list",
             listItems: [],
-        };
+        } as List;
 
         const ref = await addDoc(coll, newList);
 
@@ -101,7 +110,7 @@ export class ListManagerBase extends ResourceManagerBase {
         const snap = await getDoc(listRef);
         const data = snap.data();
 
-        return data as List;
+        return { ...data, id: snap.id } as List;
     }
 
     async setListData(listId: string, data: List) {
@@ -109,6 +118,12 @@ export class ListManagerBase extends ResourceManagerBase {
         const listRef = doc(coll, listId);
 
         await updateDoc(listRef, data);
+
+        const inAvailableLists = this.availableLists.find((list) => list.id === listId);
+        inAvailableLists && Object.assign(inAvailableLists, data);
+
+        this.options.onSelectedListDataChange?.(data);
+        this.options.onAvailableListsChange?.(this.availableLists);
     }
 
     async #pushSelectedListData() {

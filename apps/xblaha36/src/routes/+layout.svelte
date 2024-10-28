@@ -1,8 +1,6 @@
 <script lang="ts">
 	import Firebase from '$lib/Firebase.svelte';
-	import { onMount } from 'svelte';
 	import '../app.css';
-	import { itemManager } from '$ts/stores';
 
 	let screenHeight: number;
 </script>

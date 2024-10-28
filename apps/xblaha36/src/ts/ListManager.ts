@@ -4,6 +4,7 @@ import type { InListItem, ItemManagerBase, List, UserManagerBase } from 'backend
 
 export class ListManager extends ListManagerBase {
 	selectedListDataStore: Writable<List | null> = writable(null);
+	availableListsStore: Writable<List[]> = writable([]);
 	itemsToAddStore: Writable<InListItem[]> = writable([]);
 	addItemHighlightId = writable<number>(0);
 	highlightId = writable<number>(0);
@@ -23,6 +24,10 @@ export class ListManager extends ListManagerBase {
 			onItemsToAddChange: (items) => {
 				this.itemsToAddStore.set(items);
 				console.log('Items to add: ', items);
+			},
+			onAvailableListsChange: (lists) => {
+				this.availableListsStore.set(lists);
+				console.log('Available lists: ', lists);
 			}
 		});
 	}

@@ -15,7 +15,8 @@
 	onMount(() => {
 		initializeApp(firebaseConfig);
 
-		itemManager!.refreshAvailableItems();
-		listManager!.selectLastSelectedOrFirstList();
+		itemManager.refreshAvailableItems();
+		listManager.selectLastSelectedOrFirstList();
+		listManager.refreshAvailableLists();
 	});
 </script>

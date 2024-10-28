@@ -11,6 +11,7 @@ export type InListItem = {
 };
 
 export type List = {
+    id: string;
     listTitle: string;
     listItems: InListItem[];
 };
