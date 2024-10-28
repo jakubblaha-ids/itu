@@ -75,3 +75,31 @@
 - Nikde není stránka se všemi seznamy. Všechny seznamy se zobrazí pokud chci změnit seznam.
 - Nelze upravit množství konkrétní položky, pokud je již v seznamu. Musí se ze seznamu odstranit a poté znovu vyhledat a přidat s požadovaným množstvím.
 - Pří kliknutí na tlačítko "+" se dostanu do stejné nabídky jako při kliknutí na textové pole - jedno je tedy zbytečné.
+
+## Bring! (xluklp00)
+
+### Pro
+- Při otevření aplikace se ihned otevře nákupní seznam.
+- V seznamu se je jednoduché jej sdílet.
+- Aplikace pomáhá uživateli jednoduše přidat časté položky a jejich kvantitu, typ nebo váhu.
+- Lze jednoduše přidat všechny položky z receptu do seznamu.
+
+
+### Proti
+- Po přidání položky do seznamu není v aplikaci žádný feedback. Uživatel se dozví, že se položka přidala až když naviguje zpět na seznam.
+- Při přidání položek z receptu se zobrazí informační okno, které musí uživatel odkliknout.
+- Přidávání nového seznamu vyžaduje zadat jméno nebo vybrat z předem definovaných a také se automaticky zobrazí stránka, která uživateli umožňuje seznam sdílet => přidávání seznamu je příliš složité.
+- Mazání seznamu po dokončení nákupu je neintuitivní.
+
+## AnyList (xluklp00)
+
+### Pro
+- Lze jednoduše přidat všechny položky z receptu do seznamu.
+- Aplikace umožňuje jednoduchou dupliaci seznamů.
+- V seznamu lze u položek jednodušše vidět, jestli položka patří k nějakému receptu.
+
+### Proti
+
+- Přidávání položek do seznamu nelze provést jednoduše, protože aplikace nenabízí časté položky. Je také potřeba manuálně zadat kvantitu a ostatní informace.
+- Mazání seznamů vyžaduje příliš mnoho klikání.
+- Při přidávání ingrediencí z receptu do seznamu chybí dostatečný feedback pro uživatele a musí se příliš složitě vracet ke svému seznamu.
