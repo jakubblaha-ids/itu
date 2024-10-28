@@ -36,8 +36,10 @@
 	let inListIds = $derived(listManager.selectedListData?.listItems.map((i) => i.itemId) || []);
 	let ignoredIds = $derived([...addingIds, ...inListIds]);
 	let renderedRecentlyUsedItems = $derived(
-		itemManager.getRecentlyUsedItems().filter((i) => !ignoredIds.includes(i.itemId))
+		browser ? itemManager.getRecentlyUsedItems().filter((i) => !ignoredIds.includes(i.itemId)) : []
 	);
+
+	itemsToAddStore.subscribe(console.log);
 </script>
 
 <div class="flex flex-col h-full">

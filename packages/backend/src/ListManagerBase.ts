@@ -12,6 +12,7 @@ import {
 import type { InListItem, ItemAmountUnit, List } from "./types";
 import { ResourceManagerBase } from "./ResourceManagerBase";
 import { ItemManagerBase, RecentlyUsedItem } from "./ItemManagerBase";
+import { UserManagerBase } from "./UserManagerBase";
 
 export interface ListManagerBaseOptions {
     onSelectedListChange?: (listId: string) => void;
@@ -27,11 +28,13 @@ export class ListManagerBase extends ResourceManagerBase {
 
     #selectedListUnsub: Unsubscribe | null = null;
     #itemManager: ItemManagerBase;
+    #userManager: UserManagerBase;
 
-    constructor(itemManager: ItemManagerBase, options: ListManagerBaseOptions = {}) {
+    constructor(itemManager: ItemManagerBase, userManager: UserManagerBase, options: ListManagerBaseOptions = {}) {
         super();
 
         this.#itemManager = itemManager;
+        this.#userManager = userManager;
         this.options = options;
     }
 
@@ -136,7 +139,7 @@ export class ListManagerBase extends ResourceManagerBase {
             customItemName: customName,
             itemAmount: 1,
             itemChecked: false,
-            itemCheckedByUserId: "",
+            itemCheckedByUsername: "",
             itemUnit: "pcs",
         };
 
@@ -325,6 +328,12 @@ export class ListManagerBase extends ResourceManagerBase {
 
         item.itemChecked = !item.itemChecked;
 
+        if (item.itemChecked) {
+            item.itemCheckedByUsername = this.#userManager.getUsername();
+        } else {
+            item.itemCheckedByUsername = null;
+        }
+
         await this.setListData(listId, data);
     }
 
@@ -371,5 +380,7 @@ export class ListManagerBase extends ResourceManagerBase {
         newItem.itemUnit = item.unit;
 
         this.options.onItemsToAddChange?.(this.itemsToAdd);
+
+        console.log("Added recently used item to added items: ", item);
     }
 }

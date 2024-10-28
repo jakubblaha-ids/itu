@@ -4,6 +4,7 @@
 	import { itemManager } from '$ts/stores';
 	import type { InListItem } from 'backend';
 	import { createEventDispatcher, onMount } from 'svelte';
+	import randomcolor from 'randomcolor';
 
 	const dispatch = createEventDispatcher();
 
@@ -88,9 +89,12 @@
 			</div>
 
 			<div class="">
-				{#if item.itemCheckedByUserId || true}
-					<div class="text-sm py-0.5 px-2 rounded-full bg-green-500">
-						{item.itemCheckedByUserId || 'Eva'}
+				{#if item.itemCheckedByUsername}
+					<div
+						class="text-sm py-0.5 px-2 rounded-full"
+						style="background: {randomcolor({ seed: item.itemCheckedByUsername })}"
+					>
+						{item.itemCheckedByUsername}
 					</div>
 				{/if}
 			</div>

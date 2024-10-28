@@ -7,7 +7,7 @@ export type InListItem = {
     itemAmount: number | string;
     itemUnit: ItemAmountUnit;
     itemChecked: boolean;
-    itemCheckedByUserId: string;
+    itemCheckedByUsername: string;
 };
 
 export type List = {

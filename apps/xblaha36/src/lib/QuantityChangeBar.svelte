@@ -2,7 +2,7 @@
 	import Minus from '$icons/minus.icon.svelte';
 	import Plus from '$icons/plus.icon.svelte';
 	import { slide } from 'svelte/transition';
-	import CustomQuantityModal from './CustomQuantityModal.svelte';
+	import TextPromptModal from './TextPromptModal.svelte';
 	import type { InListItem, ItemAmountUnit } from 'backend';
 
 	interface Props {
@@ -25,7 +25,7 @@
 		setCustomAmount
 	}: Props = $props();
 
-	let showCustomQuantityModal = $state(false);
+	let showTextPromptModal = $state(false);
 
 	let cannotDecrease = $derived(
 		!inListItem || (typeof inListItem.itemAmount === 'number' && inListItem.itemAmount <= 1)
@@ -45,7 +45,7 @@
 			<Plus />
 		</button>
 
-		<button onclick={() => (showCustomQuantityModal = true)} {disabled}>Other</button>
+		<button onclick={() => (showTextPromptModal = true)} {disabled}>Other</button>
 	</div>
 
 	<div class="flex items-center px-2 gap-x-2 text-sm pt-2 w-full overflow-x-scroll no-scrollbar">
@@ -61,10 +61,11 @@
 	</div>
 </div>
 
-{#if showCustomQuantityModal}
-	<CustomQuantityModal
-		onConfirm={(amount) => {
-			showCustomQuantityModal = false;
+{#if showTextPromptModal}
+	<TextPromptModal
+		title="Enter custom quantity"
+		onConfirm={(amount: string) => {
+			showTextPromptModal = false;
 			setCustomAmount(amount);
 		}}
 	/>

@@ -3,14 +3,15 @@
 
 	interface Props {
 		onConfirm: (amount: string) => void;
+		title: string;
 	}
 
-	let { onConfirm }: Props = $props();
+	let { onConfirm, title }: Props = $props();
 
 	let quantity = $state('');
 </script>
 
-<Modal title="Custom quantity">
+<Modal {title}>
 	<div class="px-4 py-4 w-full flex flex-col gap-y-3 items-center">
 		<input
 			bind:value={quantity}

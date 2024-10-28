@@ -4,23 +4,29 @@
 	import Import from '$icons/import.icon.svelte';
 	import Plus from '$icons/plus.icon.svelte';
 	import Share from '$icons/share.icon.svelte';
-	import { createEventDispatcher } from 'svelte';
 	import MenuButton from './MenuButton.svelte';
-	import { listManager } from '$ts/stores';
+	import { listManager, userManager } from '$ts/stores';
+	import User from '$icons/user.icon.svelte';
 
-	const dispatch = createEventDispatcher();
+	let props: { onChangeUsernameClick: () => void; closeMenu: () => void } = $props();
+
+	const username = userManager.username;
 </script>
 
 <div class="h-full flex flex-col bg-darker">
+	<div class="px-4 pt-4 text-xs text-gray-300">Logged in as</div>
+	<div class="px-4 pt-2 text-lg">{$username}</div>
+
 	<div class="flex-grow"></div>
 
 	<div class="rounded-t-xl bg-lighter flex flex-col shadow-lg overflow-hidden">
 		<div class="text-sm px-4 bg-light py-3">Manipulate list</div>
 
+		<MenuButton on:click={props.onChangeUsernameClick} title="Change username" icon={User} />
 		<MenuButton
 			on:click={() => {
 				listManager.createList();
-				dispatch('item-clicked');
+				props.closeMenu();
 			}}
 			title="New List"
 			icon={Plus}

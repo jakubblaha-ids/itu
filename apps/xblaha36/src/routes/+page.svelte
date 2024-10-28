@@ -6,15 +6,16 @@
 	import Lists from '$icons/lists.icon.svelte';
 	import Menu from '$icons/menu.icon.svelte';
 	import BottomNavContainer from '$lib/BottomNavContainer.svelte';
+	import TextPromptModal from '$lib/TextPromptModal.svelte';
 	import MainListScreen from '$lib/partials/MainListScreen.svelte';
 	import SideListsMenu from '$lib/SideListsMenu.svelte';
 	import SideMenu from '$lib/SideMenu.svelte';
-	import { slide } from 'svelte/transition';
+	import { userManager } from '$ts/stores';
 
-	let listsOpen = false;
-	let menuOpen = false;
+	let listsOpen = $state(false);
+	let menuOpen = $state(false);
 
-	$: contentTranslate = listsOpen ? -300 : menuOpen ? 300 : 0;
+	let contentTranslate = $derived(listsOpen ? -300 : menuOpen ? 300 : 0);
 
 	function onListClick() {
 		const url = $page.url;
@@ -43,26 +44,38 @@
 		}
 	});
 
-	let mainListScreen: MainListScreen;
-	let showEdit = false;
+	let mainListScreen: MainListScreen | null = $state(null);
+	let showEdit = $state(false);
+
+	let showUsernameDrawer = $state(false);
 </script>
 
 <div
 	class="w-[80vw] h-full translate-x-20 absolute right-full top-0 duration-200"
 	style="transform: translateX({contentTranslate}px);"
 >
-	<SideMenu on:item-clicked={() => (menuOpen = false)} />
+	<SideMenu
+		onChangeUsernameClick={() => {
+			menuOpen = false;
+			showUsernameDrawer = true;
+		}}
+		closeMenu={() => (menuOpen = false)}
+	/>
 </div>
 
-<div class="w-full h-full flex flex-col" style="transform: translateX({contentTranslate}px);">
+<div
+	class="w-full h-full flex flex-col duration-200"
+	class:brightness-50={listsOpen || menuOpen}
+	style="transform: translateX({contentTranslate}px);"
+>
 	<MainListScreen bind:this={mainListScreen} bind:showEdit />
 
 	<BottomNavContainer>
-		<button on:click={onMenuClick}> <Menu /> </button>
-		<button on:click={mainListScreen.toggleCheckHighlightedItem}>
+		<button onclick={onMenuClick}> <Menu /> </button>
+		<button onclick={mainListScreen.toggleCheckHighlightedItem}>
 			<Check />
 		</button>
-		<button on:click={onListClick}> <Lists /> </button>
+		<button onclick={onListClick}> <Lists /> </button>
 	</BottomNavContainer>
 </div>
 
@@ -72,3 +85,13 @@
 >
 	<SideListsMenu />
 </div>
+
+{#if showUsernameDrawer}
+	<TextPromptModal
+		title="Change username"
+		onConfirm={(username: string) => {
+			userManager.setUsername(username);
+			showUsernameDrawer = false;
+		}}
+	/>
+{/if}
