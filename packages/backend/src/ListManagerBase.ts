@@ -9,7 +9,7 @@ import {
     updateDoc,
     type Unsubscribe,
 } from "firebase/firestore";
-import type { InListItem, List } from "./types";
+import type { InListItem, ItemAmountUnit, List } from "./types";
 import { ResourceManagerBase } from "./ResourceManagerBase";
 
 export interface ListManagerBaseOptions {
@@ -134,8 +134,7 @@ export class ListManagerBase extends ResourceManagerBase {
             itemAmount: 1,
             itemChecked: false,
             itemCheckedByUserId: "",
-            itemUnit: "",
-            customItemAmount: null,
+            itemUnit: "pcs",
         };
 
         this.itemsToAdd.push(newItem);
@@ -189,13 +188,20 @@ export class ListManagerBase extends ResourceManagerBase {
             return "";
         }
 
-        const totalAmount = itemsOnList.reduce((sum, item) => sum + item.itemAmount, 0);
+        const totalAmount = itemsOnList.reduce(
+            (sum, item) => sum + (typeof item.itemAmount === "number" ? item.itemAmount : 0),
+            0
+        );
 
         return totalAmount + " " + itemsOnList[0].itemUnit;
     }
 
     #increaseInListItemAmount(inListItem: InListItem) {
-        if (inListItem.itemUnit === "") {
+        if (typeof inListItem.itemAmount === "string") {
+            throw new Error("Cannot increase amount of custom amount item");
+        }
+
+        if (inListItem.itemUnit === "pcs") {
             inListItem.itemAmount++;
         }
 
@@ -209,7 +215,11 @@ export class ListManagerBase extends ResourceManagerBase {
     }
 
     #decreaseInListItemAmount(inListItem: InListItem) {
-        if (inListItem.itemAmount > 1) {
+        if (typeof inListItem.itemAmount === "string") {
+            throw new Error("Cannot decrease amount of custom amount item");
+        }
+
+        if (inListItem.itemAmount > 1 && inListItem.itemUnit === "pcs") {
             inListItem.itemAmount--;
         }
 
@@ -246,20 +256,11 @@ export class ListManagerBase extends ResourceManagerBase {
         this.options.onItemsToAddChange?.(this.itemsToAdd);
     }
 
-    setAmountToAdd(inListItemId: number, amount: number, unit: string) {
+    setAmountToAdd(inListItemId: number, amount: number | string, unit: ItemAmountUnit) {
         const item = this.#findItemToAdd(inListItemId);
 
         item.itemAmount = amount;
         item.itemUnit = unit;
-        item.customItemAmount = null;
-
-        this.options.onItemsToAddChange?.(this.itemsToAdd);
-    }
-
-    setCustomAmountToAdd(inListItemId: number, amount: string) {
-        const item = this.#findItemToAdd(inListItemId);
-
-        item.customItemAmount = amount;
 
         this.options.onItemsToAddChange?.(this.itemsToAdd);
     }
@@ -278,20 +279,11 @@ export class ListManagerBase extends ResourceManagerBase {
         return item;
     }
 
-    async setItemAmountInSelected(inListItemId: number, amount: number, unit: string) {
+    async setItemAmountInSelected(inListItemId: number, amount: number | string, unit: ItemAmountUnit) {
         const item = this.#findInSelectedListItem(inListItemId);
 
         item.itemAmount = amount;
         item.itemUnit = unit;
-        item.customItemAmount = null;
-
-        await this.#pushSelectedListData();
-    }
-
-    async setCustomItemAmountInSelected(inListItemId: number, amount: string) {
-        const item = this.#findInSelectedListItem(inListItemId);
-
-        item.customItemAmount = amount;
 
         await this.#pushSelectedListData();
     }

@@ -80,7 +80,11 @@
 			style="transform: translateX({showButton === 'edit' ? translateX : 0}px);"
 		>
 			<div>
-				{item.customItemAmount || item.itemAmount + item.itemUnit}
+				{item.itemAmount}
+				{#if typeof item.itemAmount === 'number'}
+					{' '}
+					{item.itemUnit}
+				{/if}
 			</div>
 
 			<div class="">

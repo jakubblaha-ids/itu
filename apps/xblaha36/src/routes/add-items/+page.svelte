@@ -44,8 +44,8 @@
 	</div>
 
 	<QuantityChangeBar
+		inListItem={highlightItem!}
 		disabled={$itemsToAddStore.length < 1}
-		disableDecreaseButton={highlightItem?.itemAmount === 1}
 		suggestedQuantities={itemManager?.getSuggestedQuantities(null) || []}
 		plusClick={() => listManager.increaseAmountToAdd(highlightItem!.id)}
 		minusClick={() => listManager.decreaseAmountToAdd(highlightItem!.id)}
@@ -53,7 +53,7 @@
 			listManager?.setAmountToAdd(highlightItem!.id, amount, unit);
 		}}
 		setCustomAmount={(customAmount) => {
-			listManager?.setCustomAmountToAdd(highlightItem!.id, customAmount);
+			listManager?.setAmountToAdd(highlightItem!.id, customAmount, 'custom');
 		}}
 	/>
 

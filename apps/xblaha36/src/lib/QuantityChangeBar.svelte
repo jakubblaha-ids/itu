@@ -3,21 +3,22 @@
 	import Plus from '$icons/plus.icon.svelte';
 	import { slide } from 'svelte/transition';
 	import CustomQuantityModal from './CustomQuantityModal.svelte';
+	import type { InListItem, ItemAmountUnit } from 'backend';
 
 	interface Props {
 		disabled?: boolean;
-		disableDecreaseButton?: boolean;
-		suggestedQuantities: { amount: number; unit: string }[];
+		suggestedQuantities: { amount: number; unit: ItemAmountUnit }[];
+		inListItem: InListItem;
 		plusClick: () => void;
 		minusClick: () => void;
-		setQuantity: (amount: number, unit: string) => void;
+		setQuantity: (amount: number, unit: ItemAmountUnit) => void;
 		setCustomAmount: (customAmount: string) => void;
 	}
 
 	let {
 		disabled = false,
-		disableDecreaseButton = false,
 		suggestedQuantities,
+		inListItem,
 		plusClick,
 		minusClick,
 		setQuantity,
@@ -25,17 +26,22 @@
 	}: Props = $props();
 
 	let showCustomQuantityModal = $state(false);
+
+	let cannotDecrease = $derived(
+		typeof inListItem.itemAmount === 'number' && inListItem.itemAmount <= 1
+	);
+	let isCustomAmount = $derived(typeof inListItem.itemAmount === 'string');
 </script>
 
 <div class="bg-darker flex flex-col items-center pb-3 z-30" transition:slide>
 	<div class="h-12 flex items-center">Quantity</div>
 
 	<div id="large-btn-container" class="grid grid-cols-3 h-14 w-full px-2 gap-x-2">
-		<button disabled={disableDecreaseButton || disabled} onclick={minusClick}>
+		<button disabled={cannotDecrease || isCustomAmount || disabled} onclick={minusClick}>
 			<Minus />
 		</button>
 
-		<button {disabled} onclick={plusClick}>
+		<button disabled={isCustomAmount || disabled} onclick={plusClick}>
 			<Plus />
 		</button>
 

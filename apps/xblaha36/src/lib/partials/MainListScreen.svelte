@@ -56,13 +56,14 @@
 
 	{#if showEdit}
 		<QuantityChangeBar
+			inListItem={highlightItem!}
 			suggestedQuantities={itemManager.getSuggestedQuantities(highlightItem!.itemId)}
 			plusClick={() => listManager.increaseItemAmountInSelected(highlightItem!.id)}
 			minusClick={() => listManager.decreaseItemAmountInSelected(highlightItem!.id)}
 			setQuantity={(amount, unit) =>
 				listManager.setItemAmountInSelected(highlightItem!.id, amount, unit)}
 			setCustomAmount={(customAmount) =>
-				listManager.setCustomItemAmountInSelected(highlightItem!.id, customAmount)}
+				listManager.setItemAmountInSelected(highlightItem!.id, customAmount, 'custom')}
 		/>
 	{/if}
 

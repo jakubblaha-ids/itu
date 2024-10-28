@@ -33,4 +33,6 @@ export class ItemManagerBase extends ResourceManagerBase {
             return item.name.toLowerCase().includes(filter.toLowerCase());
         });
     }
+
+    // storeRecentlyUsedItem(itemId: string, ) {}
 }
