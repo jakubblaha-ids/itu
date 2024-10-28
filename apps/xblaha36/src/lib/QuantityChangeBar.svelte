@@ -1,28 +1,39 @@
 <script lang="ts">
 	import Minus from '$icons/minus.icon.svelte';
 	import Plus from '$icons/plus.icon.svelte';
-	import { listManager } from '$ts/stores';
-	import { get } from 'svelte/store';
+	import { slide } from 'svelte/transition';
 
-	export let disabled = false;
-	export let disableDecreaseButton = false;
-	export let suggestedQuantities: { amount: number; unit: string }[];
+	interface Props {
+		disabled?: boolean;
+		disableDecreaseButton?: boolean;
+		suggestedQuantities: { amount: number; unit: string }[];
+		plusClick: () => void;
+		minusClick: () => void;
+		setQuantity: (amount: number, unit: string) => void;
+	}
+
+	let {
+		disabled = false,
+		disableDecreaseButton = false,
+		suggestedQuantities,
+		plusClick,
+		minusClick,
+		setQuantity
+	}: Props = $props();
 </script>
 
-<div class="bg-darker flex flex-col items-center">
+<div class="bg-darker flex flex-col items-center pb-3 z-20" transition:slide>
 	<div class="h-12 flex items-center">Quantity</div>
 
 	<div id="large-btn-container" class="grid grid-cols-3 h-14 w-full px-2 gap-x-2">
-		<button
-			disabled={disableDecreaseButton || disabled}
-			on:click={() => listManager?.decreaseAmountToAdd(get(listManager.addItemHighlightId))}
-			><Minus /></button
-		>
-		<button
-			{disabled}
-			on:click={() => listManager?.increaseAmountToAdd(get(listManager.addItemHighlightId))}
-			><Plus /></button
-		>
+		<button disabled={disableDecreaseButton || disabled} onclick={minusClick}>
+			<Minus />
+		</button>
+
+		<button {disabled} onclick={plusClick}>
+			<Plus />
+		</button>
+
 		<button {disabled}>Other</button>
 	</div>
 
@@ -30,8 +41,7 @@
 		{#each suggestedQuantities as q}
 			<button
 				{disabled}
-				on:click={() =>
-					listManager?.setAmountToAdd(get(listManager.addItemHighlightId), q.amount, q.unit)}
+				onclick={() => setQuantity(q.amount, q.unit)}
 				class="min-w-12 bg-light grid place-items-center rounded px-4 flex-shrink-0 py-2"
 			>
 				{q.amount + q.unit}

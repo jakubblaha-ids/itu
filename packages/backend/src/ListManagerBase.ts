@@ -105,6 +105,14 @@ export class ListManagerBase extends ResourceManagerBase {
         await updateDoc(listRef, data);
     }
 
+    async #pushSelectedListData() {
+        if (!this.selectedListId) {
+            throw new Error("No list selected");
+        }
+
+        await this.setListData(this.selectedListId, this.selectedListData);
+    }
+
     async deleteList(listId: string) {
         const coll = collection(this.firestore, "lists");
         const listRef = doc(coll, listId);
@@ -184,63 +192,106 @@ export class ListManagerBase extends ResourceManagerBase {
         return totalAmount + " " + itemsOnList[0].itemUnit;
     }
 
-    increaseAmountToAdd(inListItemId: number) {
+    #increaseInListItemAmount(inListItem: InListItem) {
+        if (inListItem.itemUnit === "") {
+            inListItem.itemAmount++;
+        }
+
+        if (inListItem.itemUnit === "ml") {
+            inListItem.itemAmount += 100;
+        }
+
+        if (inListItem.itemUnit === "g") {
+            inListItem.itemAmount += 100;
+        }
+    }
+
+    #decreaseInListItemAmount(inListItem: InListItem) {
+        if (inListItem.itemAmount > 1) {
+            inListItem.itemAmount--;
+        }
+
+        if (inListItem.itemUnit === "ml") {
+            inListItem.itemAmount -= 100;
+        }
+
+        if (inListItem.itemUnit === "g") {
+            inListItem.itemAmount -= 100;
+        }
+    }
+
+    #findItemToAdd(inListItemId: number): InListItem {
         const item = this.itemsToAdd.find((item) => item.id === inListItemId);
 
         if (!item) {
-            throw new Error("Item not found");
+            throw new Error(`Item ${inListItemId} not found`);
         }
 
-        if (item.itemUnit === "") {
-            item.itemAmount++;
-        }
+        return item;
+    }
 
-        if (item.itemUnit === "ml") {
-            item.itemAmount += 100;
-        }
+    increaseAmountToAdd(inListItemId: number) {
+        const item = this.#findItemToAdd(inListItemId);
 
-        if (item.itemUnit === "g") {
-            item.itemAmount += 100;
-        }
-
+        this.#increaseInListItemAmount(item);
         this.options.onItemsToAddChange?.(this.itemsToAdd);
     }
 
     decreaseAmountToAdd(inListItemId: number) {
-        const item = this.itemsToAdd.find((item) => item.id === inListItemId);
+        const item = this.#findItemToAdd(inListItemId);
 
-        if (!item) {
-            throw new Error("Item not found");
-        }
-
-        if (item.itemAmount > 1) {
-            item.itemAmount--;
-        }
-
-        if (item.itemUnit === "ml") {
-            item.itemAmount -= 100;
-        }
-
-        if (item.itemUnit === "g") {
-            item.itemAmount -= 100;
-        }
-
+        this.#decreaseInListItemAmount(item);
         this.options.onItemsToAddChange?.(this.itemsToAdd);
     }
 
     setAmountToAdd(inListItemId: number, amount: number, unit: string) {
         console.log({ inListItemId });
 
-        const item = this.itemsToAdd.find((item) => item.id === inListItemId);
-
-        if (!item) {
-            throw new Error("Item not found");
-        }
+        const item = this.#findItemToAdd(inListItemId);
 
         item.itemAmount = amount;
         item.itemUnit = unit;
 
         this.options.onItemsToAddChange?.(this.itemsToAdd);
+    }
+
+    #findInSelectedListItem(inListItemId: number): InListItem {
+        if (!this.selectedListData) {
+            throw new Error("No list selected");
+        }
+
+        const item = this.selectedListData.listItems.find((item) => item.id === inListItemId);
+
+        if (!item) {
+            throw new Error(`Item ${inListItemId} not found`);
+        }
+
+        return item;
+    }
+
+    async setItemAmountInSelected(inListItemId: number, amount: number, unit: string) {
+        const item = this.#findInSelectedListItem(inListItemId);
+
+        item.itemAmount = amount;
+        item.itemUnit = unit;
+
+        await this.#pushSelectedListData();
+    }
+
+    async increaseItemAmountInSelected(inListItemId: number) {
+        const item = this.#findInSelectedListItem(inListItemId);
+
+        this.#increaseInListItemAmount(item);
+
+        await this.#pushSelectedListData();
+    }
+
+    async decreaseItemAmountInSelected(inListItemId: number) {
+        const item = this.#findInSelectedListItem(inListItemId);
+
+        this.#decreaseInListItemAmount(item);
+
+        await this.#pushSelectedListData();
     }
 
     async toggleItemChecked(listId: string, inListItemId: number): Promise<void> {

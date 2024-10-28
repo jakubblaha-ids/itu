@@ -1,13 +1,21 @@
 <script lang="ts">
-	import type { InListItem } from '$ts/types';
-	import { createEventDispatcher, tick } from 'svelte';
+	import type { InListItem } from 'backend';
+	import { createEventDispatcher, onMount, tick } from 'svelte';
 	import ItemListItem from './ItemListItem.svelte';
 
 	const dispatch = createEventDispatcher();
 
 	export let items: InListItem[] = [];
 	export let highlightIndex = 0;
-	export let highlightItemId: number | null;
+	export let highlightItem: InListItem | null = null;
+
+	if (highlightItem) {
+		highlightIndex = items.findIndex((item) => item.id === highlightItem!.id);
+
+		onMount(() => {
+			scrollToIndex(highlightIndex);
+		});
+	}
 
 	let container: HTMLDivElement;
 	const itemContainers: HTMLDivElement[] = [];
@@ -52,7 +60,7 @@
 
 	$: items && sortItems();
 	$: allChecked = items.every((item) => item.itemChecked);
-	$: highlightItemId = items[highlightIndex]?.id;
+	$: highlightItem = items[highlightIndex];
 </script>
 
 <div
@@ -87,6 +95,8 @@
 						on:click={() => dispatch('item-click', { item })}
 						on:edit-click={(e) => {
 							scrollToIndex(index);
+
+							dispatch('edit-click', { item });
 						}}
 						on:delete-click
 						highlight={index === highlightIndex}

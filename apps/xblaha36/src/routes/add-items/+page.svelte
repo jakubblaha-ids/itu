@@ -8,29 +8,32 @@
 	import QuantityChangeBar from '$lib/QuantityChangeBar.svelte';
 	import SearchModal from '$lib/SearchModal.svelte';
 	import { itemManager, listManager } from '$ts/stores';
+	import type { InListItem } from 'backend';
 	import { expoOut } from 'svelte/easing';
+	import { get } from 'svelte/store';
 	import { fly } from 'svelte/transition';
 
-	let showSearchModal = false;
+	const { itemsToAddStore, addItemHighlightId } = listManager;
 
-	const _itemsToAdd = listManager?.itemsToAddStore;
-	$: itemsToAdd = $_itemsToAdd || [];
+	const initHighlightId = get(addItemHighlightId);
+	const initHighlightItem: InListItem | null =
+		$itemsToAddStore.find((item) => item.id === initHighlightId) || null;
 
-	let addItemHighlightId = listManager?.addItemHighlightId;
+	let highlightItem = $state(initHighlightItem);
 
-	$: highlightedItem = itemsToAdd.find((item) => item.id === $addItemHighlightId);
+	$effect(() => {
+		if (highlightItem) {
+			listManager.addItemHighlightId.set(highlightItem.id);
+		}
+	});
+
+	let showSearchModal = $state(false);
 </script>
 
 <div class="flex flex-col h-full">
 	<div class="bg-darker px-2 py-2">Will be added</div>
 
-	<ItemList
-		highlightItemId={$addItemHighlightId || null}
-		items={itemsToAdd}
-		on:highlight-item={(e) => {
-			listManager!.addItemHighlightId.set(e.detail.id);
-		}}
-	/>
+	<ItemList bind:highlightItem items={$itemsToAddStore} />
 
 	<div class="bg-darker px-2 py-2">Recently used</div>
 
@@ -41,16 +44,21 @@
 	</div>
 
 	<QuantityChangeBar
-		disabled={itemsToAdd.length < 1}
-		disableDecreaseButton={highlightedItem?.itemAmount === 1}
+		disabled={$itemsToAddStore.length < 1}
+		disableDecreaseButton={highlightItem?.itemAmount === 1}
 		suggestedQuantities={itemManager?.getSuggestedQuantities(null) || []}
+		plusClick={() => listManager.increaseAmountToAdd(highlightItem!.id)}
+		minusClick={() => listManager.decreaseAmountToAdd(highlightItem!.id)}
+		setQuantity={(amount, unit) => {
+			listManager?.setAmountToAdd(highlightItem!.id, amount, unit);
+		}}
 	/>
 
 	<BottomNavContainer>
-		<button on:click={() => goto('/')}> <Back /> </button>
-		<button on:click={() => (showSearchModal = true)}> <Search /> </button>
+		<button onclick={() => goto('/')}> <Back /> </button>
+		<button onclick={() => (showSearchModal = true)}> <Search /> </button>
 		<button
-			on:click={() => {
+			onclick={() => {
 				listManager?.commitAddingItems();
 				goto('/');
 			}}
