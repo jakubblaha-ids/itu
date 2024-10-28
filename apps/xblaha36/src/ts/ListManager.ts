@@ -1,6 +1,6 @@
 import { writable, type Writable } from 'svelte/store';
 import { ListManagerBase, type ListManagerBaseOptions } from 'backend';
-import type { InListItem, List } from 'backend';
+import type { InListItem, ItemManagerBase, List } from 'backend';
 
 export class ListManager extends ListManagerBase {
 	selectedListDataStore: Writable<List | null> = writable(null);
@@ -8,8 +8,8 @@ export class ListManager extends ListManagerBase {
 	addItemHighlightId = writable<number>(0);
 	highlightId = writable<number>(0);
 
-	constructor(options: ListManagerBaseOptions = {}) {
-		super({
+	constructor(itemManager: ItemManagerBase, options: ListManagerBaseOptions = {}) {
+		super(itemManager, {
 			...options,
 			onSelectedListDataChange: (listData) => {
 				this.selectedListDataStore.set(listData);

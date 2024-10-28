@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import Back from '$icons/back.icon.svelte';
 	import Check from '$icons/check.icon.svelte';
+	import ChevronDown from '$icons/chevron-down.icon.svelte';
 	import Search from '$icons/search.icon.svelte';
 	import BottomNavContainer from '$lib/BottomNavContainer.svelte';
 	import ItemList from '$lib/ItemList.svelte';
@@ -28,23 +30,64 @@
 	});
 
 	let showSearchModal = $state(false);
+	let showRecentlyUsed = $state(true);
+
+	let addingIds = $derived($itemsToAddStore.map((i) => i.itemId));
+	let inListIds = $derived(listManager.selectedListData?.listItems.map((i) => i.itemId) || []);
+	let ignoredIds = $derived([...addingIds, ...inListIds]);
+	let renderedRecentlyUsedItems = $derived(
+		itemManager.getRecentlyUsedItems().filter((i) => !ignoredIds.includes(i.itemId))
+	);
 </script>
 
 <div class="flex flex-col h-full">
-	<div class="bg-darker px-2 py-2">Will be added</div>
+	<div class="bg-darker px-2 py-2 text-center">Add Items</div>
 
 	<ItemList bind:highlightItem items={$itemsToAddStore} />
 
-	<div class="bg-darker px-2 py-2">Recently used</div>
+	<button
+		onclick={() => (showRecentlyUsed = !showRecentlyUsed)}
+		class="bg-darker px-3 py-2 flex text-left items-center border-b border-darkest"
+	>
+		<div class="flex-grow text-gray-200 font-medium">Recently used</div>
 
-	<div class="grid px-3 gap-y-3 py-3 flex-grow overflow-scroll">
-		<!-- {#each testItems as item}
-			<SimplifiedItemButton {item} />
-		{/each} -->
+		<div class:rotate-180={!showRecentlyUsed} class="w-4 duration-500">
+			<ChevronDown />
+		</div>
+	</button>
+
+	<div class:!max-h-0={!showRecentlyUsed} class="duration-200 transition-all max-h-32">
+		<div class="flex flex-wrap px-3 gap-x-2 gap-y-2.5 py-2.5 overflow-y-scroll">
+			{#if browser}
+				{#each renderedRecentlyUsedItems as item}
+					<button
+						onclick={() => listManager.addRecentlyUsedItemToAddedItems(item)}
+						class="flex items-center rounded-full bg-light select-none duration-100 text-sm text-gray-200"
+					>
+						<div class="flex py-2 px-4 w-full flex-shrink-0 duration-100 items-center">
+							<div class="flex-grow">
+								{itemManager.getNameOfitemId(item.itemId)}
+							</div>
+
+							<!-- <div>
+							{item.amount}
+							{item.unit}
+						</div> -->
+						</div>
+					</button>
+				{:else}
+					<div
+						class="text-gray-200 grid place-items-center w-full text-sm opacity-75 font-medium h-14"
+					>
+						No recently used items
+					</div>
+				{/each}
+			{/if}
+		</div>
 	</div>
 
 	<QuantityChangeBar
-		inListItem={highlightItem!}
+		inListItem={highlightItem}
 		disabled={$itemsToAddStore.length < 1}
 		suggestedQuantities={itemManager?.getSuggestedQuantities(null) || []}
 		plusClick={() => listManager.increaseAmountToAdd(highlightItem!.id)}

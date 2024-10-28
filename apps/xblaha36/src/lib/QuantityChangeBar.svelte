@@ -8,7 +8,7 @@
 	interface Props {
 		disabled?: boolean;
 		suggestedQuantities: { amount: number; unit: ItemAmountUnit }[];
-		inListItem: InListItem;
+		inListItem: InListItem | null;
 		plusClick: () => void;
 		minusClick: () => void;
 		setQuantity: (amount: number, unit: ItemAmountUnit) => void;
@@ -28,13 +28,13 @@
 	let showCustomQuantityModal = $state(false);
 
 	let cannotDecrease = $derived(
-		typeof inListItem.itemAmount === 'number' && inListItem.itemAmount <= 1
+		!inListItem || (typeof inListItem.itemAmount === 'number' && inListItem.itemAmount <= 1)
 	);
-	let isCustomAmount = $derived(typeof inListItem.itemAmount === 'string');
+	let isCustomAmount = $derived(inListItem && typeof inListItem.itemAmount === 'string');
 </script>
 
-<div class="bg-darker flex flex-col items-center pb-3 z-30" transition:slide>
-	<div class="h-12 flex items-center">Quantity</div>
+<div class="bg-darker flex flex-col pb-3 z-30" transition:slide>
+	<div class="text-gray-100 font-medium py-3 pl-3">Quantity</div>
 
 	<div id="large-btn-container" class="grid grid-cols-3 h-14 w-full px-2 gap-x-2">
 		<button disabled={cannotDecrease || isCustomAmount || disabled} onclick={minusClick}>

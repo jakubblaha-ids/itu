@@ -18,7 +18,7 @@
 	});
 </script>
 
-<div class="h-full bg-darkest flex flex-col">
+<div class="h-full bg-darkest flex flex-col z-40 relative">
 	<input
 		bind:this={input}
 		type="text"

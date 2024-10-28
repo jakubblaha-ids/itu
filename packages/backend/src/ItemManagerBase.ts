@@ -1,6 +1,13 @@
-import type { Item } from "./types";
+import type { Item, ItemAmountUnit } from "./types";
 import { collection, getDocs } from "firebase/firestore";
 import { ResourceManagerBase } from "./ResourceManagerBase";
+
+export type RecentlyUsedItem = {
+    itemId: string;
+    amount: number | string;
+    unit: ItemAmountUnit;
+    timestamp: number;
+};
 
 export class ItemManagerBase extends ResourceManagerBase {
     availableItems: Item[] = [];
@@ -34,5 +41,30 @@ export class ItemManagerBase extends ResourceManagerBase {
         });
     }
 
-    // storeRecentlyUsedItem(itemId: string, ) {}
+    getRecentlyUsedItems(): RecentlyUsedItem[] {
+        const recentlyUsed = localStorage.getItem("recentlyUsedItems");
+        const parsed = recentlyUsed ? JSON.parse(recentlyUsed) : [];
+
+        return parsed;
+    }
+
+    storeRecentlyUsedItem(itemId: string, amount: number | string, unit: ItemAmountUnit) {
+        const recentlyUsed = this.getRecentlyUsedItems();
+        const existing = recentlyUsed.find((item) => item.itemId === itemId);
+
+        if (existing) {
+            existing.timestamp = Date.now();
+            existing.amount = amount;
+            existing.unit = unit;
+        } else {
+            recentlyUsed.push({
+                itemId,
+                amount,
+                unit,
+                timestamp: Date.now(),
+            });
+        }
+
+        localStorage.setItem("recentlyUsedItems", JSON.stringify(recentlyUsed));
+    }
 }

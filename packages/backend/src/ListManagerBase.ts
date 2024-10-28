@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import type { InListItem, ItemAmountUnit, List } from "./types";
 import { ResourceManagerBase } from "./ResourceManagerBase";
+import { ItemManagerBase, RecentlyUsedItem } from "./ItemManagerBase";
 
 export interface ListManagerBaseOptions {
     onSelectedListChange?: (listId: string) => void;
@@ -25,10 +26,12 @@ export class ListManagerBase extends ResourceManagerBase {
     selectedListData: List | null = null;
 
     #selectedListUnsub: Unsubscribe | null = null;
+    #itemManager: ItemManagerBase;
 
-    constructor(options: ListManagerBaseOptions = {}) {
+    constructor(itemManager: ItemManagerBase, options: ListManagerBaseOptions = {}) {
         super();
 
+        this.#itemManager = itemManager;
         this.options = options;
     }
 
@@ -168,6 +171,11 @@ export class ListManagerBase extends ResourceManagerBase {
         await updateDoc(listRef, {
             listItems: newListItems,
         });
+
+        // Add to recently used items
+        for (const item of this.itemsToAdd) {
+            this.#itemManager.storeRecentlyUsedItem(item.itemId, item.itemAmount, item.itemUnit);
+        }
 
         this.itemsToAdd = [];
         this.options.onItemsToAddChange?.(this.itemsToAdd);
@@ -354,5 +362,14 @@ export class ListManagerBase extends ResourceManagerBase {
         data.listItems = data.listItems.filter((item) => item.id !== inListItemId);
 
         await this.setListData(listId, data);
+    }
+
+    async addRecentlyUsedItemToAddedItems(item: RecentlyUsedItem) {
+        const newItem = this.addItemToList(item.itemId, null);
+
+        newItem.itemAmount = item.amount;
+        newItem.itemUnit = item.unit;
+
+        this.options.onItemsToAddChange?.(this.itemsToAdd);
     }
 }
