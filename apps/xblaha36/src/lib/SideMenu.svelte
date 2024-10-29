@@ -31,7 +31,13 @@
 			title="New List"
 			icon={Plus}
 		/>
-		<MenuButton title="Remove list" icon={Bin} />
+		<MenuButton
+			on:click={() => {
+				listManager.removeListLocally(listManager.selectedListId!);
+			}}
+			title="Remove list"
+			icon={Bin}
+		/>
 		<MenuButton title="Duplicate" icon={Duplicate} />
 		<MenuButton title="Share" icon={Share} />
 		<MenuButton title="Import" icon={Import} />

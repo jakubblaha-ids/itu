@@ -6,7 +6,9 @@ import {
     getDoc,
     getDocs,
     onSnapshot,
+    query,
     updateDoc,
+    where,
     type Unsubscribe,
 } from "firebase/firestore";
 import type { InListItem, ItemAmountUnit, List } from "./types";
@@ -40,11 +42,58 @@ export class ListManagerBase extends ResourceManagerBase {
         this.options = options;
     }
 
-    async refreshAvailableLists() {
-        const coll = collection(this.firestore, "lists");
-        const lists = await getDocs(coll);
+    async addListLocally(listId: string): Promise<void> {
+        const lists = JSON.parse(localStorage.getItem("addedLists") || "[]");
 
-        this.availableLists = lists.docs.map((doc) => ({ ...doc.data(), id: doc.id }) as List);
+        lists.push(listId);
+
+        console.log({ lists });
+
+        localStorage.setItem("addedLists", JSON.stringify(lists));
+
+        await this.refreshAvailableLists();
+    }
+
+    removeListLocally(listId: string): void {
+        const lists = JSON.parse(localStorage.getItem("addedLists") || "[]");
+
+        const newList = lists.filter((id: string) => id !== listId);
+
+        localStorage.setItem("addedLists", JSON.stringify(newList));
+
+        this.refreshAvailableLists();
+
+        const localListIds = this.getLocallyAddedListIds();
+
+        if (localListIds.length === 0) {
+            this.setSelectedListId(null);
+        } else {
+            this.setSelectedListId(localListIds[0]);
+        }
+
+        this.refreshSelectedListData();
+    }
+
+    getLocallyAddedListIds() {
+        const val = localStorage.getItem("addedLists");
+        const parsed = JSON.parse(val || "[]");
+
+        return parsed;
+    }
+
+    async refreshAvailableLists() {
+        const addedLists = this.getLocallyAddedListIds();
+
+        if (addedLists.length === 0) {
+            this.availableLists = [];
+            this.options.onAvailableListsChange?.(this.availableLists);
+            return;
+        }
+
+        const q = query(collection(this.firestore, "lists"), where("__name__", "in", addedLists));
+        const querySnapshot = await getDocs(q);
+
+        this.availableLists = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }) as List);
 
         this.options.onAvailableListsChange?.(this.availableLists);
     }
@@ -53,14 +102,28 @@ export class ListManagerBase extends ResourceManagerBase {
         this.selectedListId = listId;
         console.log("Selected list ID changed to: " + listId);
 
+        localStorage.setItem("lastSelectedList", listId);
+
         if (this.#selectedListUnsub) {
             this.#selectedListUnsub();
+        }
+
+        if (!listId) {
+            this.selectedListData = null;
+            this.options.onSelectedListDataChange?.(null);
+            this.options.onSelectedListChange?.(null);
+            return;
         }
 
         const coll = collection(this.firestore, "lists");
         const listRef = doc(coll, listId);
 
         this.#selectedListUnsub = onSnapshot(listRef, (snap) => {
+            if (!snap.exists()) {
+                console.error("List not found: " + listId);
+                return;
+            }
+
             this.selectedListData = { ...snap.data(), id: snap.id } as List;
 
             this.options.onSelectedListDataChange?.(this.selectedListData);
@@ -71,7 +134,11 @@ export class ListManagerBase extends ResourceManagerBase {
 
     async refreshSelectedListData() {
         if (!this.selectedListId) {
-            throw new Error("No list selected");
+            this.selectedListData = null;
+            this.options.onSelectedListDataChange?.(null);
+
+            console.warn("No list selected and refreshSelectedListData called");
+            return;
         }
 
         this.selectedListData = await this.getListData(this.selectedListId);
@@ -81,13 +148,12 @@ export class ListManagerBase extends ResourceManagerBase {
         console.log("Selected list data: ", this.selectedListData);
     }
 
-    async selectLastSelectedOrFirstList() {
-        // Make it the first list in the DB for now
-        const coll = collection(this.firestore, "lists");
-        const lists = await getDocs(coll);
-        const firstList = lists.docs[0];
+    async selectLastSelectedList() {
+        const lastSelected = localStorage.getItem("lastSelectedList");
 
-        this.setSelectedListId(firstList.id);
+        if (lastSelected) {
+            await this.setSelectedListId(lastSelected);
+        }
     }
 
     async createList() {
@@ -101,13 +167,19 @@ export class ListManagerBase extends ResourceManagerBase {
         const ref = await addDoc(coll, newList);
 
         this.setSelectedListId(ref.id);
+        this.addListLocally(ref.id);
     }
 
-    async getListData(listId: string) {
+    async getListData(listId: string): Promise<List | null> {
         const coll = collection(this.firestore, "lists");
         const listRef = doc(coll, listId);
 
         const snap = await getDoc(listRef);
+
+        if (!snap.exists()) {
+            return null;
+        }
+
         const data = snap.data();
 
         return { ...data, id: snap.id } as List;

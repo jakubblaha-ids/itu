@@ -16,7 +16,7 @@
 		initializeApp(firebaseConfig);
 
 		itemManager.refreshAvailableItems();
-		listManager.selectLastSelectedOrFirstList();
+		listManager.selectLastSelectedList();
 		listManager.refreshAvailableLists();
 	});
 </script>
