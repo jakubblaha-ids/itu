@@ -80,7 +80,7 @@
 
 ### Pro
 - Při otevření aplikace se ihned otevře nákupní seznam.
-- V seznamu se je jednoduché jej sdílet.
+- V seznamu je jednoduché jej sdílet.
 - Aplikace pomáhá uživateli jednoduše přidat časté položky a jejich kvantitu, typ nebo váhu.
 - Lze jednoduše přidat všechny položky z receptu do seznamu.
 
