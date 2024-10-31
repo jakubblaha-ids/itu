@@ -35,7 +35,13 @@
 </script>
 
 <div class="h-full flex flex-col duration-200 flex-grow overflow-hidden">
-	<input class="bg-darker text-2xl py-4 text-center outline-none" value={titleValue} />
+	<input
+		class="bg-darker text-2xl py-4 text-center outline-none"
+		bind:value={titleValue}
+		on:change={() => {
+			listManager?.setListTitle(listManager.selectedListId!, titleValue);
+		}}
+	/>
 
 	<ItemList
 		on:item-click={(e) => toggleCheckItem(e.detail.item.id)}

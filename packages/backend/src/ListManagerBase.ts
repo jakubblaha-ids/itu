@@ -470,4 +470,12 @@ export class ListManagerBase extends ResourceManagerBase {
 
         console.log("Added recently used item to added items: ", item);
     }
+
+    async setListTitle(listId: string, newName: string) {
+        const data = await this.getListData(listId);
+
+        data.listTitle = newName;
+
+        await this.setListData(listId, data);
+    }
 }
