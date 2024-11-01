@@ -1,4 +1,4 @@
-import { ItemManagerBase, type ItemAmountUnit } from 'backend';
+import { ItemManagerBase, type InListItem, type ItemAmountUnit } from 'backend';
 
 export class ItemManager extends ItemManagerBase {
 	getSuggestedQuantities(itemId: string | null): { amount: number; unit: ItemAmountUnit }[] {
@@ -13,5 +13,9 @@ export class ItemManager extends ItemManagerBase {
 			{ amount: 250, unit: 'g' },
 			{ amount: 300, unit: 'g' }
 		];
+	}
+
+	getInListItemName(item: InListItem): string {
+		return item.customItemName || this.getNameOfitemId(item.itemId!);
 	}
 }

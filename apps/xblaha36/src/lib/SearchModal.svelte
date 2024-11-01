@@ -32,8 +32,7 @@
 
 			<SimplifiedItemButton
 				on:click={() => {
-					const newItem = listManager!.addItemToList(item.id, null);
-					listManager!.addItemHighlightId.set(newItem.id);
+					listManager!.setItemToAdd(item.id, null);
 
 					dispatch('back-click');
 				}}
@@ -51,20 +50,20 @@
 
 		<button
 			on:click={() => {
-				listManager?.addItemToList(null, searchValue);
+				listManager?.setItemToAdd(null, searchValue);
 				dispatch('back-click');
 			}}
 		>
-			Add custom
+			Custom
 		</button>
 
 		<button
 			on:click={() => {
-				listManager?.addItemToList(filtItems[0].id, null);
+				listManager?.setItemToAdd(filtItems[0].id, null);
 				dispatch('back-click');
 			}}
 		>
-			Add first
+			First
 		</button>
 	</BottomNavContainer>
 </div>

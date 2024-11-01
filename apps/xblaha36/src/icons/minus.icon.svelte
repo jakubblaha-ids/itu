@@ -2,7 +2,7 @@
 	<path
 		d="M5 12H19"
 		stroke="white"
-		stroke-width="1.5"
+		stroke-width="2"
 		stroke-linecap="round"
 		stroke-linejoin="round"
 	/>

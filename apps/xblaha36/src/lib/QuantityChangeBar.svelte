@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Minus from '$icons/minus.icon.svelte';
 	import Plus from '$icons/plus.icon.svelte';
-	import { slide } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import TextPromptModal from './TextPromptModal.svelte';
 	import type { InListItem, ItemAmountUnit } from 'backend';
 
@@ -9,6 +9,7 @@
 		disabled?: boolean;
 		suggestedQuantities: { amount: number; unit: ItemAmountUnit }[];
 		inListItem: InListItem | null;
+		showTitleBar?: boolean;
 		plusClick: () => void;
 		minusClick: () => void;
 		setQuantity: (amount: number, unit: ItemAmountUnit) => void;
@@ -19,6 +20,7 @@
 		disabled = false,
 		suggestedQuantities,
 		inListItem,
+		showTitleBar = true,
 		plusClick,
 		minusClick,
 		setQuantity,
@@ -31,12 +33,24 @@
 		!inListItem || (typeof inListItem.itemAmount === 'number' && inListItem.itemAmount <= 1)
 	);
 	let isCustomAmount = $derived(inListItem && typeof inListItem.itemAmount === 'string');
+
+	let scrollContainer: HTMLDivElement;
+	let showLeftGradient = $state(false);
+	let showRightGradient = $state(true);
+
+	function handleScroll() {
+		showLeftGradient = scrollContainer.scrollLeft > 0;
+		showRightGradient =
+			scrollContainer.scrollLeft + scrollContainer.clientWidth < scrollContainer.scrollWidth;
+	}
 </script>
 
-<div class="bg-darker flex flex-col pb-3 z-30" transition:slide>
-	<div class="text-gray-100 font-medium py-3 pl-3">Quantity</div>
+<div class="flex flex-col pb-3 z-30" transition:slide>
+	{#if showTitleBar}
+		<div class="text-gray-200 font-semibold rounded-t-lg py-2 pl-3 bg-darkest">Quantity</div>
+	{/if}
 
-	<div id="large-btn-container" class="grid grid-cols-3 h-14 w-full px-2 gap-x-2">
+	<div id="large-btn-container" class="grid grid-cols-3 w-full px-2 gap-x-2 pt-2">
 		<button disabled={cannotDecrease || isCustomAmount || disabled} onclick={minusClick}>
 			<Minus />
 		</button>
@@ -45,24 +59,50 @@
 			<Plus />
 		</button>
 
-		<button onclick={() => (showTextPromptModal = true)} {disabled}>Other</button>
+		<button class="font-semibold" onclick={() => (showTextPromptModal = true)} {disabled}>
+			Other
+		</button>
 	</div>
 
-	<div class="flex items-center px-2 gap-x-2 text-sm pt-2 w-full overflow-x-scroll no-scrollbar">
-		{#each suggestedQuantities as q}
-			<button
-				{disabled}
-				onclick={() => setQuantity(q.amount, q.unit)}
-				class="min-w-12 bg-light grid place-items-center rounded px-4 flex-shrink-0 py-2"
-			>
-				{q.amount + q.unit}
-			</button>
-		{/each}
+	<div class="relative">
+		<div
+			bind:this={scrollContainer}
+			onscroll={handleScroll}
+			class="flex items-center px-2 gap-x-2 text-sm pt-3 w-full overflow-x-scroll no-scrollbar"
+		>
+			{#each suggestedQuantities as q}
+				<button
+					{disabled}
+					onclick={() => setQuantity(q.amount, q.unit)}
+					class="min-w-12 bg-light grid place-items-center rounded-lg px-4 flex-shrink-0 py-4 font-medium"
+					class:bg-lightest={inListItem &&
+						inListItem.itemAmount === q.amount &&
+						inListItem.itemUnit === q.unit}
+				>
+					{q.amount + q.unit}
+				</button>
+			{/each}
+		</div>
+
+		{#if showRightGradient}
+			<div
+				transition:fade={{ duration: 200 }}
+				class="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-darker to-transparent pointer-events-none"
+			></div>
+		{/if}
+
+		{#if showLeftGradient}
+			<div
+				transition:fade={{ duration: 200 }}
+				class="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-darker to-transparent pointer-events-none"
+			></div>
+		{/if}
 	</div>
 </div>
 
 {#if showTextPromptModal}
 	<TextPromptModal
+		placeholder="Enter custom quantity..."
 		title="Enter custom quantity"
 		onConfirm={(amount: string) => {
 			showTextPromptModal = false;
@@ -73,6 +113,6 @@
 
 <style>
 	#large-btn-container > button {
-		@apply grid place-items-center bg-light h-14 rounded-lg;
+		@apply grid place-items-center bg-light h-16 rounded-lg;
 	}
 </style>

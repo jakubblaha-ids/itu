@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import Plus from '$icons/plus.icon.svelte';
 	import Undo from '$icons/undo.icon.svelte';
+	import AddItemScreen from '$lib/partials/AddItemScreen.svelte';
 	import BottomNavContainer from '$lib/BottomNavContainer.svelte';
 	import ItemList from '$lib/ItemList.svelte';
+	import Modal from '$lib/Modal.svelte';
 	import QuantityChangeBar from '$lib/QuantityChangeBar.svelte';
 	import { itemManager, listManager } from '$ts/stores';
 	import type { InListItem } from 'backend';
@@ -32,6 +33,8 @@
 	export function toggleCheckHighlightedItem() {
 		toggleCheckItem(highlightItem!.id);
 	}
+
+	let showAddItemModal = false;
 </script>
 
 <div class="h-full flex flex-col duration-200 flex-grow overflow-hidden">
@@ -61,16 +64,19 @@
 	/>
 
 	{#if showEdit}
-		<QuantityChangeBar
-			inListItem={highlightItem!}
-			suggestedQuantities={itemManager.getSuggestedQuantities(highlightItem!.itemId)}
-			plusClick={() => listManager.increaseItemAmountInSelected(highlightItem!.id)}
-			minusClick={() => listManager.decreaseItemAmountInSelected(highlightItem!.id)}
-			setQuantity={(amount, unit) =>
-				listManager.setItemAmountInSelected(highlightItem!.id, amount, unit)}
-			setCustomAmount={(customAmount) =>
-				listManager.setItemAmountInSelected(highlightItem!.id, customAmount, 'custom')}
-		/>
+		<div class="bg-darker z-30">
+			<QuantityChangeBar
+				showTitleBar={false}
+				inListItem={highlightItem!}
+				suggestedQuantities={itemManager.getSuggestedQuantities(highlightItem!.itemId)}
+				plusClick={() => listManager.increaseItemAmountInSelected(highlightItem!.id)}
+				minusClick={() => listManager.decreaseItemAmountInSelected(highlightItem!.id)}
+				setQuantity={(amount, unit) =>
+					listManager.setItemAmountInSelected(highlightItem!.id, amount, unit)}
+				setCustomAmount={(customAmount) =>
+					listManager.setItemAmountInSelected(highlightItem!.id, customAmount, 'custom')}
+			/>
+		</div>
 	{/if}
 
 	{#if listManager}
@@ -103,7 +109,7 @@
 
 			<!-- Plus button -->
 			<button
-				on:click={() => goto('add-items')}
+				on:click={() => (showAddItemModal = true)}
 				class="rounded-lg bg-light w-20 h-20 absolute right-2 bottom-28 shadow-xl grid place-items-center translate-y-2 active:brightness-90 duration-100 z-20"
 			>
 				<div class="scale-125">
@@ -128,4 +134,10 @@
 			</button>
 		</BottomNavContainer>
 	</div>
+{/if}
+
+{#if showAddItemModal}
+	<Modal title="Add an Item">
+		<AddItemScreen goBack={() => (showAddItemModal = false)} />
+	</Modal>
 {/if}

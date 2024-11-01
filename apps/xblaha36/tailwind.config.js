@@ -7,7 +7,8 @@ export default {
 				darkest: 'var(--darkest)',
 				darker: 'var(--darker)',
 				light: 'var(--light)',
-				lighter: 'var(--lighter)'
+				lighter: 'var(--lighter)',
+				lightest: 'var(--lightest)'
 			}
 		}
 	},

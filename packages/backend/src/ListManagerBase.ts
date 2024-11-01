@@ -239,8 +239,17 @@ export class ListManagerBase extends ResourceManagerBase {
 
     removeItemToAdd(inListItemId: number) {
         this.itemsToAdd = this.itemsToAdd.filter((item) => item.id !== inListItemId);
-
         this.options.onItemsToAddChange?.(this.itemsToAdd);
+    }
+
+    clearItemsToAdd() {
+        this.itemsToAdd = [];
+        this.options.onItemsToAddChange?.(this.itemsToAdd);
+    }
+
+    setItemToAdd(itemId: string | null, customName: string | null) {
+        this.itemsToAdd = [];
+        this.addItemToList(itemId, customName);
     }
 
     async commitAddingItems(): Promise<void> {
