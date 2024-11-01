@@ -2,11 +2,10 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import AlertModal from '$lib/AlertModal.svelte';
-	import Sad from '$icons/sad.img.svelte';
 	import { listManager } from '$ts/stores';
 	import { onMount } from 'svelte';
 	import Happy from '$icons/happy.img.svelte';
-	import InvalidListCodeModal from '$lib/partials/InvalidListCodeModal.svelte';
+	import InvalidListCodeModal from '$lib/modals/InvalidListCodeModal.svelte';
 
 	const code = parseInt($page.url.searchParams.get('code') || '0');
 	let isCodeValid = $state(code >= 1000 && code <= 9999);

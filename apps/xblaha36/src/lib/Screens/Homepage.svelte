@@ -9,6 +9,7 @@
 	import SideMenu from '$lib/SideMenu.svelte';
 	import { listManager, userManager } from '$ts/stores';
 	import { goto } from '$app/navigation';
+	import ShareListModal from '$lib/modals/ShareListModal.svelte';
 
 	let listsOpen = $state(false);
 	let menuOpen = $state(false);
@@ -18,6 +19,7 @@
 
 	let showUsernameDrawer = $state(false);
 	let showImportListModal = $state(false);
+	let showShareListModal = $state(false);
 
 	let { availableListsStore } = listManager;
 </script>
@@ -63,6 +65,10 @@
 		onRemove={() => {
 			listManager.removeListLocally(listManager.selectedListId!);
 		}}
+		onShare={() => {
+			menuOpen = false;
+			showShareListModal = true;
+		}}
 	/>
 </div>
 
@@ -102,4 +108,8 @@
 		goBack={() => (showImportListModal = false)}
 		placeholder="----"
 	></TextPromptModal>
+{/if}
+
+{#if showShareListModal}
+	<ShareListModal close={() => (showShareListModal = false)} />
 {/if}

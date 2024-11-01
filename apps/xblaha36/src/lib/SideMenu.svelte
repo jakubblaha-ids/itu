@@ -13,6 +13,7 @@
 		closeMenu: () => void;
 		onImport: () => void;
 		onRemove: () => void;
+		onShare: () => void;
 	} = $props();
 
 	const username = userManager.username;
@@ -45,7 +46,7 @@
 			icon={Bin}
 		/>
 		<MenuButton title="Duplicate" icon={Duplicate} />
-		<MenuButton title="Share" icon={Share} />
+		<MenuButton title="Share" icon={Share} on:click={props.onShare} />
 		<MenuButton title="Import" icon={Import} on:click={props.onImport} />
 
 		<div class="text-sm px-4 bg-light py-3">Sorting</div>
