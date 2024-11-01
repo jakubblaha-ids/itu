@@ -1,16 +1,15 @@
 <script lang="ts">
 	import Firebase from '$lib/Firebase.svelte';
+	import { screenHeight } from '$ts/stores';
 	import '../app.css';
-
-	let screenHeight: number;
 </script>
 
-<svelte:window bind:innerHeight={screenHeight} />
+<svelte:window bind:innerHeight={$screenHeight} />
 
 <Firebase />
 
 <div
-	style="--darkest: #1C0333; --darker: #360F5A; --lighter: #6A329F; --light: #522081; --lightest: #8C6C9D; height: {screenHeight}px; "
+	style="--darkest: #1C0333; --darker: #360F5A; --lighter: #6A329F; --light: #522081; --lightest: #8C6C9D; height: {$screenHeight}px; "
 	class="bg-darkest text-white relative overflow-hidden"
 >
 	<slot />

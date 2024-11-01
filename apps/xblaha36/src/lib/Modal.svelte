@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { screenHeight } from '$ts/stores';
 	import type { Snippet } from 'svelte';
 	import { fly } from 'svelte/transition';
 
@@ -7,7 +8,7 @@
 
 <div
 	class="fixed left-0 bottom-0 w-screen z-30 bg-black/50 flex flex-col justify-end backdrop-blur-xl h-screen"
-	transition:fly={{ y: 800, opacity: 100 }}
+	transition:fly={{ y: $screenHeight, opacity: 100 }}
 >
 	<div class="h-[90vh] rounded-t-xl flex flex-col bg-darker items-center pt-4">
 		<div class="text-xl font-semibold">{title}</div>

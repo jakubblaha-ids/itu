@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 	import Check from '$icons/check.icon.svelte';
 	import Lists from '$icons/lists.icon.svelte';
 	import Menu from '$icons/menu.icon.svelte';
@@ -15,35 +12,6 @@
 	let listsOpen = $state(false);
 	let menuOpen = $state(false);
 
-	let contentTranslate = $derived(listsOpen ? -300 : menuOpen ? 300 : 0);
-
-	function onListClick() {
-		const url = $page.url;
-		url.searchParams.set('listsOpen', listsOpen ? '0' : '1');
-		goto(url);
-		refreshMenusFromUrl();
-	}
-
-	function onMenuClick() {
-		const url = $page.url;
-		url.searchParams.set('menuOpen', menuOpen ? '0' : '1');
-		goto(url);
-		refreshMenusFromUrl();
-	}
-
-	function refreshMenusFromUrl() {
-		const url = $page.url;
-
-		listsOpen = url.searchParams.get('listsOpen') === '1';
-		menuOpen = url.searchParams.get('menuOpen') === '1';
-	}
-
-	page.subscribe(() => {
-		if (browser) {
-			refreshMenusFromUrl();
-		}
-	});
-
 	let mainListScreen: MainListScreen | null = $state(null);
 	let showEdit = $state(false);
 
@@ -52,9 +20,33 @@
 	let { availableListsStore } = listManager;
 </script>
 
+<div class="w-full h-full flex flex-col duration-200" class:brightness-50={listsOpen || menuOpen}>
+	<MainListScreen bind:this={mainListScreen} bind:showEdit />
+
+	<BottomNavContainer>
+		<button onclick={() => (menuOpen = true)}> <Menu /> </button>
+		<button onclick={mainListScreen.toggleCheckHighlightedItem}>
+			<Check />
+		</button>
+		<button onclick={() => (listsOpen = true)}> <Lists /> </button>
+	</BottomNavContainer>
+
+	{#if listsOpen || menuOpen}
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<div
+			onclick={() => {
+				listsOpen = false;
+				menuOpen = false;
+			}}
+			class="absolute inset-0 bg-black/50 z-50"
+		></div>
+	{/if}
+</div>
+
 <div
-	class="w-[80vw] h-full translate-x-20 absolute right-full top-0 duration-200"
-	style="transform: translateX({contentTranslate}px);"
+	class="w-[75vw] h-full translate-x-20 absolute right-full top-0 duration-200"
+	style="transform: translateX({menuOpen ? 100 : 0}%);"
 >
 	<SideMenu
 		onChangeUsernameClick={() => {
@@ -66,24 +58,8 @@
 </div>
 
 <div
-	class="w-full h-full flex flex-col duration-200"
-	class:brightness-50={listsOpen || menuOpen}
-	style="transform: translateX({contentTranslate}px);"
->
-	<MainListScreen bind:this={mainListScreen} bind:showEdit />
-
-	<BottomNavContainer>
-		<button onclick={onMenuClick}> <Menu /> </button>
-		<button onclick={mainListScreen.toggleCheckHighlightedItem}>
-			<Check />
-		</button>
-		<button onclick={onListClick}> <Lists /> </button>
-	</BottomNavContainer>
-</div>
-
-<div
-	class="w-[80vw] h-full translate-x-20 absolute left-full top-0 duration-200"
-	style="transform: translateX({contentTranslate}px);"
+	class="w-[75vw] h-full translate-x-20 absolute left-full top-0 duration-200"
+	style="transform: translateX({listsOpen ? -100 : 0}%);"
 >
 	<SideListsMenu
 		lists={$availableListsStore}

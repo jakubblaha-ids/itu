@@ -124,7 +124,7 @@
 			<!-- Plus button -->
 			<button
 				on:click={() => (showAddItemModal = true)}
-				class="rounded-lg bg-light w-20 h-20 absolute right-2 bottom-28 shadow-xl grid place-items-center translate-y-2 active:brightness-90 duration-100 z-20"
+				class="rounded-lg bg-light w-20 h-20 absolute right-6 bottom-32 shadow-xl grid place-items-center translate-y-2 active:brightness-90 duration-100 z-20"
 			>
 				<div class="scale-125">
 					<Plus />
