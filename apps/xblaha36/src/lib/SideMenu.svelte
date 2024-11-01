@@ -8,7 +8,12 @@
 	import { listManager, userManager } from '$ts/stores';
 	import User from '$icons/user.icon.svelte';
 
-	let props: { onChangeUsernameClick: () => void; closeMenu: () => void } = $props();
+	let props: {
+		onChangeUsernameClick: () => void;
+		closeMenu: () => void;
+		onImport: () => void;
+		onRemove: () => void;
+	} = $props();
 
 	const username = userManager.username;
 </script>
@@ -33,14 +38,15 @@
 		/>
 		<MenuButton
 			on:click={() => {
-				listManager.removeListLocally(listManager.selectedListId!);
+				props.onRemove();
+				props.closeMenu();
 			}}
 			title="Remove list"
 			icon={Bin}
 		/>
 		<MenuButton title="Duplicate" icon={Duplicate} />
 		<MenuButton title="Share" icon={Share} />
-		<MenuButton title="Import" icon={Import} />
+		<MenuButton title="Import" icon={Import} on:click={props.onImport} />
 
 		<div class="text-sm px-4 bg-light py-3">Sorting</div>
 

@@ -45,9 +45,12 @@ export class ListManagerBase extends ResourceManagerBase {
     async addListLocally(listId: string): Promise<void> {
         const lists = JSON.parse(localStorage.getItem("addedLists") || "[]");
 
-        lists.push(listId);
+        if (lists.includes(listId)) {
+            console.warn("List is already added: " + listId);
+            return;
+        }
 
-        console.log({ lists });
+        lists.push(listId);
 
         localStorage.setItem("addedLists", JSON.stringify(lists));
 
@@ -162,6 +165,7 @@ export class ListManagerBase extends ResourceManagerBase {
         const newList = {
             listTitle: "New list",
             listItems: [],
+            code: new Date().getTime() % 10000,
         } as List;
 
         const ref = await addDoc(coll, newList);
@@ -486,5 +490,21 @@ export class ListManagerBase extends ResourceManagerBase {
         data.listTitle = newName;
 
         await this.setListData(listId, data);
+    }
+
+    async importList(code: number) {
+        const coll = collection(this.firestore, "lists");
+
+        const q = query(coll, where("code", "==", code));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.size === 0) {
+            throw new Error("List not found");
+        }
+
+        const ref = querySnapshot.docs[0];
+
+        this.addListLocally(ref.id);
+        this.setSelectedListId(ref.id);
     }
 }

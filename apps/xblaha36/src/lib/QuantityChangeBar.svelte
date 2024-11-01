@@ -108,6 +108,7 @@
 			showTextPromptModal = false;
 			setCustomAmount(amount);
 		}}
+		goBack={() => (showTextPromptModal = false)}
 	/>
 {/if}
 

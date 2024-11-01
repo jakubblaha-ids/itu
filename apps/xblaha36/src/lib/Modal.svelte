@@ -11,7 +11,7 @@
 	style="height: {$screenHeight}px;"
 	transition:fly={{ y: $screenHeight, opacity: 100 }}
 >
-	<div class="h-[90vh] rounded-t-xl flex flex-col bg-darker items-center pt-4">
+	<div class="h-[90vh] rounded-t-xl flex flex-col bg-darker items-center pt-6">
 		<div class="text-xl font-semibold">{title}</div>
 
 		<div class="flex-grow w-full">

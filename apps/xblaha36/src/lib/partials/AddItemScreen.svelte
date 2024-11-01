@@ -65,7 +65,10 @@
 	</div>
 
 	<div class:!max-h-0={!showRecentlyUsed} class="duration-200 transition-all flex-grow">
-		<div class="flex flex-wrap px-3 gap-x-2 gap-y-2.5 py-2.5 overflow-y-scroll h-full">
+		<div
+			class="flex flex-wrap px-3 gap-x-2 gap-y-2.5 py-2.5 overflow-y-scroll"
+			class:h-full={renderedRecentlyUsedItems.length < 1}
+		>
 			{#if browser}
 				{#each renderedRecentlyUsedItems as item}
 					<button

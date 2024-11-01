@@ -8,6 +8,7 @@
 	import SideListsMenu from '$lib/SideListsMenu.svelte';
 	import SideMenu from '$lib/SideMenu.svelte';
 	import { listManager, userManager } from '$ts/stores';
+	import { goto } from '$app/navigation';
 
 	let listsOpen = $state(false);
 	let menuOpen = $state(false);
@@ -16,6 +17,7 @@
 	let showEdit = $state(false);
 
 	let showUsernameDrawer = $state(false);
+	let showImportListModal = $state(false);
 
 	let { availableListsStore } = listManager;
 </script>
@@ -53,7 +55,14 @@
 			menuOpen = false;
 			showUsernameDrawer = true;
 		}}
+		onImport={() => {
+			menuOpen = false;
+			showImportListModal = true;
+		}}
 		closeMenu={() => (menuOpen = false)}
+		onRemove={() => {
+			listManager.removeListLocally(listManager.selectedListId!);
+		}}
 	/>
 </div>
 
@@ -77,5 +86,20 @@
 			userManager.setUsername(username);
 			showUsernameDrawer = false;
 		}}
+		goBack={() => (showUsernameDrawer = false)}
 	/>
+{/if}
+
+{#if showImportListModal}
+	<TextPromptModal
+		title="Import a List"
+		validator={(v) => {
+			return parseInt(v) >= 1000 && parseInt(v) <= 9999;
+		}}
+		onConfirm={(value: string) => {
+			goto(`/import-list?code=${value}`);
+		}}
+		goBack={() => (showImportListModal = false)}
+		placeholder="----"
+	></TextPromptModal>
 {/if}
