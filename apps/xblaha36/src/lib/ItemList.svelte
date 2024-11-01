@@ -1,13 +1,14 @@
-<script lang="ts">
-	import type { InListItem } from 'backend';
+<script lang="ts" generics="T extends {id: string | number}">
 	import { createEventDispatcher, onMount, tick } from 'svelte';
-	import ItemListItem from './ItemListItem.svelte';
 
 	const dispatch = createEventDispatcher();
 
-	export let items: InListItem[] = [];
+	export let items: T[] = [];
 	export let highlightIndex = 0;
-	export let highlightItem: InListItem | null = null;
+	export let highlightItem: T | null = null;
+	export let bottomSectionTitle: string;
+	export let itemRenderer: (item: T, highlighted: boolean, scrollToItem: () => void) => any;
+	export let isItemInBottomSection: (item: T) => boolean;
 
 	if (highlightItem) {
 		highlightIndex = items.findIndex((item) => item.id === highlightItem!.id);
@@ -22,10 +23,13 @@
 
 	function onScroll() {
 		for (const [index, itemContainer] of itemContainers.entries()) {
+			if (!container || !itemContainer) {
+				continue;
+			}
+
 			if (itemContainer.offsetTop - 40 > container.scrollTop) {
 				highlightIndex = index;
 				dispatch('highlight-index', index);
-				dispatch('highlight-item', { item: items[index] });
 				break;
 			}
 		}
@@ -44,9 +48,9 @@
 
 	function sortItems() {
 		items = items.sort((a, b) => {
-			if (a.itemChecked && !b.itemChecked) {
+			if (isItemInBottomSection(a) && !isItemInBottomSection(b)) {
 				return 1;
-			} else if (!a.itemChecked && b.itemChecked) {
+			} else if (!isItemInBottomSection(a) && isItemInBottomSection(b)) {
 				return -1;
 			} else {
 				return 0;
@@ -54,12 +58,8 @@
 		});
 	}
 
-	// $: highlightItemId &&
-	// 	items &&
-	// 	scrollToIndex(items.findIndex((item) => item.id === highlightItemId));
-
 	$: items && sortItems();
-	$: allChecked = items.every((item) => item.itemChecked);
+	$: areAllInBottomSection = items.every((item) => isItemInBottomSection(item));
 	$: highlightItem = items[highlightIndex];
 </script>
 
@@ -69,12 +69,12 @@
 	class="flex-grow flex flex-col px-3 overflow-scroll snap-y snap-mandatory"
 >
 	{#each items as item, index}
-		{#if (item.itemChecked && items[index - 1]?.itemChecked === false) || (allChecked && index === 0)}
+		{#if (isItemInBottomSection(item) && isItemInBottomSection(items[index - 1]) === false) || (areAllInBottomSection && index === 0)}
 			<div
 				class="py-3 px-4 mt-3 mb-1 duration-300 bg-darker -mx-3 sticky top-0 z-10"
 				class:translate-y-6={index > highlightIndex}
 			>
-				Checked items
+				{bottomSectionTitle}
 			</div>
 		{/if}
 
@@ -88,20 +88,10 @@
 			>
 				<div
 					class="duration-300"
-					class:translate-y-12={item.itemChecked && items[highlightIndex].itemChecked}
+					class:translate-y-12={isItemInBottomSection(item) &&
+						isItemInBottomSection(items[highlightIndex])}
 				>
-					<ItemListItem
-						{item}
-						on:click={() => dispatch('item-click', { item })}
-						on:edit-click={(e) => {
-							scrollToIndex(index);
-
-							dispatch('edit-click', { item });
-						}}
-						on:delete-click
-						highlight={index === highlightIndex}
-						checked={item.itemChecked}
-					/>
+					{@render itemRenderer(item, item === highlightItem, () => scrollToIndex(index))}
 				</div>
 			</div>
 		</div>

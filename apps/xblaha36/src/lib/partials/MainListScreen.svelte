@@ -9,6 +9,7 @@
 	import { itemManager, listManager } from '$ts/stores';
 	import type { InListItem } from 'backend';
 	import { fade, fly } from 'svelte/transition';
+	import ItemListItem from '$lib/ItemListItem.svelte';
 
 	export let showEdit = false;
 
@@ -47,13 +48,8 @@
 	/>
 
 	<ItemList
-		on:item-click={(e) => toggleCheckItem(e.detail.item.id)}
 		on:highlight-index={(e) => {
 			listManager?.setListHighlightIndex(e.detail);
-		}}
-		on:edit-click={(e) => {
-			highlightItem = e.detail.item;
-			showEdit = true;
 		}}
 		on:delete-click={(e) => {
 			listManager?.deleteItemFromList(listManager.selectedListId!, e.detail.item.id);
@@ -61,7 +57,25 @@
 		}}
 		items={selectedListData?.listItems}
 		bind:highlightItem
-	/>
+		isItemInBottomSection={(item) => item?.itemChecked}
+		bottomSectionTitle="Checked off"
+	>
+		{#snippet itemRenderer(item, highlight: boolean, scrollToItem: () => void)}
+			<ItemListItem
+				{item}
+				on:click={() => toggleCheckItem(item.id)}
+				on:edit-click={(e) => {
+					scrollToItem();
+
+					highlightItem = item;
+					showEdit = true;
+				}}
+				on:delete-click
+				{highlight}
+				checked={item.itemChecked}
+			/>
+		{/snippet}
+	</ItemList>
 
 	{#if showEdit}
 		<div class="bg-darker z-30">

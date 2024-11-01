@@ -4,6 +4,10 @@
 	import SimplifiedItemButton from './SimplifiedItemButton.svelte';
 	import BottomNavContainer from './BottomNavContainer.svelte';
 	import { itemManager, listManager } from '$ts/stores';
+	import ItemList from './ItemList.svelte';
+	import Down from '$icons/down.arrow.svelte';
+	import type { Item } from 'backend';
+	import Check from '$icons/check.icon.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -16,32 +20,52 @@
 	onMount(() => {
 		input.focus();
 	});
+
+	let highlightItem: Item | null = null;
 </script>
 
 <div class="h-full bg-darkest flex flex-col z-40 relative">
 	<input
 		bind:this={input}
 		type="text"
-		class="h-20 px-8 w-full bg-darker outline-none text-xl flex-shrink-0"
+		class="h-20 px-8 w-full bg-darker outline-none text-xl flex-shrink-0 font-semibold placeholder-gray-300"
 		bind:value={searchValue}
+		placeholder="Search..."
 	/>
 
-	<div class="flex flex-col px-3 gap-y-3 py-3 flex-grow overflow-scroll">
-		{#each filtItems as item, index}
-			{@const amountOnList = listManager?.getAmountOnList(item.id) || ''}
+	{#if filtItems.length > 0}
+		<ItemList
+			items={filtItems}
+			bottomSectionTitle="Already on list"
+			isItemInBottomSection={(item) => (item ? listManager.getAmountOnList(item.id) !== '' : false)}
+			bind:highlightItem
+		>
+			{#snippet itemRenderer(item, highlight)}
+				{@const amountOnList = listManager.getAmountOnList(item.id) || ''}
 
-			<SimplifiedItemButton
-				on:click={() => {
-					listManager!.setItemToAdd(item.id, null);
+				<SimplifiedItemButton
+					{highlight}
+					{item}
+					subtitle={amountOnList ? amountOnList + ' already on list' : ''}
+					on:click={() => {
+						listManager!.setItemToAdd(item.id, null);
 
-					dispatch('back-click');
-				}}
-				{item}
-				highlight={index === 0}
-				subtitle={amountOnList ? amountOnList + ' already on list' : ''}
-			/>
-		{/each}
-	</div>
+						dispatch('back-click');
+					}}
+				/>
+			{/snippet}
+		</ItemList>
+	{:else}
+		<div
+			class="flex-grow text-center px-10 flex flex-col items-center gap-y-2 justify-center font-semibold text-gray-200"
+		>
+			<div>Such item was not found, but don't worry. Click below to add a custom item.</div>
+
+			<div class="w-8">
+				<Down />
+			</div>
+		</div>
+	{/if}
 
 	<BottomNavContainer>
 		<button on:click={() => dispatch('back-click')}>
@@ -49,6 +73,7 @@
 		</button>
 
 		<button
+			class="font-medium"
 			on:click={() => {
 				listManager?.setItemToAdd(null, searchValue);
 				dispatch('back-click');
@@ -58,12 +83,13 @@
 		</button>
 
 		<button
+			disabled={!highlightItem || filtItems.length < 1}
 			on:click={() => {
-				listManager?.setItemToAdd(filtItems[0].id, null);
+				listManager?.setItemToAdd(highlightItem!.id, null);
 				dispatch('back-click');
 			}}
 		>
-			First
+			<Check />
 		</button>
 	</BottomNavContainer>
 </div>
