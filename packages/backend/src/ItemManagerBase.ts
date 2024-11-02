@@ -25,6 +25,14 @@ export class ItemManagerBase extends ResourceManagerBase {
     }
 
     getNameOfitemId(itemId: string): string {
+        if (!itemId) {
+            return "N/A";
+        }
+
+        if (itemId.startsWith("_custom_")) {
+            return itemId.replace("_custom_", "");
+        }
+
         const items = this.availableItems;
         const item = items.find((i) => i.id === itemId);
 

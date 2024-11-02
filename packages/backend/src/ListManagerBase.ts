@@ -277,7 +277,11 @@ export class ListManagerBase extends ResourceManagerBase {
 
         // Add to recently used items
         for (const item of this.itemsToAdd) {
-            this.#itemManager.storeRecentlyUsedItem(item.itemId, item.itemAmount, item.itemUnit);
+            this.#itemManager.storeRecentlyUsedItem(
+                item.itemId ?? "_custom_" + item.customItemName,
+                item.itemAmount,
+                item.itemUnit
+            );
         }
 
         this.itemsToAdd = [];
