@@ -1,6 +1,43 @@
-import { writable, type Writable } from 'svelte/store';
+import { derived, writable, type Writable } from 'svelte/store';
 import { ListManagerBase, type ListManagerBaseOptions } from 'backend';
 import type { InListItem, ItemManagerBase, List, UserManagerBase } from 'backend';
+import { config } from './Config';
+import { itemManager } from './global';
+
+function getInListItemName(item: InListItem) {
+	return item.itemId ? itemManager.getNameOfitemId(item.itemId) : item.customItemName;
+}
+
+function inListItemsAlphaCompare(a: InListItem, b: InListItem) {
+	const nameA = getInListItemName(a)!.toUpperCase();
+	const nameB = getInListItemName(b)!.toUpperCase();
+
+	if (nameA < nameB) {
+		return -1;
+	}
+
+	if (nameA > nameB) {
+		return 1;
+	}
+
+	return 0;
+}
+
+function inListItemsCategoryCompare(a: InListItem, b: InListItem) {
+	const strA = (itemManager.getCategoryNameOfItemId(a.itemId) + getInListItemName(a)).toUpperCase();
+
+	const strB = (itemManager.getCategoryNameOfItemId(b.itemId) + getInListItemName(b)).toUpperCase();
+
+	if (strA < strB) {
+		return -1;
+	}
+
+	if (strA > strB) {
+		return 1;
+	}
+
+	return 0;
+}
 
 export class ListManager extends ListManagerBase {
 	selectedListDataStore: Writable<List | null> = writable(null);
@@ -8,6 +45,22 @@ export class ListManager extends ListManagerBase {
 	itemsToAddStore: Writable<InListItem[]> = writable([]);
 	addItemHighlightId = writable<number>(0);
 	highlightId = writable<number>(0);
+
+	sortedInListItemsStore = derived(
+		[this.selectedListDataStore, config],
+		([$selectedListData, $config]) => {
+			const sorting = $config.sorting;
+
+			const sortCompare =
+				sorting === 'alpha' ? inListItemsAlphaCompare : inListItemsCategoryCompare;
+
+			if (!$selectedListData) {
+				return [];
+			}
+
+			return $selectedListData.listItems.toSorted(sortCompare);
+		}
+	);
 
 	constructor(
 		itemManager: ItemManagerBase,

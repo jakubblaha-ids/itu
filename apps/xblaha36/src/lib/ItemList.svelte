@@ -47,15 +47,10 @@
 	}
 
 	function sortItems() {
-		items = items.sort((a, b) => {
-			if (isItemInBottomSection(a) && !isItemInBottomSection(b)) {
-				return 1;
-			} else if (!isItemInBottomSection(a) && isItemInBottomSection(b)) {
-				return -1;
-			} else {
-				return 0;
-			}
-		});
+		const topSection = items.filter((i) => !isItemInBottomSection(i));
+		const bottomSection = items.filter((i) => isItemInBottomSection(i));
+
+		items = [...topSection, ...bottomSection];
 	}
 
 	$: items && sortItems();
@@ -71,7 +66,7 @@
 	{#each items as item, index}
 		{#if (isItemInBottomSection(item) && isItemInBottomSection(items[index - 1]) === false) || (areAllInBottomSection && index === 0)}
 			<div
-				class="py-3 px-4 mt-3 mb-1 duration-300 bg-darker -mx-3 sticky top-0 z-10"
+				class="py-3 px-4 mt-2.5 mb-px duration-300 bg-darker -mx-3 sticky top-0 z-10"
 				class:translate-y-6={index > highlightIndex}
 			>
 				{bottomSectionTitle}
@@ -80,7 +75,7 @@
 
 		<div
 			bind:this={itemContainers[index]}
-			class="snap-start overflow-visible flex-shrink-0 relative h-16 pointer-events-none"
+			class="snap-start overflow-visible flex-shrink-0 relative h-[4.9rem] pointer-events-none"
 		>
 			<div
 				class="absolute w-full duration-300 left-0 top-2"

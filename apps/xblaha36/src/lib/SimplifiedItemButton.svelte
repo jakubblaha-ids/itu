@@ -9,7 +9,7 @@
 
 <button
 	on:click
-	class="flex items-center rounded-lg h-14 bg-light overflow-hidden select-none relative flex-shrink-0 text-left w-full duration-300 pointer-events-auto"
+	class="flex items-center rounded-lg h-[4.5rem] bg-light overflow-hidden select-none relative flex-shrink-0 text-left w-full duration-300 pointer-events-auto"
 	class:highlight
 >
 	<div class="flex py-4 px-4 w-full flex-shrink-0 duration-100 items-center">
@@ -19,7 +19,7 @@
 			</div>
 
 			{#if subtitle}
-				<div class="text-sm opacity-80">
+				<div class="text-xs opacity-80">
 					{subtitle}
 				</div>
 			{/if}
@@ -33,6 +33,6 @@
 
 <style>
 	.highlight {
-		@apply bg-gradient-to-b from-[#A88AC5] to-[#5F3487] h-20;
+		@apply bg-gradient-to-b from-[#A88AC5] to-[#5F3487] h-24 text-lg;
 	}
 </style>

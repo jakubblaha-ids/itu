@@ -6,7 +6,7 @@
 	import BottomNavContainer from '$lib/BottomNavContainer.svelte';
 	import QuantityChangeBar from '$lib/QuantityChangeBar.svelte';
 	import SearchModal from '$lib/SearchModal.svelte';
-	import { itemManager, listManager } from '$ts/stores';
+	import { itemManager, listManager } from '$ts/global';
 	import type { InListItem } from 'backend';
 	import { onMount } from 'svelte';
 	import { expoOut } from 'svelte/easing';

@@ -3,7 +3,7 @@
 	import { createEventDispatcher, onMount } from 'svelte';
 	import SimplifiedItemButton from './SimplifiedItemButton.svelte';
 	import BottomNavContainer from './BottomNavContainer.svelte';
-	import { itemManager, listManager, screenHeight } from '$ts/stores';
+	import { itemManager, listManager } from '$ts/global';
 	import ItemList from './ItemList.svelte';
 	import Down from '$icons/down.arrow.svelte';
 	import type { Item } from 'backend';
@@ -18,6 +18,11 @@
 	let searchValue = '';
 
 	$: filtItems = itemManager.getAvailableItems(searchValue) || [];
+	$: filtSorted = filtItems.toSorted((a, b) =>
+		(a.categoryName + a.name).localeCompare(b.categoryName + b.name)
+	);
+
+	$: console.log(filtSorted.map((i) => i.categoryName));
 
 	let initialViewportHeight: number | null = 0;
 
@@ -65,7 +70,7 @@
 
 	{#if filtItems.length > 0}
 		<ItemList
-			items={filtItems}
+			items={filtSorted}
 			bottomSectionTitle="Already on list"
 			isItemInBottomSection={(item) => (item ? listManager.getAmountOnList(item.id) !== '' : false)}
 			bind:highlightItem
@@ -76,7 +81,8 @@
 				<SimplifiedItemButton
 					{highlight}
 					{item}
-					subtitle={amountOnList ? amountOnList + ' already on list' : ''}
+					subtitle={item.categoryName +
+						(amountOnList ? ' | ' + amountOnList + ' already on list' : '')}
 					on:click={() => {
 						listManager.setItemToAdd(item.id, null);
 

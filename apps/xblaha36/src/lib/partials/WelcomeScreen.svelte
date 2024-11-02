@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Plus from '$icons/plus.icon.svelte';
-	import { listManager } from '$ts/stores';
+	import { listManager } from '$ts/global';
 </script>
 
 <div class="bg-darker grid place-items-center h-full">

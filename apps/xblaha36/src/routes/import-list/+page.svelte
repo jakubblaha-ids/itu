@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import AlertModal from '$lib/AlertModal.svelte';
-	import { listManager } from '$ts/stores';
+	import { listManager } from '$ts/global';
 	import { onMount } from 'svelte';
 	import Happy from '$icons/happy.img.svelte';
 	import InvalidListCodeModal from '$lib/modals/InvalidListCodeModal.svelte';

@@ -6,7 +6,7 @@
 	import ItemList from '$lib/ItemList.svelte';
 	import Modal from '$lib/Modal.svelte';
 	import QuantityChangeBar from '$lib/QuantityChangeBar.svelte';
-	import { itemManager, listManager } from '$ts/stores';
+	import { itemManager, listManager } from '$ts/global';
 	import type { InListItem } from 'backend';
 	import { fly } from 'svelte/transition';
 	import ItemListItem from '$lib/ItemListItem.svelte';
@@ -15,6 +15,8 @@
 	import Bin from '$icons/bin.icon.svelte';
 
 	export let showEdit = false;
+
+	const { sortedInListItemsStore } = listManager;
 
 	let titleValue = '';
 
@@ -54,7 +56,7 @@
 		on:highlight-index={(e) => {
 			listManager?.setListHighlightIndex(e.detail);
 		}}
-		items={selectedListData?.listItems}
+		items={$sortedInListItemsStore}
 		bind:highlightItem
 		isItemInBottomSection={(item) => item?.itemChecked}
 		bottomSectionTitle="Checked off"

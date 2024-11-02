@@ -5,8 +5,9 @@
 	import Plus from '$icons/plus.icon.svelte';
 	import Share from '$icons/share.icon.svelte';
 	import MenuButton from './MenuButton.svelte';
-	import { listManager, userManager } from '$ts/stores';
+	import { listManager, userManager } from '$ts/global';
 	import User from '$icons/user.icon.svelte';
+	import { config } from '$ts/Config';
 
 	let props: {
 		onChangeUsernameClick: () => void;
@@ -26,7 +27,7 @@
 	<div class="flex-grow"></div>
 
 	<div class="rounded-t-xl bg-lighter flex flex-col shadow-lg overflow-hidden">
-		<div class="text-sm px-4 bg-light py-3">Manipulate list</div>
+		<div class="text-sm px-4 bg-light py-3">Menu</div>
 
 		<MenuButton on:click={props.onChangeUsernameClick} title="Change username" icon={User} />
 		<MenuButton
@@ -51,7 +52,23 @@
 
 		<div class="text-sm px-4 bg-light py-3">Sorting</div>
 
-		<MenuButton title="Sort by category" icon={Share} />
-		<MenuButton title="Sort alphabetically" icon={Import} />
+		<MenuButton
+			on:click={() => {
+				$config.sorting = 'category';
+				props.closeMenu();
+			}}
+			highlight={$config.sorting === 'category'}
+			title="Sort by category"
+			icon={Share}
+		/>
+		<MenuButton
+			on:click={() => {
+				$config.sorting = 'alpha';
+				props.closeMenu();
+			}}
+			highlight={$config.sorting === 'alpha'}
+			title="Sort alphabetically"
+			icon={Import}
+		/>
 	</div>
 </div>

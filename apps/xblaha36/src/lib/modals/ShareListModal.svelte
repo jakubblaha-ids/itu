@@ -4,7 +4,7 @@
 	import CopyInput from '$lib/CopyInput.svelte';
 	import Filler from '$lib/Filler.svelte';
 	import Modal from '$lib/Modal.svelte';
-	import { listManager } from '$ts/stores';
+	import { listManager } from '$ts/global';
 	import { fade } from 'svelte/transition';
 
 	interface Props {

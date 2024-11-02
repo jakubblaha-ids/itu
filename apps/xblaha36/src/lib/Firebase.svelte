@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { itemManager, listManager } from '$ts/stores';
+	import { itemManager, listManager } from '$ts/global';
 	import { initializeApp } from 'firebase/app';
 	import { onMount } from 'svelte';
 

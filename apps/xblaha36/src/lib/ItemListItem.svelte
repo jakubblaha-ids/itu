@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Bin from '$icons/bin.icon.svelte';
 	import Edit from '$icons/edit.icon.svelte';
-	import { itemManager } from '$ts/stores';
+	import { itemManager } from '$ts/global';
 	import type { InListItem } from 'backend';
 	import { createEventDispatcher, onMount } from 'svelte';
 	import randomcolor from 'randomcolor';
@@ -63,17 +63,24 @@
 	on:keypress={() => {}}
 	role="button"
 	tabindex="0"
-	class="flex items-center rounded-lg h-14 from-light transition-all to-light bg-gradient-to-b overflow-hidden select-none relative duration-300 pointer-events-auto flex-shrink-0"
+	class="flex items-center rounded-lg h-[4.5rem] from-light transition-all to-light bg-gradient-to-b overflow-hidden select-none relative duration-300 pointer-events-auto flex-shrink-0"
 	class:opacity-75={!highlight}
 	class:!opacity-50={checked && !highlight}
 	class:highlight
 >
 	<div class="flex py-4 px-4 w-full flex-shrink-0">
-		<div
-			class="flex-grow duration-100"
-			style="transform: translateX({showButton === 'delete' ? translateX : 0}px);"
-		>
-			{item.customItemName || itemManager?.getNameOfitemId(item.itemId!)}
+		<div class="flex-grow">
+			<div
+				class="duration-100 font-semibold text-lg"
+				style="transform: translateX({showButton === 'delete' ? translateX : 0}px);"
+				class:!text-xl={highlight}
+			>
+				{item.customItemName || itemManager?.getNameOfitemId(item.itemId!)}
+			</div>
+
+			<div class="text-xs">
+				{itemManager.getCategoryNameOfItemId(item.itemId)}
+			</div>
 		</div>
 
 		<div
@@ -102,8 +109,8 @@
 
 		<div class="flex flex-col justify-center absolute inset-0 w-full pl-2.5 pr-[4.5rem]">
 			<div
-				class="h-0.5 bg-white w-0 duration-100 translate-y-px rounded-full opacity-50"
-				class:!w-full={checked}
+				class="h-0.5 bg-white w-0 duration-100 translate-y-[-0.4rem] rounded-full opacity-50"
+				class:!w-[50%]={checked}
 			></div>
 		</div>
 		<!-- <div class="text-xl absolute left-0">✓</div> -->
@@ -134,6 +141,6 @@
 
 <style>
 	.highlight {
-		@apply from-[#A88AC5] to-[#5F3487] h-20;
+		@apply from-[#A88AC5] to-[#5F3487] h-24;
 	}
 </style>

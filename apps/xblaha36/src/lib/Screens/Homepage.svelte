@@ -7,7 +7,7 @@
 	import MainListScreen from '$lib/partials/MainListScreen.svelte';
 	import SideListsMenu from '$lib/SideListsMenu.svelte';
 	import SideMenu from '$lib/SideMenu.svelte';
-	import { listManager, userManager } from '$ts/stores';
+	import { listManager, userManager } from '$ts/global';
 	import { goto } from '$app/navigation';
 	import ShareListModal from '$lib/modals/ShareListModal.svelte';
 

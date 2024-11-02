@@ -8,12 +8,12 @@ export class UserManagerBase {
     }
 
     setUsername(username: string) {
-        localStorage.setItem("username", username);
+        localStorage?.setItem("username", username);
 
         this.options.onUsernameChange?.(username);
     }
 
     getUsername() {
-        return localStorage.getItem("username");
+        return localStorage?.getItem("username") || "N/A";
     }
 }

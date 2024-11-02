@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { List } from 'backend';
 	import ShoppingListSideMenuItem from './ShoppingListSideMenuItem.svelte';
-	import { listManager } from '$ts/stores';
+	import { listManager } from '$ts/global';
 
 	interface Props {
 		lists: List[];

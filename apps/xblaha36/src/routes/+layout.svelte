@@ -1,7 +1,13 @@
 <script lang="ts">
 	import Firebase from '$lib/Firebase.svelte';
-	import { screenHeight } from '$ts/stores';
+	import { itemManager, screenHeight } from '$ts/global';
+	import { onMount } from 'svelte';
 	import '../app.css';
+
+	onMount(() => {
+		// @ts-ignore
+		window.itemManager = itemManager;
+	});
 </script>
 
 <svelte:window bind:innerHeight={$screenHeight} />

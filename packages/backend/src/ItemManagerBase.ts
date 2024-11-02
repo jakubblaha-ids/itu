@@ -1,6 +1,7 @@
 import type { Item, ItemAmountUnit } from "./types";
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { ResourceManagerBase } from "./ResourceManagerBase";
+import { items } from "./items";
 
 export type RecentlyUsedItem = {
     itemId: string;
@@ -43,6 +44,21 @@ export class ItemManagerBase extends ResourceManagerBase {
         return "Unknown item";
     }
 
+    getCategoryNameOfItemId(itemId: string | null) {
+        if (!itemId) {
+            return "Custom";
+        }
+
+        const items = this.availableItems;
+        const item = items.find((i) => i.id === itemId);
+
+        if (item) {
+            return item.categoryName;
+        }
+
+        return "Unknown category";
+    }
+
     getAvailableItems(filter: string) {
         return this.availableItems.filter((item) => {
             return item.name.toLowerCase().includes(filter.toLowerCase());
@@ -74,5 +90,16 @@ export class ItemManagerBase extends ResourceManagerBase {
         }
 
         localStorage.setItem("recentlyUsedItems", JSON.stringify(recentlyUsed));
+    }
+
+    async uploadItems() {
+        const coll = collection(this.firestore, "items");
+
+        for (const item of items) {
+            await addDoc(coll, {
+                name: item.name,
+                categoryName: item.categoryName,
+            });
+        }
     }
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { screenHeight } from '$ts/stores';
+	import { screenHeight } from '$ts/global';
 	import type { Snippet } from 'svelte';
 	import { fly } from 'svelte/transition';
 
