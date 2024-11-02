@@ -3,11 +3,13 @@
 	import { createEventDispatcher, onMount } from 'svelte';
 	import SimplifiedItemButton from './SimplifiedItemButton.svelte';
 	import BottomNavContainer from './BottomNavContainer.svelte';
-	import { itemManager, listManager } from '$ts/stores';
+	import { itemManager, listManager, screenHeight } from '$ts/stores';
 	import ItemList from './ItemList.svelte';
 	import Down from '$icons/down.arrow.svelte';
 	import type { Item } from 'backend';
 	import Check from '$icons/check.icon.svelte';
+	import FloatingButton from './components/FloatingButton.svelte';
+	import Search from '$icons/search.icon.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -15,13 +17,36 @@
 
 	let searchValue = '';
 
-	$: filtItems = itemManager?.getAvailableItems(searchValue) || [];
+	$: filtItems = itemManager.getAvailableItems(searchValue) || [];
+
+	let initialViewportHeight: number | null = 0;
 
 	onMount(() => {
 		input.focus();
+
+		initialViewportHeight = window.visualViewport?.height ?? null;
+
+		window.visualViewport?.addEventListener('resize', () => {
+			oskShown = window.visualViewport?.height !== initialViewportHeight;
+		});
 	});
 
+	function addHighlightedOrCustomItem() {
+		if (filtItems.length > 0) {
+			listManager.setItemToAdd(highlightItem!.id, null);
+		} else {
+			listManager.setItemToAdd(null, searchValue);
+		}
+
+		dispatch('back-click');
+	}
+
 	let highlightItem: Item | null = null;
+	let oskShown = false;
+
+	function showOsk() {
+		input.focus();
+	}
 </script>
 
 <div class="h-full bg-darkest flex flex-col z-40 relative">
@@ -30,6 +55,11 @@
 		type="text"
 		class="h-20 px-8 w-full bg-darker outline-none text-xl flex-shrink-0 font-semibold placeholder-gray-300"
 		bind:value={searchValue}
+		onkeydown={(event: KeyboardEvent) => {
+			if (event.key === 'Enter') {
+				addHighlightedOrCustomItem();
+			}
+		}}
 		placeholder="Search..."
 	/>
 
@@ -48,7 +78,7 @@
 					{item}
 					subtitle={amountOnList ? amountOnList + ' already on list' : ''}
 					on:click={() => {
-						listManager!.setItemToAdd(item.id, null);
+						listManager.setItemToAdd(item.id, null);
 
 						dispatch('back-click');
 					}}
@@ -68,30 +98,30 @@
 	{/if}
 
 	<BottomNavContainer>
-		<button on:click={() => dispatch('back-click')}>
+		<button onclick={() => dispatch('back-click')}>
 			<Back />
 		</button>
 
 		<button
 			class="font-medium"
-			on:click={() => {
-				listManager?.setItemToAdd(null, searchValue);
+			onclick={() => {
+				listManager.setItemToAdd(null, searchValue);
 				dispatch('back-click');
 			}}
 		>
 			Custom
 		</button>
 
-		<button
-			disabled={!highlightItem || filtItems.length < 1}
-			on:click={() => {
-				listManager?.setItemToAdd(highlightItem!.id, null);
-				dispatch('back-click');
-			}}
-		>
+		<button disabled={!highlightItem || filtItems.length < 1} onclick={addHighlightedOrCustomItem}>
 			<Check />
 		</button>
 	</BottomNavContainer>
+
+	{#if !oskShown}
+		<FloatingButton class="bg-lighter" onclick={showOsk}>
+			<Search />
+		</FloatingButton>
+	{/if}
 </div>
 
 <style>

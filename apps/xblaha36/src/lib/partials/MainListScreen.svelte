@@ -8,8 +8,10 @@
 	import QuantityChangeBar from '$lib/QuantityChangeBar.svelte';
 	import { itemManager, listManager } from '$ts/stores';
 	import type { InListItem } from 'backend';
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import ItemListItem from '$lib/ItemListItem.svelte';
+	import FloatingButton from '$lib/components/FloatingButton.svelte';
+	import FloatingLeftButton from '$lib/components/FloatingLeftButton.svelte';
 
 	export let showEdit = false;
 
@@ -51,10 +53,6 @@
 		on:highlight-index={(e) => {
 			listManager?.setListHighlightIndex(e.detail);
 		}}
-		on:delete-click={(e) => {
-			listManager?.deleteItemFromList(listManager.selectedListId!, e.detail.item.id);
-			showUndoDelete = true;
-		}}
 		items={selectedListData?.listItems}
 		bind:highlightItem
 		isItemInBottomSection={(item) => item?.itemChecked}
@@ -70,7 +68,10 @@
 					highlightItem = item;
 					showEdit = true;
 				}}
-				on:delete-click
+				on:delete-click={(e) => {
+					listManager?.deleteItemFromList(listManager.selectedListId!, e.detail.item.id);
+					showUndoDelete = true;
+				}}
 				{highlight}
 				checked={item.itemChecked}
 			/>
@@ -97,39 +98,24 @@
 		{#key selectedListData}
 			<!-- Delete checked off -->
 			{#if listManager.lastDeletedItems.length > 0 && showUndoDelete}
-				<button
-					transition:fade
-					on:click={() => listManager.undoDelete()}
-					class="bg-light absolute bottom-28 translate-y-2 left-2 px-4 py-2 rounded-lg flex gap-x-2 pr-6"
-				>
-					<div class="rotate-90 scale-75">
-						<Undo />
-					</div>
-
-					Undo delete
-				</button>
+				<FloatingLeftButton
+					text="Undo delete"
+					icon={Undo}
+					onclick={() => listManager.undoDelete()}
+				/>
 			{:else if selectedListData?.listItems.some((item) => item.itemChecked)}
-				<button
-					transition:fade
-					on:click={() => {
+				<FloatingLeftButton
+					text="Delete checked-off"
+					onclick={() => {
 						listManager!.deleteAllCheckedItems(listManager!.selectedListId!);
 						showUndoDelete = true;
 					}}
-					class="bg-light absolute bottom-28 translate-y-2 left-2 px-4 py-2 rounded-lg z-20"
-				>
-					Delete checked-off
-				</button>
+				/>
 			{/if}
 
-			<!-- Plus button -->
-			<button
-				on:click={() => (showAddItemModal = true)}
-				class="rounded-lg bg-light w-20 h-20 absolute right-2 bottom-28 shadow-xl grid place-items-center translate-y-2 active:brightness-90 duration-100 z-20"
-			>
-				<div class="scale-125">
-					<Plus />
-				</div>
-			</button>
+			<FloatingButton onclick={() => (showAddItemModal = true)}>
+				<Plus />
+			</FloatingButton>
 		{/key}
 	{/if}
 </div>

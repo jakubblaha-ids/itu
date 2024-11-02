@@ -50,31 +50,38 @@
 		<div class="text-gray-200 font-semibold rounded-t-lg py-2 pl-3 bg-darkest">Quantity</div>
 	{/if}
 
-	<div id="large-btn-container" class="grid grid-cols-3 w-full px-2 gap-x-2 pt-2">
-		<button disabled={cannotDecrease || isCustomAmount || disabled} onclick={minusClick}>
+	<div id="large-btn-container" class="flex w-full px-2 gap-x-2 pt-2 justify-center h-24">
+		<button
+			class="bg-gradient-to-l from-light to-darker flex justify-end items-center px-8 disabled:opacity-10 rounded flex-grow"
+			disabled={cannotDecrease || isCustomAmount || disabled}
+			onclick={minusClick}
+		>
 			<Minus />
 		</button>
 
-		<button disabled={isCustomAmount || disabled} onclick={plusClick}>
+		<button
+			class="bg-gradient-to-r from-light to-darker flex justify-start items-center px-8 rounded flex-grow"
+			disabled={isCustomAmount || disabled}
+			onclick={plusClick}
+		>
 			<Plus />
-		</button>
-
-		<button class="font-semibold" onclick={() => (showTextPromptModal = true)} {disabled}>
-			Other
 		</button>
 	</div>
 
 	<div class="relative">
 		<div
+			id="shortcut-btn-container"
 			bind:this={scrollContainer}
 			onscroll={handleScroll}
 			class="flex items-center px-2 gap-x-2 text-sm pt-3 w-full overflow-x-scroll no-scrollbar"
 		>
+			<button onclick={() => (showTextPromptModal = true)} {disabled}> Custom </button>
+
 			{#each suggestedQuantities as q}
 				<button
 					{disabled}
 					onclick={() => setQuantity(q.amount, q.unit)}
-					class="min-w-12 bg-light grid place-items-center rounded-lg px-4 flex-shrink-0 py-4 font-medium"
+					class=""
 					class:bg-lightest={inListItem &&
 						inListItem.itemAmount === q.amount &&
 						inListItem.itemUnit === q.unit}
@@ -113,7 +120,7 @@
 {/if}
 
 <style>
-	#large-btn-container > button {
-		@apply grid place-items-center bg-light h-16 rounded-lg;
+	#shortcut-btn-container > button {
+		@apply min-w-20 bg-light grid place-items-center rounded-xl px-4 flex-shrink-0 py-6 font-medium;
 	}
 </style>
