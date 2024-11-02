@@ -12,6 +12,7 @@
 	import ItemListItem from '$lib/ItemListItem.svelte';
 	import FloatingButton from '$lib/components/FloatingButton.svelte';
 	import FloatingLeftButton from '$lib/components/FloatingLeftButton.svelte';
+	import Bin from '$icons/bin.icon.svelte';
 
 	export let showEdit = false;
 
@@ -106,6 +107,7 @@
 			{:else if selectedListData?.listItems.some((item) => item.itemChecked)}
 				<FloatingLeftButton
 					text="Delete checked-off"
+					icon={Bin}
 					onclick={() => {
 						listManager!.deleteAllCheckedItems(listManager!.selectedListId!);
 						showUndoDelete = true;

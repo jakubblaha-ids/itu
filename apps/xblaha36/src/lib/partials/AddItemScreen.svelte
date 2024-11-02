@@ -115,7 +115,7 @@
 		<button
 			disabled={itemToAdd?.itemId === null && !itemToAdd?.customItemName}
 			onclick={() => {
-				listManager?.commitAddingItems();
+				listManager.commitAddingItems();
 				props.goBack();
 			}}
 		>

@@ -20,7 +20,7 @@
 	class="bg-light absolute bottom-36 translate-y-2 left-2 px-4 py-4 rounded-lg flex gap-x-2 pr-6 {additionalClasses}"
 >
 	{#if icon}
-		<div class="rotate-90 scale-75">
+		<div class="scale-75">
 			<SvelteComponent_1 />
 		</div>
 	{/if}
