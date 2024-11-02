@@ -16,7 +16,7 @@
 	const { selectedListDataStore } = listManager;
 
 	let showCopied = $state(false);
-	let shareListUrl = $derived($page.url.host + '/import-list?code=' + $selectedListDataStore);
+	let shareListUrl = $derived($page.url.host + '/import-list?code=' + $selectedListDataStore.code);
 </script>
 
 <Modal title="Share List" {...props}>
@@ -31,6 +31,7 @@
 				onCopy={() => {
 					showCopied = true;
 					setTimeout(() => (showCopied = false), 200);
+					console.log('copied');
 				}}
 				inputValue={shareListUrl}
 			></CopyInput>

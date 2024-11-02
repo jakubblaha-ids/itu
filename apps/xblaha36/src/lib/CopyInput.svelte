@@ -10,10 +10,7 @@
 	let inputElement: HTMLInputElement | null = null;
 
 	function copyToClipboard() {
-		if (inputElement) {
-			inputElement.select();
-			// document.execCommand('copy');
-		}
+		navigator.clipboard.writeText(inputValue);
 
 		onCopy();
 	}
