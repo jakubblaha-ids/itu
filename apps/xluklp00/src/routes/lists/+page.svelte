@@ -62,7 +62,7 @@
     </Modal>
         
 
-    <div class="mx-10 my-20">
+    <div class="mx-4 my-12">
         <div class="flex flex-col gap-8 overflow-y-auto">
             {#each $lists as list}
                 <ListCard {list} />
