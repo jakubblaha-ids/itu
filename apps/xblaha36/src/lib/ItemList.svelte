@@ -1,6 +1,4 @@
 <script lang="ts" generics="T extends {id: string | number}">
-	import { run } from 'svelte/legacy';
-
 	import { createEventDispatcher, onMount, tick } from 'svelte';
 
 	const dispatch = createEventDispatcher();
@@ -66,11 +64,13 @@
 		items = [...topSection, ...bottomSection];
 	}
 
-	run(() => {
+	$effect(() => {
 		items && sortItems();
 	});
+
 	let areAllInBottomSection = $derived(items.every((item) => isItemInBottomSection(item)));
-	run(() => {
+
+	$effect(() => {
 		highlightItem = items[highlightIndex];
 	});
 </script>
@@ -80,7 +80,7 @@
 	onscroll={onScroll}
 	class="flex-grow flex flex-col px-3 overflow-scroll snap-y snap-mandatory"
 >
-	{#each items as item, index}
+	{#each items as item, index (item.id)}
 		{#if (isItemInBottomSection(item) && isItemInBottomSection(items[index - 1]) === false) || (areAllInBottomSection && index === 0)}
 			<div
 				class="py-3 px-4 mt-2.5 mb-px duration-300 bg-darker -mx-3 sticky top-0 z-10"
