@@ -58,7 +58,7 @@
         <div class="text-white">{list.listItems.length} items</div>
     </div>
 
-    <div class="flex flex-col overflow-y-auto flex-grow mt-2">
+    <div class="flex flex-col overflow-y-auto flex-grow mt-1">
         {#each list.listItems as item}
             <StringListItem {item} />
         {/each}
