@@ -119,7 +119,9 @@
 				props.goBack();
 			}}
 		>
-			<Check />
+			<div class="w-6">
+				<Check />
+			</div>
 		</button>
 	</BottomNavContainer>
 </div>

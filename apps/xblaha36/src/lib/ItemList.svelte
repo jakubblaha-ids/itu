@@ -1,14 +1,27 @@
 <script lang="ts" generics="T extends {id: string | number}">
+	import { run } from 'svelte/legacy';
+
 	import { createEventDispatcher, onMount, tick } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 
-	export let items: T[] = [];
-	export let highlightIndex = 0;
-	export let highlightItem: T | null = null;
-	export let bottomSectionTitle: string;
-	export let itemRenderer: (item: T, highlighted: boolean, scrollToItem: () => void) => any;
-	export let isItemInBottomSection: (item: T) => boolean;
+	interface Props {
+		items?: T[];
+		highlightIndex?: number;
+		highlightItem?: T | null;
+		bottomSectionTitle: string;
+		itemRenderer: (item: T, highlighted: boolean, scrollToItem: () => void) => any;
+		isItemInBottomSection: (item: T) => boolean;
+	}
+
+	let {
+		items = $bindable([]),
+		highlightIndex = $bindable(0),
+		highlightItem = $bindable(null),
+		bottomSectionTitle,
+		itemRenderer,
+		isItemInBottomSection
+	}: Props = $props();
 
 	if (highlightItem) {
 		highlightIndex = items.findIndex((item) => item.id === highlightItem!.id);
@@ -18,8 +31,8 @@
 		});
 	}
 
-	let container: HTMLDivElement;
-	const itemContainers: HTMLDivElement[] = [];
+	let container = $state<HTMLDivElement>();
+	const itemContainers: HTMLDivElement[] = $state([]);
 
 	function onScroll() {
 		for (const [index, itemContainer] of itemContainers.entries()) {
@@ -53,14 +66,18 @@
 		items = [...topSection, ...bottomSection];
 	}
 
-	$: items && sortItems();
-	$: areAllInBottomSection = items.every((item) => isItemInBottomSection(item));
-	$: highlightItem = items[highlightIndex];
+	run(() => {
+		items && sortItems();
+	});
+	let areAllInBottomSection = $derived(items.every((item) => isItemInBottomSection(item)));
+	run(() => {
+		highlightItem = items[highlightIndex];
+	});
 </script>
 
 <div
 	bind:this={container}
-	on:scroll={onScroll}
+	onscroll={onScroll}
 	class="flex-grow flex flex-col px-3 overflow-scroll snap-y snap-mandatory"
 >
 	{#each items as item, index}

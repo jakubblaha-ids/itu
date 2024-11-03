@@ -14,22 +14,25 @@
 	import FloatingLeftButton from '$lib/components/FloatingLeftButton.svelte';
 	import Bin from '$icons/bin.icon.svelte';
 
-	export let showEdit = false;
+	interface Props {
+		showEdit?: boolean;
+		highlightItem: InListItem | null;
+	}
+
+	let { showEdit = $bindable(false), highlightItem = $bindable() }: Props = $props();
 
 	const { sortedInListItemsStore } = listManager;
 
-	let titleValue = '';
+	let titleValue = $state('');
 
 	listManager?.selectedListDataStore.subscribe((data) => {
 		titleValue = data?.listTitle ?? 'Untitled';
 	});
 
 	const _selectedListData = listManager?.selectedListDataStore;
-	$: selectedListData = $_selectedListData;
+	let selectedListData = $derived($_selectedListData);
 
-	let highlightItem: InListItem | null;
-
-	let showUndoDelete = false;
+	let showUndoDelete = $state(false);
 
 	function toggleCheckItem(itemId: number) {
 		listManager?.toggleItemChecked(listManager!.selectedListId!, itemId);
@@ -40,14 +43,14 @@
 		toggleCheckItem(highlightItem!.id);
 	}
 
-	let showAddItemModal = false;
+	let showAddItemModal = $state(false);
 </script>
 
 <div class="h-full flex flex-col duration-200 flex-grow overflow-hidden">
 	<input
 		class="bg-darker text-2xl py-4 text-center outline-none"
 		bind:value={titleValue}
-		on:change={() => {
+		onchange={() => {
 			listManager?.setListTitle(listManager.selectedListId!, titleValue);
 		}}
 	/>
@@ -130,10 +133,9 @@
 		transition:fly={{ y: 200 }}
 	>
 		<BottomNavContainer>
-			<button on:click={() => (showEdit = false)} class="col-span-3">
+			<button onclick={() => (showEdit = false)} class="col-span-3">
 				<div class="flex gap-x-2 font-semibold">
 					<div>Done</div>
-					<!-- <Check /> -->
 				</div>
 			</button>
 		</BottomNavContainer>

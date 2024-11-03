@@ -10,11 +10,12 @@
 	import { listManager, userManager } from '$ts/global';
 	import { goto } from '$app/navigation';
 	import ShareListModal from '$lib/modals/ShareListModal.svelte';
+	import type { InListItem } from 'backend';
+	import Cancel from '$icons/cancel.icon.svelte';
 
 	let listsOpen = $state(false);
 	let menuOpen = $state(false);
 
-	let mainListScreen: MainListScreen | null = $state(null);
 	let showEdit = $state(false);
 
 	let showUsernameDrawer = $state(false);
@@ -22,15 +23,25 @@
 	let showShareListModal = $state(false);
 
 	let { availableListsStore } = listManager;
+
+	let highlightItem = $state<InListItem | null>(null);
+
+	let mainListScreen = $state<any>();
 </script>
 
 <div class="w-full h-full flex flex-col duration-200" class:brightness-50={listsOpen || menuOpen}>
-	<MainListScreen bind:this={mainListScreen} bind:showEdit />
+	<MainListScreen bind:this={mainListScreen} bind:highlightItem bind:showEdit />
 
 	<BottomNavContainer>
 		<button onclick={() => (menuOpen = true)}> <Menu /> </button>
 		<button onclick={mainListScreen.toggleCheckHighlightedItem}>
-			<Check />
+			<div class="w-7">
+				{#if highlightItem?.itemChecked}
+					<Cancel />
+				{:else}
+					<Check />
+				{/if}
+			</div>
 		</button>
 		<button onclick={() => (listsOpen = true)}> <Lists /> </button>
 	</BottomNavContainer>

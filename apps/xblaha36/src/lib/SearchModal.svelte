@@ -119,7 +119,9 @@
 		</button>
 
 		<button disabled={!highlightItem || filtItems.length < 1} onclick={addHighlightedOrCustomItem}>
-			<Check />
+			<div class="w-6">
+				<Check />
+			</div>
 		</button>
 	</BottomNavContainer>
 
