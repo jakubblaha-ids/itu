@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Cancel from '$icons/cancel.icon.svelte';
 	import Check from '$icons/check.icon.svelte';
+	import { onMount } from 'svelte';
 	import Modal from './Modal.svelte';
 
 	interface Props {
@@ -21,24 +22,29 @@
 
 	let value = $state('');
 	let isValid = $derived(validator(value));
+
+	let input: HTMLInputElement;
+
+	onMount(() => {
+		input.focus();
+	});
 </script>
 
-<Modal {title}>
+<Modal {title} aboveKeyboard>
 	<div class="px-4 py-4 w-full flex flex-col gap-y-3 items-center">
 		<input
+			bind:this={input}
 			bind:value
 			{placeholder}
 			type="text"
 			class="h-24 bg-light rounded-lg w-full outline-none px-4 text-center focus:bg-lighter duration-100 text-xl"
 		/>
 
-		<div class="w-full flex justify-end gap-x-2">
+		<div class="w-full flex justify-end gap-x-3">
 			<button
 				onclick={goBack}
-				class="py-4 rounded-lg font-semibold w-32 shadow-lg flex items-center justify-center gap-x-2 flex-grow bg-[#52202E]"
+				class="py-8 rounded-lg font-semibold w-32 shadow-lg flex items-center justify-center gap-x-2 bg-light"
 			>
-				Cancel
-
 				<div class="w-6">
 					<Cancel />
 				</div>
@@ -47,9 +53,8 @@
 			<button
 				disabled={!isValid}
 				onclick={() => onConfirm(value)}
-				class="bg-[#528281] py-4 rounded-lg font-semibold w-32 shadow-lg flex items-center gap-x-2 justify-center flex-grow"
+				class="py-8 rounded-lg font-semibold w-32 shadow-lg flex items-center gap-x-2 justify-center flex-grow bg-lighter"
 			>
-				Confirm
 				<div class="w-6">
 					<Check />
 				</div>
