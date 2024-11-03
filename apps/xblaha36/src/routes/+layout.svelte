@@ -12,6 +12,10 @@
 
 <svelte:window bind:innerHeight={$screenHeight} />
 
+<svelte:head>
+	<title>Shopli!</title>
+</svelte:head>
+
 <Firebase />
 
 <div
