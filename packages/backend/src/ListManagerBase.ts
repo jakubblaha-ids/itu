@@ -170,6 +170,8 @@ export class ListManagerBase extends ResourceManagerBase {
 
         const ref = await addDoc(coll, newList);
 
+        console.log("Created new list: ", ref.id);
+
         this.setSelectedListId(ref.id);
         this.addListLocally(ref.id);
     }
@@ -200,6 +202,21 @@ export class ListManagerBase extends ResourceManagerBase {
 
         this.options.onSelectedListDataChange?.(data);
         this.options.onAvailableListsChange?.(this.availableLists);
+    }
+
+    async duplicateList(list: List) {
+        const coll = collection(this.firestore, "lists");
+    
+        const { id, ...newList } = {
+            ...list,
+            listTitle: list.listTitle,
+            code: new Date().getTime() % 10000,
+        };
+    
+        const ref = await addDoc(coll, newList as List);
+    
+        // Add the new list locally
+        this.addListLocally(ref.id);
     }
 
     async #pushSelectedListData() {

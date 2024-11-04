@@ -5,8 +5,8 @@
     import ListCard from '$lib/components/ListCard.svelte';
 	import Modal from '$lib/components/Modal.svelte';
     import { listManager } from '$lib/script';
-	import type { List } from 'backend';
     import { onMount } from 'svelte';
+	import { flip } from 'svelte/animate';
 	import { slide } from 'svelte/transition';
 
     const { lists } = listManager;
@@ -17,7 +17,6 @@
     
 
     onMount(async () => {
-        lists.subscribe(console.log);
         await listManager.refreshAvailableLists();
     });
 
@@ -26,8 +25,6 @@
             return;
         }
 
-        console.log("importing list with code", importCode);
-
         try {
             await listManager.importList(parseInt(importCode));
         } catch (e) {
@@ -35,8 +32,6 @@
             isDisplayingImportError = true;
             return;
         }
-
-        // TODO: list already added error
 
         importCode = "";
         openModal = null;
@@ -62,21 +57,23 @@
     </Modal>
         
 
-    <div class="mx-4 my-12">
+    <div class="px-4 pt-12 pb-24">
         <div class="flex flex-col gap-8 overflow-y-auto">
-            {#each $lists as list}
-                <ListCard {list} />
+            {#each $lists as list (list.id)}
+                <div class="" animate:flip={{duration: 400}}>
+                    <ListCard {list} />
+                </div>
             {/each}
         </div>
     </div>
 
-    <div class="absolute bottom-4 right-4 flex items-center justify-end w-full gap-x-6">
-
-        <button onclick={() => openModal = openModal === 'import' ? null : 'import'} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center">
+    <div class="fixed bottom-4 right-4 flex items-center justify-end w-full gap-x-6 z-20">
+        <button onclick={() => openModal = openModal === 'import' ? null : 'import'} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
             <ArrowUp></ArrowUp>
         </button>
-        <button class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center">
-            <!-- TODO: open new list -->
+
+        <!-- TODO: open new list -->
+        <button class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
             <Plus></Plus>
         </button>
     </div>
