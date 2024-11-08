@@ -1,0 +1,41 @@
+<div class="w-full flex justify-between items-center">
+  <div *ngIf="canGoBack; else settings" class="w-fit h-fit flex items-center">
+    <button
+      mat-icon-button
+      class="flex justify-center items-center"
+      (click)="navigateBack()"
+    >
+      <mat-icon class="icon-size -translate-x-3 -translate-y-3"
+        >chevron_left</mat-icon
+      >
+    </button>
+  </div>
+
+  <ng-template #settings>
+    <div class="w-fit h-fit flex items-center">
+      <button
+        mat-icon-button
+        class="flex justify-center items-center w-12 h-12"
+        (click)="navigateToSettings()"
+      >
+        <mat-icon class="icon-size -translate-x-3 -translate-y-3"
+          >settings</mat-icon
+        >
+      </button>
+    </div>
+  </ng-template>
+
+  <div class="text-7xl app-name-text w-fit h-fit">Shopli</div>
+
+  <div class="w-fit h-fit flex items-center">
+    <button
+      mat-icon-button
+      class="rotate-180 flex justify-center items-center"
+      *ngIf="isLoggedIn"
+    >
+      <mat-icon class="icon-size -translate-x-2 -translate-y-3"
+        >logout</mat-icon
+      >
+    </button>
+  </div>
+</div>

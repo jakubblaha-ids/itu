@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>{{ data.header }}</h1>
+<div mat-dialog-content>
+  <p>{{ data.warning }}</p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-raised-button (click)="onCancelClick()">Cancel</button>
+  <button
+    mat-raised-button
+    [ngStyle]="{ 'background-color': '#65558f', color: 'white' }"
+    (click)="onConfirmClick()"
+  >
+    Confirm
+  </button>
+</div>

@@ -1,0 +1,37 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --primary-color: #133C55;
+    --secondary-color: #84D2F6;
+    --accent-color: #ED9FD9;
+    --app-name-coplor: #EFD09E; 
+  }
+
+.background-primary{
+  background-color: var(--primary-color) !important;
+}
+
+.background-secondary{
+  background-color: var(--secondary-color) !important;
+}
+
+.custom-gradient {
+    background: linear-gradient( var(--primary-color) 0%, var(--secondary-color) 70%, var(--accent-color) 100%);
+  }
+
+
+.app-name-text{
+  color: var(--app-name-coplor);
+  opacity: 0.65;
+}
+  
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.custom-backdrop {
+  background: linear-gradient( var(--secondary-color) 0%, white 50%, var(--secondary-color) 100%) !important;
+  opacity: 0.5 !important;
+}

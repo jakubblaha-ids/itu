@@ -1,0 +1,68 @@
+<head>
+  <!-- for outlined icons -->
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+    rel="stylesheet"
+  />
+</head>
+
+<mat-card
+  class="p-2 rounded-card background-secondary"
+  (click)="viewList.emit()"
+>
+  <div class="flex justify-between items-center">
+    <div class="flex pl-3 gap-3">
+      <div class="flex items-center justify-center">
+        <button
+          mat-icon-button
+          style="background-color: #65558f; color: white"
+          (click)="resetLsit.emit()"
+          appStopPropagation
+        >
+          <mat-icon>repeat</mat-icon>
+        </button>
+      </div>
+
+      <div>
+        <div class="w-full text-center">
+          <b>{{ item.listTitle }}</b>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-2">
+      <button
+        mat-icon-button
+        style="background-color: #65558f; color: white"
+        (click)="copyList.emit()"
+        appStopPropagation
+      >
+        <mat-icon fontSet="material-icons-outlined"> content_copy</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        style="background-color: #65558f; color: white"
+        (click)="shareList.emit()"
+        appStopPropagation
+      >
+        <mat-icon fontSet="material-icons-outlined">share</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        style="background-color: #65558f; color: white"
+        (click)="editList.emit()"
+        appStopPropagation
+      >
+        <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        style="background-color: #65558f; color: white"
+        (click)="deleteList.emit()"
+        appStopPropagation
+      >
+        <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-card>

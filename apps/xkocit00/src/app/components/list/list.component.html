@@ -1,0 +1,48 @@
+<div class="w-full h-full">
+  <mat-form-field class="custom-form-field">
+    <mat-select [(value)]="sorting" (selectionChange)="sortBy($event)">
+      <mat-option value="alphabetically"> Alphabetically </mat-option>
+      <mat-option value="byCategory"> By Category </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="w-full card-wrapper overflow-auto">
+    <div *ngFor="let o of uncheckedItems" class="mt-3">
+      <app-item-card
+        [item]="o"
+        (checkItem)="checkItem(o)"
+        (deleteItem)="deleteItem(o.id)"
+        (editItem)="editItem(o)"
+      ></app-item-card>
+    </div>
+
+    <div *ngFor="let o of checkedItems" class="mt-3">
+      <app-item-card
+        [item]="o"
+        (checkItem)="checkItem(o)"
+        (deleteItem)="deleteItem(o.id)"
+        (editItem)="editItem(o)"
+      ></app-item-card>
+    </div>
+  </div>
+
+  <div class="flex justify-between items-center">
+    <button
+      mat-fab
+      class="fixed bottom-10 right-10 translate-x-10 translate-y-10"
+      style="background-color: #65558f; color: white"
+      (click)="deleteSelected()"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button
+      mat-fab
+      class="fixed bottom-10 right-10 translate-x-10 translate-y-10"
+      style="background-color: #65558f; color: white"
+      (click)="addItem()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>
+<router-outlet></router-outlet>

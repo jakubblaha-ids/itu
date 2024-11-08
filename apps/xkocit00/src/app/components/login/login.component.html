@@ -1,0 +1,58 @@
+<head>
+  <!-- for outlined icons -->
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+    rel="stylesheet"
+  />
+</head>
+
+<div class="flex justify-center items-center h-full w-full">
+  <mat-card class="w-72 max-w-md p-6 rounded-card">
+    <h2 class="text-center text-2xl mb-4">Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <div class="mb-4">
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" type="text" required />
+          <button
+            mat-icon-button
+            matSuffix
+            *ngIf="loginForm.get('username')?.value"
+            (click)="loginForm.get('username')?.setValue('')"
+          >
+            <mat-icon fontSet="material-icons-outlined">
+              cancel_outline
+            </mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <div class="mb-4">
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" required />
+          <button
+            mat-icon-button
+            matSuffix
+            *ngIf="loginForm.get('password')?.value"
+            (click)="loginForm.get('password')?.setValue('')"
+          >
+            <mat-icon fontSet="material-icons-outlined">
+              cancel_outline
+            </mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <div class="flex items-center justify-center">
+        <button
+          mat-raised-button
+          color="primary"
+          class="rounded-button w-32"
+          type="submit"
+        >
+          Login
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

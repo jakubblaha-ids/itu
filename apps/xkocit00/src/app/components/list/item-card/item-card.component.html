@@ -1,0 +1,53 @@
+<head>
+  <!-- for outlined icons -->
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+    rel="stylesheet"
+  />
+</head>
+
+<mat-card class="p-2 rounded-card background-secondary" (click)="onCheckItem()">
+  <div class="flex justify-between items-center">
+    <div class="flex pl-3 gap-3 w-44">
+      <div class="flex items-center justify-center">
+        <mat-slide-toggle
+          [checked]="item.itemChecked"
+          (change)="onCheckItem()"
+          appStopPropagation
+        >
+        </mat-slide-toggle>
+      </div>
+
+      <div class="w-full">
+        <div class="w-full text-center">
+          <b>{{ item.customItemName || item.itemId }}</b>
+        </div>
+        <div class="w-full text-center">
+          {{ item.itemAmount }} {{ item.itemUnit }}
+        </div>
+      </div>
+    </div>
+
+    <div class="translate-y-5" *ngIf="item.itemCheckedByUsername">
+      Bought by: {{ item.itemCheckedByUsername }}
+    </div>
+    <div class="flex gap-2">
+      <button
+        mat-icon-button
+        style="background-color: #65558f; color: white"
+        (click)="onEditItem()"
+        appStopPropagation
+      >
+        <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        style="background-color: #65558f; color: white"
+        (click)="onDeleteItem()"
+        appStopPropagation
+      >
+        <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-card>
