@@ -61,17 +61,8 @@ export class ListManagerService {
   }
 
   public async deleteList(listId: string): Promise<void> {
-    const records = JSON.parse(localStorage.getItem('addedLists') || '[]');
-    const index = records.indexOf(listId);
-    if (index > -1) {
-      records.splice(index, 1);
-    }
-    localStorage.setItem('addedLists', JSON.stringify(records));
-    this.availableLists = this.availableLists.filter(
-      (list) => list.id !== listId,
-    );
+    await this.listManager.removeListLocally(listId);
     await this.listManager.refreshAvailableLists();
-    this.listManager.deleteList(listId);
   }
 
   public async getAllLists(): Promise<List[]> {

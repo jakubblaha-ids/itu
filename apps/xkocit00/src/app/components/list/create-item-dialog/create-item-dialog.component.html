@@ -3,12 +3,25 @@
   <form [formGroup]="form">
     <mat-form-field class="form-field full-width">
       <mat-label>Item Name</mat-label>
-      <input matInput formControlName="name" required />
+      <input
+        matInput
+        formControlName="name"
+        [matAutocomplete]="auto"
+        required
+      />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option
+          *ngFor="let item of filteredItems | async"
+          [value]="item.name"
+        >
+          {{ item.name }}
+        </mat-option>
+      </mat-autocomplete>
       <mat-error *ngIf="form.get('name')?.hasError('required')">
-        Name is required
+        Item name is required
       </mat-error>
       <mat-error *ngIf="form.get('name')?.hasError('unique')">
-        Name must be unique
+        Item name must be unique
       </mat-error>
     </mat-form-field>
     <div class="form-row">

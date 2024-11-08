@@ -8,6 +8,7 @@ import {
   CreateItemDialogComponent,
   DialogData,
 } from './create-item-dialog/create-item-dialog.component';
+import { ConfiramtionDialogComponent } from '../confiramtion-dialog/confiramtion-dialog.component';
 
 @Component({
   selector: 'app-list',
@@ -37,12 +38,15 @@ export class ListComponent implements OnInit {
       return;
     }
     this.listId = id;
+    this.itemManagerService.items$.subscribe((items) => {
+      this.items = items;
+      this.sortBy({ value: this.sorting });
+    });
     this.loadItems();
   }
 
   private async loadItems(): Promise<void> {
-    this.items = await this.itemManagerService.fetchItems(this.listId);
-    this.sortBy({ value: this.sorting });
+    this.itemManagerService.fetchItems(this.listId);
   }
 
   async addItem(): Promise<void> {
@@ -96,11 +100,11 @@ export class ListComponent implements OnInit {
         const newItem: InListItem = {
           id: item.id,
           itemId: null,
-          customItemName: result.customItemName,
-          itemAmount: result.itemAmount,
-          itemUnit: result.itemUnit,
-          itemChecked: false,
-          itemCheckedByUsername: '',
+          customItemName: result.name,
+          itemAmount: result.quantity,
+          itemUnit: result.quantityType,
+          itemChecked: item.itemChecked,
+          itemCheckedByUsername: item.itemCheckedByUsername,
         };
         await this.itemManagerService.editItemInList(this.listId, newItem);
         this.loadItems();
@@ -142,13 +146,27 @@ export class ListComponent implements OnInit {
   }
 
   public deleteSelected(): void {
-    this.itemManagerService.deleteAllCheckedItems(this.listId).then(() => {
-      this.loadItems();
-    });
+    this.dialog
+      .open(ConfiramtionDialogComponent, {
+        width: '350px',
+        data: {
+          title: 'Delete all checked items',
+          message: 'Are you sure you want to delete all checked items?',
+        },
+      })
+      .afterClosed()
+      .subscribe((data) => {
+        if (data) {
+          this.itemManagerService
+            .deleteAllCheckedItems(this.listId)
+            .then(() => {
+              this.loadItems();
+            });
+        }
+      });
   }
 
   public viewList(list: List): void {
-    console.log('View list ' + list.id);
     this.router.navigate(['/list', list.id]);
   }
 }

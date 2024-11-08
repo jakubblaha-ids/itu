@@ -31,38 +31,68 @@
     </div>
 
     <div class="flex gap-2">
-      <button
-        mat-icon-button
-        style="background-color: #65558f; color: white"
-        (click)="copyList.emit()"
-        appStopPropagation
-      >
-        <mat-icon fontSet="material-icons-outlined"> content_copy</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        style="background-color: #65558f; color: white"
-        (click)="shareList.emit()"
-        appStopPropagation
-      >
-        <mat-icon fontSet="material-icons-outlined">share</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        style="background-color: #65558f; color: white"
-        (click)="editList.emit()"
-        appStopPropagation
-      >
-        <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        style="background-color: #65558f; color: white"
-        (click)="deleteList.emit()"
-        appStopPropagation
-      >
-        <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
-      </button>
+      <ng-container *ngIf="!isSmallScreen; else menuButton">
+        <button
+          mat-icon-button
+          style="background-color: #65558f; color: white"
+          (click)="copyList.emit()"
+          appStopPropagation
+        >
+          <mat-icon fontSet="material-icons-outlined">content_copy</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          style="background-color: #65558f; color: white"
+          (click)="shareList.emit()"
+          appStopPropagation
+        >
+          <mat-icon fontSet="material-icons-outlined">share</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          style="background-color: #65558f; color: white"
+          (click)="editList.emit()"
+          appStopPropagation
+        >
+          <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          style="background-color: #65558f; color: white"
+          (click)="deleteList.emit()"
+          appStopPropagation
+        >
+          <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #menuButton>
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="menu"
+          style="background-color: #65558f; color: white"
+          appStopPropagation
+        >
+          <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="copyList.emit()">
+            <mat-icon fontSet="material-icons-outlined">content_copy</mat-icon>
+            <span>Copy</span>
+          </button>
+          <button mat-menu-item (click)="shareList.emit()">
+            <mat-icon fontSet="material-icons-outlined">share</mat-icon>
+            <span>Share</span>
+          </button>
+          <button mat-menu-item (click)="editList.emit()">
+            <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
+            <span>Edit</span>
+          </button>
+          <button mat-menu-item (click)="deleteList.emit()">
+            <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+            <span>Delete</span>
+          </button>
+        </mat-menu>
+      </ng-template>
     </div>
   </div>
 </mat-card>

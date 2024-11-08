@@ -28,9 +28,10 @@
       </div>
     </div>
 
-    <div class="translate-y-5" *ngIf="item.itemCheckedByUsername">
+    <div *ngIf="item.itemCheckedByUsername">
       Bought by: {{ item.itemCheckedByUsername }}
     </div>
+
     <div class="flex gap-2">
       <button
         mat-icon-button

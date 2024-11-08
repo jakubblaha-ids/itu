@@ -9,6 +9,8 @@ import { MatCardModule } from '@angular/material/card'; // Import MatCardModule
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {
   MAT_DIALOG_DEFAULT_OPTIONS,
   MatDialogModule,
@@ -69,6 +71,8 @@ import { UserManagerService } from './services/user-manager.service';
     MatDialogModule,
     FormsModule,
     MatSnackBarModule,
+    MatMenuModule,
+    MatAutocompleteModule,
   ],
   providers: [
     { provide: OverlayContainer, useClass: CustomOverlayContainer },

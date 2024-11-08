@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
-import { ItemManagerBase, InListItem } from 'backend'; // Ensure this path is correct
+import { ItemManagerBase, InListItem, Item } from 'backend'; // Ensure this path is correct
 import { ListManagerService } from './list-manager.service'; // Ensure this path is correct
 import { UserManagerService } from './user-manager.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ItemManagerService {
   private itemManager: ItemManagerBase;
+  private itemsSource = new BehaviorSubject<InListItem[]>([]);
+  public items$ = this.itemsSource.asObservable();
 
   constructor(
     private listManagerService: ListManagerService,
@@ -20,11 +23,11 @@ export class ItemManagerService {
     return this.itemManager;
   }
 
-  async fetchItems(listId: string): Promise<InListItem[]> {
+  async fetchItems(listId: string): Promise<void> {
     const listData = await this.listManagerService
       .getManager()
       .getListData(listId);
-    return listData ? listData.listItems : [];
+    this.itemsSource.next(listData ? listData.listItems : []);
   }
 
   async addItemToList(listId: string, item: InListItem): Promise<void> {
@@ -52,6 +55,7 @@ export class ItemManagerService {
       const index = listData.listItems.findIndex((i) => i.id === item.id);
       if (index !== -1) {
         console.log(listData);
+        console.log('Editing item in list:', item);
         listData.listItems[index] = item;
         await this.listManagerService
           .getManager()
@@ -68,5 +72,10 @@ export class ItemManagerService {
 
   async deleteAllCheckedItems(listId: string): Promise<void> {
     return this.listManagerService.getManager().deleteAllCheckedItems(listId);
+  }
+
+  public getAvailableItems(filter: string): Item[] {
+    this.itemManager.refreshAvailableItems();
+    return this.itemManager.getAvailableItems(filter);
   }
 }
