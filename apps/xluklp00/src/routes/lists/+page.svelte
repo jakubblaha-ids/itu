@@ -15,7 +15,7 @@
 </script>
 
 {#if $lists.length === 0}
-    <div class="h-full flex flex-col items-center gap-4" in:fade>
+    <div class="h-full flex flex-col items-center justify-center gap-4" in:fade>
         <div class="text-2xl font-semibold text-gray">No lists available</div>
         <div class="text-lg text-gray">Create a new list or import one</div>
         <div class="flex gap-4">
