@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+  import Loader from '$lib/components/Loader.svelte';
   import { onMount } from 'svelte';
 
   onMount(() => {
-    goto("/lists");
+    
   });
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<Loader></Loader>
