@@ -16,10 +16,6 @@ import { userManager } from "$lib/script";
         input.focus();
     });
 
-    $effect(() => {
-        console.log("Username changed to", inputUsername);
-    })
-
     async function changeUsername(newUsername: string) {
         if(newUsername.length === 0) {
             return;

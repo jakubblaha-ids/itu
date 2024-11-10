@@ -19,11 +19,13 @@
 
     let isCheckDisplayed = $state(false);
 
-    function deleteList() {
+    function deleteList(e: Event) {
+        e.stopPropagation();
         listManager.removeListLocally(list.id);
     }
 
-    async function copyListCode() {
+    async function copyListCode(e: Event) {
+        e.stopPropagation();
         await navigator.clipboard.writeText(list.code.toString());
         isCheckDisplayed = true;
 
@@ -32,7 +34,8 @@
         }, 3000);
     }
 
-    async function duplicateList() {
+    async function duplicateList(e: Event) {
+        e.stopPropagation();
         await listManager.duplicateList(list);
     }
 
@@ -73,13 +76,13 @@
             }
         });
 
-        manager.on('panend', function () {
+        manager.on('panend', function (e) {
             if (isSwipeAllowed) {
                 if (Math.abs(deltaX) > 100) {
                     if (deltaX > 0) {
-                        duplicateList();
+                        duplicateList(e.srcEvent);
                     } else {
-                        deleteList();
+                        deleteList(e.srcEvent);
                     }
                 }
                 resetCardPosition();
@@ -139,7 +142,7 @@
                     </div>
                 </button>
             </div>
-            <div class="text-white">{list.listItems.length} items</div>
+            <div class="text-white">{list.listItems.filter((item) => item.itemChecked).length} of {list.listItems.length} items</div>
         </div>
 
         <div class="flex flex-col overflow-hidden flex-grow mt-1">

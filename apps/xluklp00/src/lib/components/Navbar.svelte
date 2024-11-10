@@ -8,11 +8,11 @@
 </script>
 
 <div class="fixed top-0 w-full bg-gray h-20 z-20 flex place-content-between items-center px-4">
-    <button onclick={() => goto("/lists")} class="h-full px-2 button-nshadow">
-        <div class="w-6 h-6 grid place-items-center text-white">
+    <a href="/lists" class="h-full px-2 grid place-items-center">
+        <div class="w-6 h-6 grid place-items-center text-white button-nshadow">
             <Menu></Menu>
         </div>
-    </button>
+    </a>
 
     <button onclick={() => $activeModal = 'user'} class="h-full px-2 flex items-center gap-x-2">
         <div class="text-white text-lg">

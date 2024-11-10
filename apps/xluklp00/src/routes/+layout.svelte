@@ -12,7 +12,7 @@
 <div class="w-full h-screen">
 	<Navbar></Navbar>
 	<ModalRenderer></ModalRenderer>
-	<div class="mt-12 h-full w-full">
+	<div class="mt-20 h-full w-full">
 		{@render children()}
 	</div>
 </div>

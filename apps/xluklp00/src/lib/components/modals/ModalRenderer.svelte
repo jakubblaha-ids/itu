@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { activeModal, NameToModal } from "$lib/script";
-	import { onDestroy, onMount, type Component } from "svelte";
+	import { onMount, type Component } from "svelte";
 
     function closeModal() {
         activeModal.set(null);

@@ -1,17 +1,13 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import ArrowUp from '$icons/ArrowUp.svelte';
     import Plus from '$icons/Plus.svelte';
     import ListCard from '$lib/components/ListCard.svelte';
     import { activeModal, listManager } from '$lib/script';
-    import { onMount } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { fade } from 'svelte/transition';
 
     const { lists } = listManager;
-
-    onMount(async () => {
-        await listManager.refreshAvailableLists();
-    });
 </script>
 
 {#if $lists.length === 0}
@@ -31,11 +27,11 @@
     </div>
 {:else}
     <div class="" in:fade>
-        <div class="px-4 pt-12 pb-24">
+        <div class="px-4 pt-4 pb-24">
             <div class="flex flex-col gap-8 overflow-y-auto overflow-x-hidden">
                 {#each $lists as list (list.id)}
                     <div class="" animate:flip={{duration: 400}} >
-                        <ListCard onclick={() => console.log("TODO")} {list} />
+                        <ListCard onclick={() => goto("/lists/" + list.id)} {list} />
                     </div>
                 {/each}
             </div>
