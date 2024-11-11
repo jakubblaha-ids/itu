@@ -76,6 +76,23 @@
 - Nelze upravit množství konkrétní položky, pokud je již v seznamu. Musí se ze seznamu odstranit a poté znovu vyhledat a přidat s požadovaným množstvím.
 - Pří kliknutí na tlačítko "+" se dostanu do stejné nabídky jako při kliknutí na textové pole - jedno je tedy zbytečné.
 
+## Sholy (xcalko00)
+
+### Pro
+- Na úvodní straně je seznam všech produktů, které si kliknutím přidám do svého seznamu.
+- Seznam obsahuje jak nezakoupené, tak již zakoupené produkty. Ty lze pomocí kliknutí vrátit zpět do stavu nezakoupené.
+- Na domovské stránce jsou produkty rozdělené do kategorií - snadněji se něco hledá.
+- Na domovské stránce vidím všechny mnou vybrané produkty, které můžu kliknutím odstranit ze seznamu.
+- Seznam lze sdílet jako odkaz, nebo jen jako textovou zprávu.
+
+### Proti
+- Můžu vést jen jeden seznam
+- Neexistuje tlačítko zpět - jakmile se z domovské stránky dostanu na stránku seznamu, už se nelze dostat zpět (a to ani při restartu!) - alespoň na Iphone, který nemá systémové tlačítko zpět.
+- Samotný seznam nelze seřadit podle kategorií. Ty už tam neexistují.
+- Načítání trvá dlouho.
+- Seznam jde sdílet jen z domovské obrazovky. Jakmile se dostanu na stránku seznamu, je aplikace nepoužitelná - nelze přidat produkty ani se dostat zpět.
+- Aplikace je jednorázová (jen pro vytvoření tohoto hodnocení jsem ji stahovala 5x).
+
 ## Bring! (xluklp00)
 
 ### Pro

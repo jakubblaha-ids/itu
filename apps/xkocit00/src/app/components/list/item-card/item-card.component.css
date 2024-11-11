@@ -1,0 +1,23 @@
+.rounded-card{
+    border-radius: 16px !important;
+}
+
+.item-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.item-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-actions {
+  display: flex;
+  gap: 10px;
+}

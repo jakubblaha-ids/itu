@@ -1,0 +1,67 @@
+<h1 mat-dialog-title>{{ data.isEdit ? "Edit" : "Create" }} Item</h1>
+<div mat-dialog-content class="form-container">
+  <form [formGroup]="form">
+    <mat-form-field class="form-field full-width">
+      <mat-label>Item Name</mat-label>
+      <input
+        matInput
+        formControlName="name"
+        [matAutocomplete]="auto"
+        required
+      />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option
+          *ngFor="let item of filteredItems | async"
+          [value]="item.name"
+        >
+          {{ item.name }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="form.get('name')?.hasError('required')">
+        Item name is required
+      </mat-error>
+      <mat-error *ngIf="form.get('name')?.hasError('unique')">
+        Item name must be unique
+      </mat-error>
+    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field class="form-field">
+        <mat-label>Quantity</mat-label>
+        <input matInput type="number" formControlName="quantity" required />
+        <mat-error *ngIf="form.get('quantity')?.hasError('required')">
+          Quantity is required
+        </mat-error>
+        <mat-error *ngIf="form.get('quantity')?.hasError('min')">
+          Quantity must be greater than 0
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Quantity Type</mat-label>
+        <mat-select formControlName="quantityType" required>
+          <mat-option *ngFor="let type of quantityTypes" [value]="type">
+            {{ type }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('quantityType')?.hasError('required')">
+          Quantity type is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <mat-form-field
+      class="mat-form-field full-width"
+      *ngIf="form.value['quantityType'] == 'custom'"
+    >
+      <mat-label>Custom Quantity Type</mat-label>
+      <input matInput formControlName="customQuantityType" required />
+      <mat-error *ngIf="form.get('customQuantityType')?.hasError('required')">
+        Custom Quantity type is required
+      </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button (click)="onCreateClick()" [disabled]="form.invalid">
+    {{ data.isEdit ? "Edit" : "Create" }}
+  </button>
+</div>

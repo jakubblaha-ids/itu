@@ -1,0 +1,35 @@
+<div class="w-full h-full">
+  <div class="w-full card-wrapper overflow-auto">
+    <div *ngFor="let o of lists" class="mt-3">
+      <app-card
+        [item]="o"
+        (copyList)="copyList(o)"
+        (deleteList)="deleteList(o)"
+        (editList)="editList(o)"
+        (resetLsit)="resetList(o)"
+        (shareList)="shareList(o)"
+        (viewList)="viewList(o)"
+      >
+      </app-card>
+    </div>
+  </div>
+  <div class="flex justify-between items-center">
+    <button
+      mat-fab
+      class="fixed bottom-10 right-10 translate-x-10 translate-y-10"
+      style="background-color: #65558f; color: white"
+      (click)="importList()"
+    >
+      <mat-icon>download</mat-icon>
+    </button>
+    <button
+      mat-fab
+      class="fixed bottom-10 right-10 translate-x-10 translate-y-10"
+      style="background-color: #65558f; color: white"
+      (click)="addList()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>
+<router-outlet></router-outlet>
