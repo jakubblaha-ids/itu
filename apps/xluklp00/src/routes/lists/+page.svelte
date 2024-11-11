@@ -3,7 +3,8 @@
 	import ArrowUp from '$icons/ArrowUp.svelte';
     import Plus from '$icons/Plus.svelte';
     import ListCard from '$lib/components/ListCard.svelte';
-    import { activeModal, listManager } from '$lib/script';
+    import { listManager } from '$lib/script';
+	import { activeModal } from '$lib/script/modal';
 	import { flip } from 'svelte/animate';
 	import { fade } from 'svelte/transition';
 

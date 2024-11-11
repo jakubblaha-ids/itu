@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Cross from "$icons/Cross.svelte";
-import type { Snippet } from "svelte";
+    import type { Snippet } from "svelte";
 	import { fade, slide } from "svelte/transition";
 
     let { children, onClose}: {children?: Snippet, onClose: CallableFunction} = $props();

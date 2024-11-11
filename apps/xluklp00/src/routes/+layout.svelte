@@ -1,13 +1,13 @@
 <script lang="ts">
 	import '../app.css';
-	import Firebase from '$lib/components/Firebase.svelte';
+	import DataReload from '$lib/components/DataReload.svelte';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import ModalRenderer from '$lib/components/modals/ModalRenderer.svelte';
 
 	let { children } = $props();
 </script>
 
-<Firebase />
+<DataReload />
 
 <div class="w-full h-screen">
 	<Navbar></Navbar>

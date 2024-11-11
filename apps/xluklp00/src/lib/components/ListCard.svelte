@@ -16,6 +16,7 @@
     const swipeMultiplier = 2; // Adjust this multiplier to control swipe speed
     let resetTimer: ReturnType<typeof setTimeout> | null = null;
     const resetDelay = 300; // Delay in ms to reset if panend doesn't fire
+    const swipeThreshold = 100;
 
     let isCheckDisplayed = $state(false);
 
@@ -78,7 +79,7 @@
 
         manager.on('panend', function (e) {
             if (isSwipeAllowed) {
-                if (Math.abs(deltaX) > 100) {
+                if (Math.abs(deltaX) > swipeThreshold) {
                     if (deltaX > 0) {
                         duplicateList(e.srcEvent);
                     } else {
@@ -98,8 +99,8 @@
 <div onclick={() => onclick()} class="bg-gray h-44 w-full p-4 rounded-2xl overflow-y-auto z-0 card !touch-pan-y flex gap-2" bind:this={card}>
     <!-- Left Indicator for Duplicate -->
     {#if deltaX > 0}
-        <div class="grid place-items-center bg-blue text-white rounded-l-2xl" style="width: {Math.min(Math.abs(deltaX), 100)}px;" transition:fade={{duration: 100}}>
-            {#if deltaX > 100}    
+        <div class="grid place-items-center bg-blue text-white rounded-l-2xl" style="width: {Math.min(Math.abs(deltaX), swipeThreshold)}px;" transition:fade={{duration: 100}}>
+            {#if deltaX > swipeThreshold}    
                 <div class="h-6 w-6" transition:fade={{delay: 100, duration: 100}}>
                     <Duplicate />
                 </div>
@@ -153,8 +154,8 @@
     </div>
 
     {#if deltaX < 0}
-        <div class="grid place-items-center bg-red text-white rounded-r-2xl" style="width: {Math.min(Math.abs(deltaX), 100)}px;" transition:fade={{duration: 100}}>
-            {#if deltaX < -100}    
+        <div class="grid place-items-center bg-red text-white rounded-r-2xl" style="width: {Math.min(Math.abs(deltaX), swipeThreshold)}px;" transition:fade={{duration: 100}}>
+            {#if deltaX < -swipeThreshold}    
                 <div class="h-6 w-6" transition:fade={{delay: 100, duration: 100}}>
                     <Bin />
                 </div>

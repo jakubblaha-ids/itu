@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
 	import Menu from "$icons/Menu.svelte";
 	import User from "$icons/User.svelte";
-	import { activeModal, userManager } from "$lib/script";
+	import { userManager } from "$lib/script";
+	import { activeModal } from "$lib/script/modal";
 
     const { username } = userManager;
 </script>
