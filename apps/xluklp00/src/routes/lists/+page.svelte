@@ -8,7 +8,15 @@
 	import { flip } from 'svelte/animate';
 	import { fade } from 'svelte/transition';
 
-    const { lists } = listManager;
+    const { lists, selectedListIdStore } = listManager;
+
+    async function createNewList() {
+        await listManager.createList();
+        const listId = $selectedListIdStore;
+
+        if(!listId) return;
+        goto('/lists/' + listId);
+    }
 </script>
 
 {#if $lists.length === 0}
@@ -20,8 +28,7 @@
                 <ArrowUp></ArrowUp>
             </button>
 
-            <!-- TODO: open new list -->
-            <button class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
+            <button onclick={createNewList} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
                 <Plus></Plus>
             </button>
         </div>
@@ -43,8 +50,7 @@
                 <ArrowUp></ArrowUp>
             </button>
 
-            <!-- TODO: open new list -->
-            <button class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
+            <button onclick={createNewList} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
                 <Plus></Plus>
             </button>
         </div>

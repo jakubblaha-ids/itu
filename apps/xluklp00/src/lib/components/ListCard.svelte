@@ -110,7 +110,7 @@
 
     <div class="flex flex-col w-full h-full transition-all">
         <div class="flex flex-col gap-1">
-            <div class="flex items-center flex-wrap gap-2">
+            <div class="flex items-center flex-wrap gap-2 w-full">
                 <div class="text-lg font-semibold text-white">
                     {list.listTitle}
                 </div>

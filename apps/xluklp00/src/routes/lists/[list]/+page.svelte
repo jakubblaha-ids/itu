@@ -73,8 +73,7 @@
     })
 </script>
 
-<!-- TODO: items empty -->
-<div class="w-full h-full relative flex flex-col gap-4 pt-4 pb-12 px-8 items-center">
+<div class="w-full h-full relative flex flex-col gap-4 pt-4 pb-12 px-4 items-center">
     <div class="flex flex-col items-start w-full">
         {#if isEditingTitle}
             <div class="flex items-center gap-4 w-full h-12" in:fade>
@@ -113,15 +112,24 @@
         </div>
     {/if}
 
-    <div class="w-full flex flex-col gap-4">
-        {#each localData.listItems as item (item.id)}
-            <div class="w-full" animate:flip={{duration: 400}}>
-                <ItemCard {item} onclick={() => onItemClick(item.id)} onDeleteItem={() => deleteItem(item.id)}></ItemCard>
+    {#if localData.listItems.length === 0}
+        <div class="text-2xl font-semibold text-gray mt-40">No items in List</div>
+        <!-- TODO: open add item modal -->
+        <button class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
+            <div class="w-10 h-10 grid place-items-center">
+                <Plus></Plus>
             </div>
-        {/each}
-    </div>
-    
-
+        </button>
+    {:else}
+        <div class="w-full flex flex-col gap-4">
+            {#each localData.listItems as item (item.id)}
+                <div class="w-full" animate:flip={{duration: 400}}>
+                    <ItemCard {item} onclick={() => onItemClick(item.id)} onDeleteItem={() => deleteItem(item.id)}></ItemCard>
+                </div>
+            {/each}
+        </div>
+    {/if}
+        
     <div class="fixed bottom-4 flex items-center justify-between w-full z-20 px-4">
         <button onclick={() => $activeModal = 'menu'} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
             <div class="grid place-items-center">
