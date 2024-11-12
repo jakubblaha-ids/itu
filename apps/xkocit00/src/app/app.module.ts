@@ -21,7 +21,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/main/app.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
-import { LoginComponent } from './components/login/login.component';
 import { ListOfListsComponent } from './components/list-of-lists/list-of-lists.component';
 import { CardComponent } from './components/list-of-lists/card/card.component';
 import { StopPropagationDirective } from './directives/stop-propagation.directive';
@@ -44,7 +43,6 @@ import { UserManagerService } from './services/user-manager.service';
   declarations: [
     AppComponent,
     TopbarComponent,
-    LoginComponent,
     ListOfListsComponent,
     CardComponent,
     StopPropagationDirective,

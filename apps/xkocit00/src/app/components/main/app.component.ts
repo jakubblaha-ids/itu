@@ -10,7 +10,6 @@ import { ResourceManagerService } from '../../services/resource-manager.service'
 })
 export class AppComponent implements OnInit {
   title = 'Shopli';
-  public loggedIn!: boolean;
   public canGoBack: boolean = false;
 
   constructor(
@@ -19,13 +18,7 @@ export class AppComponent implements OnInit {
     private resourceManager: ResourceManagerService,
   ) {
     this.authService.loggedInStatus.subscribe((value: boolean) => {
-      console.log('Logged in:', value);
-      this.loggedIn = value;
-      if (!this.loggedIn) {
-        this.router.navigate(['/login']);
-      } else {
-        this.router.navigate(['/main-list']);
-      }
+      this.router.navigate(['/main-list']);
     });
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
