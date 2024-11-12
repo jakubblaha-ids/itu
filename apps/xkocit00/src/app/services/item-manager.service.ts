@@ -11,12 +11,19 @@ export class ItemManagerService {
   private itemManager: ItemManagerBase;
   private itemsSource = new BehaviorSubject<InListItem[]>([]);
   public items$ = this.itemsSource.asObservable();
+  private recentlyUsedItems: Item[] = [];
 
   constructor(
     private listManagerService: ListManagerService,
     private userManagerService: UserManagerService,
   ) {
     this.itemManager = new ItemManagerBase();
+    this.itemManager.getRecentlyUsedItems().forEach((item: any) => {
+      // TODO: fix
+      // let it: Item = { id: item.itemId, categoryName: item };
+      this.itemManager.getNameOfitemId(item.itemId);
+      // this.recentlyUsedItems.push(item);
+    });
   }
 
   getManager(): ItemManagerBase {
@@ -52,10 +59,8 @@ export class ItemManagerService {
       item.itemCheckedByUsername = '';
     }
     if (listData) {
-      const index = listData.listItems.findIndex((i) => i.id === item.id);
+      const index = listData.listItems.findIndex((i: any) => i.id === item.id);
       if (index !== -1) {
-        console.log(listData);
-        console.log('Editing item in list:', item);
         listData.listItems[index] = item;
         await this.listManagerService
           .getManager()
@@ -75,6 +80,9 @@ export class ItemManagerService {
   }
 
   public getAvailableItems(filter: string): Item[] {
+    if (filter.length === 0) {
+      // return this.itemManager.getRecentlyUsedItems();
+    }
     this.itemManager.refreshAvailableItems();
     return this.itemManager.getAvailableItems(filter);
   }

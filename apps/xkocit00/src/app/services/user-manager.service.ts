@@ -19,7 +19,7 @@ export class UserManagerService {
     }
 
     this.userManager = new UserManagerBase({
-      onUsernameChange: (username) => this.onUsernameChange(username),
+      onUsernameChange: (username: string) => this.onUsernameChange(username),
     });
   }
 

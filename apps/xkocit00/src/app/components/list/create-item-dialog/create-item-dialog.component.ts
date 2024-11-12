@@ -42,7 +42,7 @@ export class CreateItemDialogComponent implements OnInit {
     this.originalName = JSON.parse(JSON.stringify(this.data.name));
     console.log(this.data);
     if (this.data.isEdit) {
-      let type: string = '';
+      let type: string = this.data.quantityType;
       let customQuantity: string = '';
       if (!this.quantityTypes.includes(this.data.quantityType)) {
         type = 'custom';

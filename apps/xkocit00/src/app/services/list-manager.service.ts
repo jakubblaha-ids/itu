@@ -11,7 +11,7 @@ export class ListManagerService {
   private listManager: ListManagerBase;
   private availableLists: List[] = [];
   private avaliableListsSource = new BehaviorSubject<List[]>(
-    this.availableLists,
+    this.availableLists
   );
   public availableLists$ = this.avaliableListsSource.asObservable();
 
@@ -21,11 +21,13 @@ export class ListManagerService {
       itemManager,
       this.userManagerService.getManager(),
       {
-        onSelectedListChange: (listId) => this.onSelectedListChange(listId),
-        onSelectedListDataChange: (listData) =>
+        onSelectedListChange: (listId: string) =>
+          this.onSelectedListChange(listId),
+        onSelectedListDataChange: (listData: List) =>
           this.onSelectedListDataChange(listData),
-        onAvailableListsChange: (lists) => this.onAvailableListsChange(lists),
-      },
+        onAvailableListsChange: (lists: List[]) =>
+          this.onAvailableListsChange(lists),
+      }
     );
   }
 
