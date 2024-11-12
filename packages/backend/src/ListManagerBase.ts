@@ -11,9 +11,9 @@ import {
     where,
     type Unsubscribe,
 } from "firebase/firestore";
-import type { InListItem, ItemAmountUnit, List } from "./types";
+import type { InListItem, ItemAmountUnit, List, RecentlyUsedItem } from "./types";
 import { ResourceManagerBase } from "./ResourceManagerBase";
-import { ItemManagerBase, RecentlyUsedItem } from "./ItemManagerBase";
+import { ItemManagerBase } from "./ItemManagerBase";
 import { UserManagerBase } from "./UserManagerBase";
 
 export interface ListManagerBaseOptions {

@@ -1,3 +1,4 @@
+import { browser } from "$app/environment";
 import { UserManagerBase } from "backend";
 import { writable } from "svelte/store";
 
@@ -7,8 +8,12 @@ export class UserManager extends UserManagerBase {
     constructor() {
         super({
             onUsernameChange: (username) => {
-                console.log("Username changed to", username);
+                this.username.set(username);
             }
         });
+
+        if(browser) {
+            this.username.set(this.getUsername());
+        }
     }
 }

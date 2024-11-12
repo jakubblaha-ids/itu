@@ -1,80 +1,53 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import ArrowUp from '$icons/ArrowUp.svelte';
     import Plus from '$icons/Plus.svelte';
-	import CodeInput from '$lib/components/CodeInput.svelte';
     import ListCard from '$lib/components/ListCard.svelte';
-	import Modal from '$lib/components/Modal.svelte';
     import { listManager } from '$lib/script';
-    import { onMount } from 'svelte';
+	import { activeModal } from '$lib/script/modal';
 	import { flip } from 'svelte/animate';
-	import { slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 
     const { lists } = listManager;
-
-    let openModal: 'import' | null = $state(null);
-    let importCode: string = $state("");
-    let isDisplayingImportError = $state(false);
-    
-
-    onMount(async () => {
-        await listManager.refreshAvailableLists();
-    });
-
-    async function importList(importCode: string) {
-        if(importCode.length !== 4) {
-            return;
-        }
-
-        try {
-            await listManager.importList(parseInt(importCode));
-        } catch (e) {
-            console.error(e);
-            isDisplayingImportError = true;
-            return;
-        }
-
-        importCode = "";
-        openModal = null;
-    }
-
-    $effect(() => {
-        importList(importCode);
-        isDisplayingImportError = false;
-    });
 </script>
 
-<div class="absolute inset-0">
-    <Modal isOpen={openModal === 'import'}>
-        <div class='text-gray text-lg'>Import a list with a code</div>
-        <CodeInput bind:code={importCode}></CodeInput>
-        <div class="text-red text-sm h-6">
-            {#if isDisplayingImportError}
-                <div transition:slide={{ duration: 400}}>
-                    Could not find a list with that code
-                </div>
-            {/if}
-        </div>
-    </Modal>
-        
+{#if $lists.length === 0}
+    <div class="h-full flex flex-col items-center justify-center gap-4" in:fade>
+        <div class="text-2xl font-semibold text-gray">No lists available</div>
+        <div class="text-lg text-gray">Create a new list or import one</div>
+        <div class="flex gap-4">
+            <button onclick={() => $activeModal = 'import'} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
+                <ArrowUp></ArrowUp>
+            </button>
 
-    <div class="px-4 pt-12 pb-24">
-        <div class="flex flex-col gap-8 overflow-y-auto">
-            {#each $lists as list (list.id)}
-                <div class="" animate:flip={{duration: 400}}>
-                    <ListCard {list} />
-                </div>
-            {/each}
+            <!-- TODO: open new list -->
+            <button class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
+                <Plus></Plus>
+            </button>
         </div>
     </div>
+{:else}
+    <div class="" in:fade>
+        <div class="px-4 pt-4 pb-24">
+            <div class="flex flex-col gap-8 overflow-y-auto overflow-x-hidden">
+                {#each $lists as list (list.id)}
+                    <div class="" animate:flip={{duration: 400}} >
+                        <ListCard onclick={() => goto("/lists/" + list.id)} {list} />
+                    </div>
+                {/each}
+            </div>
+        </div>
 
-    <div class="fixed bottom-4 right-4 flex items-center justify-end w-full gap-x-6 z-20">
-        <button onclick={() => openModal = openModal === 'import' ? null : 'import'} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
-            <ArrowUp></ArrowUp>
-        </button>
+        <div class="fixed bottom-4 right-4 flex items-center justify-end w-full gap-x-6 z-20">
+            <button onclick={() => $activeModal = 'import'} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
+                <ArrowUp></ArrowUp>
+            </button>
 
-        <!-- TODO: open new list -->
-        <button class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
-            <Plus></Plus>
-        </button>
-    </div>
-</div>  
+            <!-- TODO: open new list -->
+            <button class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
+                <Plus></Plus>
+            </button>
+        </div>
+    </div>    
+{/if}
+ 

@@ -1,11 +1,25 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-  import { onMount } from 'svelte';
+  import Loader from '$lib/components/Loader.svelte';
+	import { listManager } from '$lib/script';
+	import { onDestroy, onMount } from 'svelte';
+	import type { Unsubscriber } from 'svelte/store';
+
+  const { selectedListIdStore } = listManager;
+
+  let unsub: Unsubscriber;
 
   onMount(() => {
-    goto("/lists");
-  });
+    unsub = selectedListIdStore.subscribe((value) => {
+      if(value !== "null") goto(`/lists/${value}`);
+      else goto('/lists');
+    });
+  })
+
+  onDestroy(() => {
+    if(!unsub) return;
+    unsub();
+  })
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<Loader></Loader>

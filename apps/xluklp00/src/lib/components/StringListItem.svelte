@@ -2,19 +2,11 @@
 	import { itemManager } from "$lib/script";
 	import type { InListItem } from "backend";
 
-    let { item }: { item: InListItem} = $props();
-
-    let name = $state('');
-    if(item.itemId) {
-        name = itemManager.getNameOfitemId(item.itemId);
-    }
-    
+    let { item, aClass }: { item: InListItem, aClass?: string} = $props();
 </script>
 
-<div class="text-white">
-    {#if name}
-        <span>{name}</span>
-    {/if}
+<div class="text-white {aClass}">
+    <span>{item.customItemName || itemManager.getNameOfitemId(item.itemId!)}</span>
 
     {#if item.itemAmount}
         <span>{item.itemAmount}</span>

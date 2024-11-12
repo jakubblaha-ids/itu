@@ -22,3 +22,10 @@ export type Item = {
     name: string;
     categoryName: string;
 };
+
+export type RecentlyUsedItem = {
+    itemId: string;
+    amount: number | string;
+    unit: ItemAmountUnit;
+    timestamp: number;
+};
