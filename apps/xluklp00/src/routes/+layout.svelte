@@ -9,7 +9,7 @@
 
 <DataReload />
 
-<div class="w-full h-screen">
+<div class="w-full h-[90vh]">
 	<Navbar></Navbar>
 	<ModalRenderer></ModalRenderer>
 	<div class="mt-20 h-full w-full">

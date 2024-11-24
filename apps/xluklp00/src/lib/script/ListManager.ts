@@ -1,4 +1,4 @@
-import { ItemManagerBase, ListManagerBase, UserManagerBase, type InListItem, type List, type ListManagerBaseOptions } from "backend";
+import { ItemManagerBase, ListManagerBase, UserManagerBase, type InListItem, type ItemAmountUnit, type List, type ListManagerBaseOptions } from "backend";
 import { get, writable } from "svelte/store";
 import { defaultListSortDir, defaultListSortType, type ListSortDir, type ListSortType } from "./listSort";
 import { itemManager } from ".";
@@ -74,4 +74,14 @@ export class ListManager extends ListManagerBase {
 
         this.options.onSelectedListDataChange?.(list);
     }
+
+    async editItem(list: List, id: number, amount: number | string, unit: ItemAmountUnit): Promise<void> {
+		let item = list.listItems.find((item) => item.id === id);
+        if(!item) return;
+        
+		item.itemAmount = amount;
+		item.itemUnit = unit;
+
+		await this.setListData(list.id, list);
+	}
 }

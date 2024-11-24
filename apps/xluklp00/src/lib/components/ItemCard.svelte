@@ -8,7 +8,7 @@
 	import Bin from "$icons/Bin.svelte";
 	import Edit from "$icons/Edit.svelte";
 
-    let { item, onclick, onDeleteItem }: {item: InListItem, onclick: CallableFunction, onDeleteItem: CallableFunction} = $props();
+    let { item, onclick, onDeleteItem, onEdit }: {item: InListItem, onclick: CallableFunction, onDeleteItem: CallableFunction, onEdit: CallableFunction} = $props();
     const { username } = userManager;
 
     let checkedBy = $state("");
@@ -31,8 +31,7 @@
     }
 
     function editItem() {
-        // TODO
-        console.log("edit item");
+        onEdit();
     }
 
     // swipe
@@ -94,8 +93,6 @@
         });
 
     });
-
-    // TODO: handle custom units
 </script>
 
 <button onclick={() => onclick()} class="relative flex items-center bg-gray w-full rounded-3xl h-20 !touch-pan-y {item.itemChecked ? "bg-opacity-50" : ""}" bind:this={card}>

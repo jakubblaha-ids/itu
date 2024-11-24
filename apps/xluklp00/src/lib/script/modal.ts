@@ -11,6 +11,5 @@ export const activeModal: Writable<ModalName> = writable(null);
 export const NameToModal: Record<Exclude<ModalName, null>, Component | null> = {
     'import': ImportModal,
     'user': UserModal,
-    'menu': MenuModal,
-    'add-item': null
+    'menu': MenuModal
 };

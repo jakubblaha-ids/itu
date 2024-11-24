@@ -46,8 +46,7 @@
     }
 
     function handleAddItem() {
-        // TODO
-        console.log("add item");
+        $activeModal = 'add-item';
     }
 </script>
 

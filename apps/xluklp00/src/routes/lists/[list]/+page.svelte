@@ -4,14 +4,16 @@
 	import Check from "$icons/Check.svelte";
 	import ChevronRight from "$icons/ChevronRight.svelte";
     import Plus from "$icons/Plus.svelte";
+	import AddItemDrawer from "$lib/components/AddItemDrawer.svelte";
 	import ItemCard from "$lib/components/ItemCard.svelte";
-	import { listManager } from "$lib/script";
+	import { itemManager, listManager } from "$lib/script";
+	import type { DrawerState } from "$lib/script/drawer";
 	import { defaultListSortDir, defaultListSortType, listSortOptions, type ListSortDir, type ListSortType } from "$lib/script/listSort";
 	import { activeModal } from "$lib/script/modal";
-	import type { List } from "backend";
+	import type { InListItem, List } from "backend";
 	import { onMount } from "svelte";
 	import { flip } from "svelte/animate";
-	import { fade } from "svelte/transition";
+	import { fade, fly, slide } from "svelte/transition";
 
     let { data }: { data: List } = $props();
     const { selectedList } = listManager;
@@ -71,9 +73,30 @@
     $effect(() => {
         localData = data;
     })
+
+    // add item stuff
+    let drawerState: DrawerState = $state({ phase: 'search', itemToAdd: null, availableItems: [], recentlyUsedItems: [], selectedAmount: 1, selectedUnit: "pcs" });
+
+    function openAddItemDrawer() {
+       $activeModal = "add-item";
+    }
+
+    function closeAddItemDrawer() {
+        $activeModal = null;
+    }
+
+    // edit stuff
+    let isEditing = $state(false);
+
+    function editItem(item: InListItem) {
+        isEditing = true;
+        drawerState = { phase: 'add', itemToAdd: {id: item.itemId, name: item.customItemName || itemManager.getNameOfitemId(item.itemId!), inListId: item.id}, availableItems: [], recentlyUsedItems: [], selectedAmount: item.itemAmount, selectedUnit: item.itemUnit};
+        $activeModal = "add-item";
+    }
+    
 </script>
 
-<div class="w-full h-full relative flex flex-col gap-4 pt-4 pb-12 px-4 items-center">
+<div class="w-full h-full relative flex flex-col gap-4 pt-4 pb-12 px-4 items-center bg-white">
     <div class="flex flex-col items-start w-full">
         {#if isEditingTitle}
             <div class="flex items-center gap-4 w-full h-12" in:fade>
@@ -93,7 +116,7 @@
     {#if localData.listItems.length > 1}
         <div class="flex items-center justify-between w-full flex-wrap gap-y-4" transition:fade>
             {#if localData.listItems.filter((item) => item.itemChecked).length > 0}
-                <button onclick={deleteChecked} class="button bg-red text-white rounded-3xl py-2 px-6 text-lg" transition:fade>
+                <button onclick={deleteChecked} class="button bg-red text-white rounded-3xl py-2 px-4 text-lg" transition:fade>
                     <div class="flex items-center gap-2">
                         <div class="">Delete Checked</div>
                         <div class="w-4 h-4 grid place-items-center">
@@ -113,37 +136,41 @@
     {/if}
 
     {#if localData.listItems.length === 0}
-        <div class="text-2xl font-semibold text-gray mt-40">No items in List</div>
-        <!-- TODO: open add item modal -->
-        <button class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
+        <div class="text-xl font-semibold text-gray mt-40">No Items in List</div>
+        <button onclick={openAddItemDrawer} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
             <div class="w-10 h-10 grid place-items-center">
                 <Plus></Plus>
             </div>
         </button>
     {:else}
-        <div class="w-full flex flex-col gap-4">
+        <div class="w-full flex flex-col gap-4 overflow-y-auto transition-all" style="{$activeModal === 'add-item' ? "max-height: 170px;" : ""}">
             {#each localData.listItems as item (item.id)}
                 <div class="w-full" animate:flip={{duration: 400}}>
-                    <ItemCard {item} onclick={() => onItemClick(item.id)} onDeleteItem={() => deleteItem(item.id)}></ItemCard>
+                    <ItemCard {item} onclick={() => onItemClick(item.id)} onDeleteItem={() => deleteItem(item.id)} onEdit={() => editItem(item)}></ItemCard>
                 </div>
             {/each}
         </div>
     {/if}
-        
-    <div class="fixed bottom-4 flex items-center justify-between w-full z-20 px-4">
-        <button onclick={() => $activeModal = 'menu'} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
-            <div class="grid place-items-center">
-                <div class="w-9 h-9 translate-x-[2px]">
-                    <ChevronRight></ChevronRight>
+    
+    {#if localData.listItems.length > 0}
+        <div class="fixed bottom-4 flex items-center justify-between w-full z-20 px-4">
+            <button onclick={() => $activeModal = 'menu'} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
+                <div class="grid place-items-center">
+                    <div class="w-9 h-9 translate-x-[2px]">
+                        <ChevronRight></ChevronRight>
+                    </div>
                 </div>
-            </div>
-        </button>
+            </button>
 
-        <!-- TODO: open add item modal -->
-        <button class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
-            <div class="w-10 h-10 grid place-items-center">
-                <Plus></Plus>
-            </div>
-        </button>
-    </div>
+            <button onclick={openAddItemDrawer} class="bg-blue text-white rounded-full w-14 h-14 grid place-items-center button">
+                <div class="w-10 h-10 grid place-items-center">
+                    <Plus></Plus>
+                </div>
+            </button>
+        </div>
+    {/if}
+
+    {#if $activeModal === 'add-item'}
+        <AddItemDrawer onclose={closeAddItemDrawer} bind:drawerState={drawerState} bind:edit={isEditing}></AddItemDrawer>
+    {/if}
 </div>

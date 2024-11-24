@@ -5,6 +5,7 @@
     import ListCard from '$lib/components/ListCard.svelte';
     import { listManager } from '$lib/script';
 	import { activeModal } from '$lib/script/modal';
+	import { onMount } from 'svelte';
 	import { flip } from 'svelte/animate';
 	import { fade } from 'svelte/transition';
 
@@ -17,6 +18,10 @@
         if(!listId) return;
         goto('/lists/' + listId);
     }
+
+    onMount(() => {
+        listManager.refreshAvailableLists();
+    });
 </script>
 
 {#if $lists.length === 0}
@@ -35,7 +40,7 @@
     </div>
 {:else}
     <div class="" in:fade>
-        <div class="px-4 pt-4 pb-24">
+        <div class="px-2 pt-4 pb-24">
             <div class="flex flex-col gap-8 overflow-y-auto overflow-x-hidden">
                 {#each $lists as list (list.id)}
                     <div class="" animate:flip={{duration: 400}} >

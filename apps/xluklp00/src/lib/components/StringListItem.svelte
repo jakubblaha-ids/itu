@@ -6,13 +6,17 @@
 </script>
 
 <div class="text-white {aClass}">
-    <span>{item.customItemName || itemManager.getNameOfitemId(item.itemId!)}</span>
-
-    {#if item.itemAmount}
+    {#if item.itemUnit === "custom"}
+        <span>{item.customItemName || itemManager.getNameOfitemId(item.itemId!)}</span>
         <span>{item.itemAmount}</span>
-    {/if}
+    {:else}
+        <span>{item.customItemName || itemManager.getNameOfitemId(item.itemId!)}</span>
+        {#if item.itemAmount}
+            <span>{item.itemAmount}</span>
+        {/if}
 
-    {#if item.itemUnit}
-        <span>{item.itemUnit}</span>
+        {#if item.itemUnit}
+            <span>{item.itemUnit}</span>
+        {/if}
     {/if}
-</div>
+</div>  

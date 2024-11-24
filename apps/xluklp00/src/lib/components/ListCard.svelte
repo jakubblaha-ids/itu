@@ -96,7 +96,7 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
-<div onclick={() => onclick()} class="bg-gray h-44 w-full p-4 rounded-2xl overflow-y-auto z-0 card !touch-pan-y flex gap-2" bind:this={card}>
+<div onclick={() => onclick()} class="bg-gray h-44 w-full py-4 px-4 rounded-2xl overflow-y-auto z-0 card !touch-pan-y flex gap-2" bind:this={card}>
     <!-- Left Indicator for Duplicate -->
     {#if deltaX > 0}
         <div class="grid place-items-center bg-blue text-white rounded-l-2xl" style="width: {Math.min(Math.abs(deltaX), swipeThreshold)}px;" transition:fade={{duration: 100}}>
@@ -110,7 +110,7 @@
 
     <div class="flex flex-col w-full h-full transition-all">
         <div class="flex flex-col gap-1">
-            <div class="flex items-center flex-wrap gap-2 w-full">
+            <div class="flex items-center flex-wrap gap-1 w-full">
                 <div class="text-lg font-semibold text-white">
                     {list.listTitle}
                 </div>
