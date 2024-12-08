@@ -2,7 +2,7 @@
 	import Cancel from '$icons/cancel.icon.svelte';
 	import Check from '$icons/check.icon.svelte';
 	import { onMount } from 'svelte';
-	import Modal from './Modal.svelte';
+	import Modal from '$lib/modals/Modal.svelte';
 
 	interface Props {
 		onConfirm: (value: string) => void;

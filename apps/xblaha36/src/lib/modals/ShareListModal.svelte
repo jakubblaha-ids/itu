@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Button from '$lib/Button.svelte';
-	import CopyInput from '$lib/CopyInput.svelte';
-	import Filler from '$lib/Filler.svelte';
-	import Modal from '$lib/Modal.svelte';
+	import Button from '$lib/components/Button.svelte';
+	import CopyInput from '$lib/components/CopyInput.svelte';
+	import Filler from '$lib/components/Filler.svelte';
+	import Modal from '$lib/modals/Modal.svelte';
 	import { listManager } from '$ts/global';
 	import { fade } from 'svelte/transition';
 
@@ -16,7 +16,7 @@
 	const { selectedListDataStore } = listManager;
 
 	let showCopied = $state(false);
-	let shareListUrl = $derived($page.url.host + '/import-list?code=' + $selectedListDataStore.code);
+	let shareListUrl = $derived($page.url.host + '/import-list?code=' + $selectedListDataStore?.code);
 </script>
 
 <Modal title="Share List" {...props}>

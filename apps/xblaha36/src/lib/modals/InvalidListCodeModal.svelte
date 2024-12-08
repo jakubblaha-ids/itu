@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Sad from '$icons/sad.img.svelte';
-	import AlertModal from '$lib/AlertModal.svelte';
+	import AlertModal from '$lib/modals/AlertModal.svelte';
 </script>
 
 <AlertModal close={() => goto('/')} title="Invalid code" closeButtonText="Back to list">

@@ -2,7 +2,7 @@
 	import Minus from '$icons/minus.icon.svelte';
 	import Plus from '$icons/plus.icon.svelte';
 	import { fade, slide } from 'svelte/transition';
-	import TextPromptModal from './TextPromptModal.svelte';
+	import TextPromptModal from '$lib/modals/TextPromptModal.svelte';
 	import type { InListItem, ItemAmountUnit } from 'backend';
 
 	interface Props {

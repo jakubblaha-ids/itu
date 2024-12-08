@@ -3,9 +3,9 @@
 	import Back from '$icons/back.icon.svelte';
 	import Check from '$icons/check.icon.svelte';
 	import Search from '$icons/search.icon.svelte';
-	import BottomNavContainer from '$lib/BottomNavContainer.svelte';
-	import QuantityChangeBar from '$lib/QuantityChangeBar.svelte';
-	import SearchModal from '$lib/SearchModal.svelte';
+	import BottomNavContainer from '$lib/components/BottomNavContainer.svelte';
+	import QuantityChangeBar from '$lib/components/QuantityChangeBar.svelte';
+	import SearchModal from '$lib/modals/SearchModal.svelte';
 	import { itemManager, listManager } from '$ts/global';
 	import type { InListItem } from 'backend';
 	import { onMount } from 'svelte';

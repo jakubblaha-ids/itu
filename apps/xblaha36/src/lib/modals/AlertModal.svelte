@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import Button from './Button.svelte';
-	import Filler from './Filler.svelte';
-	import Modal from './Modal.svelte';
+	import Button from '$lib/components/Button.svelte';
+	import Filler from '$lib/components/Filler.svelte';
+	import Modal from '$lib/modals/Modal.svelte';
 
 	interface Props {
 		title: string;

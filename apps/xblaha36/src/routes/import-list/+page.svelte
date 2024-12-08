@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import AlertModal from '$lib/AlertModal.svelte';
+	import AlertModal from '$lib/modals/AlertModal.svelte';
 	import { listManager } from '$ts/global';
 	import { onMount } from 'svelte';
 	import Happy from '$icons/happy.img.svelte';

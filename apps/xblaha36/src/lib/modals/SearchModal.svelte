@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Back from '$icons/back.icon.svelte';
 	import { createEventDispatcher, onMount } from 'svelte';
-	import SimplifiedItemButton from './SimplifiedItemButton.svelte';
-	import BottomNavContainer from './BottomNavContainer.svelte';
+	import SimplifiedItemButton from '$lib/components/SimplifiedItemButton.svelte';
+	import BottomNavContainer from '$lib/components/BottomNavContainer.svelte';
 	import { itemManager, listManager } from '$ts/global';
-	import ItemList from './ItemList.svelte';
+	import ItemList from '$lib/components/ItemList.svelte';
 	import Down from '$icons/down.arrow.svelte';
 	import type { Item } from 'backend';
 	import Check from '$icons/check.icon.svelte';
-	import FloatingButton from './components/FloatingButton.svelte';
+	import FloatingButton from '$lib/components/FloatingButton.svelte';
 	import Search from '$icons/search.icon.svelte';
 
 	const dispatch = createEventDispatcher();

@@ -2,11 +2,11 @@
 	import Check from '$icons/check.icon.svelte';
 	import Lists from '$icons/lists.icon.svelte';
 	import Menu from '$icons/menu.icon.svelte';
-	import BottomNavContainer from '$lib/BottomNavContainer.svelte';
-	import TextPromptModal from '$lib/TextPromptModal.svelte';
+	import BottomNavContainer from '$lib/components/BottomNavContainer.svelte';
+	import TextPromptModal from '$lib/modals/TextPromptModal.svelte';
 	import MainListScreen from '$lib/partials/MainListScreen.svelte';
-	import SideListsMenu from '$lib/SideListsMenu.svelte';
-	import SideMenu from '$lib/SideMenu.svelte';
+	import SideListsMenu from '$lib/components/SideListsMenu.svelte';
+	import SideMenu from '$lib/components/SideMenu.svelte';
 	import { listManager, userManager } from '$ts/global';
 	import { goto } from '$app/navigation';
 	import ShareListModal from '$lib/modals/ShareListModal.svelte';
