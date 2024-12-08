@@ -22,8 +22,6 @@
 		(a.categoryName + a.name).localeCompare(b.categoryName + b.name)
 	);
 
-	$: console.log(filtSorted.map((i) => i.categoryName));
-
 	let initialViewportHeight: number | null = 0;
 
 	onMount(() => {

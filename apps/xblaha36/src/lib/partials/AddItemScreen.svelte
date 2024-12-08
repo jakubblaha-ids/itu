@@ -17,7 +17,7 @@
 	const { itemsToAddStore } = listManager;
 
 	let showSearchModal = $state(false);
-	let showRecentlyUsed = $state(true);
+	// let showRecentlyUsed = $state(true);
 
 	let inListIds = $derived(listManager.selectedListData?.listItems.map((i) => i.itemId) || []);
 	let ignoredIds = $derived([...inListIds]);
@@ -38,7 +38,7 @@
 	});
 </script>
 
-<div class="flex flex-col h-full z-0 relative">
+<div class="flex flex-col h-full z-0 relative overflow-hidden">
 	<div
 		class="bg-light shadow-lg rounded-xl py-4 mx-4 mt-4 flex flex-col mb-6 items-center font-semibold h-40 justify-center"
 	>
@@ -64,9 +64,9 @@
 		Recently used
 	</div>
 
-	<div class:!max-h-0={!showRecentlyUsed} class="duration-200 transition-all flex-grow">
+	<div class="duration-200 transition-all flex-grow flex-shrink">
 		<div
-			class="flex flex-wrap px-3 gap-x-2 gap-y-2.5 py-2.5 overflow-y-scroll"
+			class="flex flex-wrap px-3 gap-x-2 gap-y-2.5 py-2.5 overflow-y-scroll h-32"
 			class:h-full={renderedRecentlyUsedItems.length < 1}
 		>
 			{#if browser}

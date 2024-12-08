@@ -23,10 +23,6 @@
 
 	if (highlightItem) {
 		highlightIndex = items.findIndex((item) => item.id === highlightItem!.id);
-
-		onMount(() => {
-			scrollToIndex(highlightIndex);
-		});
 	}
 
 	let container = $state<HTMLDivElement>();
@@ -47,8 +43,6 @@
 	}
 
 	async function scrollToIndex(index: number) {
-		console.log({ index });
-
 		await tick();
 
 		itemContainers[index].scrollIntoView({
@@ -80,7 +74,7 @@
 	onscroll={onScroll}
 	class="flex-grow flex flex-col px-3 overflow-scroll snap-y snap-mandatory"
 >
-	{#each items as item, index (item.id)}
+	{#each items as item, index}
 		{#if (isItemInBottomSection(item) && isItemInBottomSection(items[index - 1]) === false) || (areAllInBottomSection && index === 0)}
 			<div
 				class="py-3 px-4 mt-2.5 mb-px duration-300 bg-darker -mx-3 sticky top-0 z-10"

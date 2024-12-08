@@ -24,5 +24,3 @@ config.subscribe((config) => {
 
 	localStorage.setItem('config', JSON.stringify(config));
 });
-
-config.subscribe(console.log);

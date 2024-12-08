@@ -50,7 +50,7 @@
 		<div class="text-gray-200 font-semibold rounded-t-lg py-2 pl-3 bg-darkest">Quantity</div>
 	{/if}
 
-	<div id="large-btn-container" class="flex w-full px-2 gap-x-2 pt-2 justify-center h-24">
+	<div id="large-btn-container" class="flex w-full px-2 gap-x-2 pt-2 justify-center h-16">
 		<button
 			class="bg-gradient-to-l from-light to-darker flex justify-end items-center px-8 disabled:opacity-10 rounded flex-grow"
 			disabled={cannotDecrease || isCustomAmount || disabled}
@@ -121,6 +121,6 @@
 
 <style>
 	#shortcut-btn-container > button {
-		@apply min-w-20 bg-light grid place-items-center rounded-xl px-4 flex-shrink-0 py-6 font-medium;
+		@apply min-w-20 bg-light grid place-items-center rounded-lg px-4 flex-shrink-0 py-4 font-medium;
 	}
 </style>

@@ -109,7 +109,7 @@
 
 {#if showImportListModal}
 	<TextPromptModal
-		title="Import a List"
+		title="Enter Code"
 		validator={(v) => {
 			return parseInt(v) >= 1000 && parseInt(v) <= 9999;
 		}}

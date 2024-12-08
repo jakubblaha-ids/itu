@@ -4,8 +4,6 @@
 	import { listManager } from '$ts/global';
 
 	const { selectedListDataStore } = listManager;
-
-	selectedListDataStore.subscribe(console.log);
 </script>
 
 {#if $selectedListDataStore}
