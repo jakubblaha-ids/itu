@@ -1,18 +1,19 @@
-import { ItemManagerBase, type InListItem, type ItemAmountUnit } from 'backend';
+import { ItemManagerBase, type InListItem, type ItemAmountUnit, type RecentlyUsedItem } from 'backend';
 
-export class ItemManager extends ItemManagerBase {
-    getCategoryNameOfItemId(itemId: string | null) {
-        if (!itemId) {
-            return "Custom";
+export class ItemManager extends ItemManagerBase { 
+
+    getRecentlyUsedItemsAsItems(): RecentlyUsedItem[] {
+        var items = this.getRecentlyUsedItems();
+        var recentlyUsed: RecentlyUsedItem[] = [];
+        for (const item of items) {
+            recentlyUsed.push({
+                itemId: item.itemId.replace("_custom_", ""),
+                amount: item.amount,
+                unit: item.unit,
+                timestamp: item.timestamp,
+            });
         }
 
-        const items = this.availableItems;
-        const item = items.find((i) => i.id === itemId);
-
-        if (item) {
-            return item.categoryName;
-        }
-
-        return "Unknown category";
+        return recentlyUsed;
     }
 }
