@@ -1,3 +1,5 @@
+// Jakub Blaha, xblaha36
+
 import {
     addDoc,
     collection,

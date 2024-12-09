@@ -1,3 +1,5 @@
+// Jakub Blaha, xblaha36
+
 export type ItemAmountUnit = "g" | "ml" | "pcs" | "custom";
 
 export type InListItem = {

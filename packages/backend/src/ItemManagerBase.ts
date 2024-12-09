@@ -1,3 +1,5 @@
+// Jakub Blaha, xblaha36
+
 import type { Item, ItemAmountUnit, RecentlyUsedItem } from "./types";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { ResourceManagerBase } from "./ResourceManagerBase";

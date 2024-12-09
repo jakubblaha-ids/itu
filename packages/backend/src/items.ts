@@ -1,3 +1,5 @@
+// Author: ChatGPT
+
 export const items = [
     { name: "Milk", categoryName: "Dairy" },
     { name: "Cheese", categoryName: "Dairy" },
