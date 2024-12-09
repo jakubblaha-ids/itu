@@ -17,9 +17,20 @@ import { ItemManagerBase } from "./ItemManagerBase";
 import { UserManagerBase } from "./UserManagerBase";
 
 export interface ListManagerBaseOptions {
+    // A callback that will be called whenever the selected list changes.
+    // Use to propagate this change into the app, for example when a
+    // list is imported.
     onSelectedListChange?: (listId: string) => void;
+
+    // Called whenever data of the selected list change in the DB.
     onSelectedListDataChange?: (listData: List) => void;
+
+    // Called when the array `itemsToAdd` is changed.
     onItemsToAddChange?: (items: InListItem[]) => void;
+
+    // Called when available lists are loaded from the DB.
+    // Available lists are lists that are locally added and found
+    // in the DB.
     onAvailableListsChange?: (lists: List[]) => void;
 }
 
@@ -27,7 +38,10 @@ export class ListManagerBase extends ResourceManagerBase {
     options: ListManagerBaseOptions;
 
     selectedListId: string | null = null;
+
+    // Automatically updated when `selectedListId` changes.
     selectedListData: List | null = null;
+
     availableLists: List[] = [];
 
     #selectedListUnsub: Unsubscribe | null = null;
@@ -42,6 +56,17 @@ export class ListManagerBase extends ResourceManagerBase {
         this.options = options;
     }
 
+    /**
+     * Adds a list to the local storage if it is not already present.
+     *
+     * @param listId - The ID of the list to be added.
+     * @returns A promise that resolves when the list has been added and the available lists have been refreshed.
+     *
+     * @remarks
+     * This method checks if the list is already present in the local storage under the key "addedLists".
+     * If the list is already present, the method returns early.
+     * Otherwise, the list ID is added to the array of lists in local storage and the available lists are refreshed.
+     */
     async addListLocally(listId: string): Promise<void> {
         const lists = JSON.parse(localStorage.getItem("addedLists") || "[]");
 
@@ -57,6 +82,13 @@ export class ListManagerBase extends ResourceManagerBase {
         await this.refreshAvailableLists();
     }
 
+    /**
+     * Removes a list from the local storage by its ID. Call when
+     * the user wants to remove a list from the app. The list will
+     * not be deleted from the databse.
+     *
+     * @param listId - The ID of the list to be removed.
+     */
     removeListLocally(listId: string): void {
         const lists = JSON.parse(localStorage.getItem("addedLists") || "[]");
 
@@ -77,6 +109,12 @@ export class ListManagerBase extends ResourceManagerBase {
         this.refreshSelectedListData();
     }
 
+    /**
+     * Retrieves the list of locally added list IDs from the local storage.
+     *
+     * @returns {string[]} An array of list IDs that were added locally.
+     * If no list IDs are found, an empty array is returned.
+     */
     getLocallyAddedListIds() {
         const val = localStorage.getItem("addedLists");
         const parsed = JSON.parse(val || "[]");
@@ -84,6 +122,14 @@ export class ListManagerBase extends ResourceManagerBase {
         return parsed;
     }
 
+    /**
+     * Refreshes the list of available lists by fetching the locally added list IDs
+     * and querying the Firestore database for those lists. Updates the `availableLists`
+     * property with the fetched lists and triggers the `onAvailableListsChange` callback
+     * if it is defined.
+     *
+     * @returns {Promise<void>} A promise that resolves when the available lists have been refreshed.
+     */
     async refreshAvailableLists() {
         const addedLists = this.getLocallyAddedListIds();
 
@@ -101,6 +147,16 @@ export class ListManagerBase extends ResourceManagerBase {
         this.options.onAvailableListsChange?.(this.availableLists);
     }
 
+    /**
+     * Sets the selected list ID and updates the selected list data accordingly.
+     *
+     * @param listId - The ID of the list to be selected.
+     *
+     * This method performs the following actions:
+     * - Updates the `selectedListId` property with the provided `listId`.
+     * - Stores the `listId` in the local storage under the key "lastSelectedList".
+     * - Triggers the `onSelectedListChange` callback with the new `listId`.
+     */
     async setSelectedListId(listId: string) {
         this.selectedListId = listId;
         console.log("Selected list ID changed to: " + listId);
@@ -135,6 +191,16 @@ export class ListManagerBase extends ResourceManagerBase {
         this.options.onSelectedListChange?.(listId);
     }
 
+    /**
+     * Refreshes the data for the currently selected list.
+     *
+     * If a list is selected, it fetches the data for the selected list using the
+     * `getListData` method, updates the `selectedListData` property with the fetched data,
+     * and triggers the `onSelectedListDataChange` callback with the new data. If no list is
+     * selected, `selectedListData` is set to `null`.
+     *
+     * @returns {Promise<void>} A promise that resolves when the selected list data has been refreshed.
+     */
     async refreshSelectedListData() {
         if (!this.selectedListId) {
             this.selectedListData = null;
@@ -151,6 +217,15 @@ export class ListManagerBase extends ResourceManagerBase {
         console.log("Selected list data: ", this.selectedListData);
     }
 
+    /**
+     * Selects the last selected list from local storage and sets it as the current selected list.
+     *
+     * This method retrieves the last selected list ID from the local storage and, if it exists,
+     * sets it as the currently selected list by calling the `setSelectedListId` method.
+     * Snapshot listeners are updates accordingly by calling `setSelectedListId`.
+     *
+     * @returns {Promise<void>} A promise that resolves when the selected list ID has been set.
+     */
     async selectLastSelectedList() {
         const lastSelected = localStorage.getItem("lastSelectedList");
 
@@ -159,7 +234,10 @@ export class ListManagerBase extends ResourceManagerBase {
         }
     }
 
-    async createList() {
+    /**
+     * Create a new list in the DB and set it as selected. Update listeners accordingly.
+     */
+    async createList(): Promise<void> {
         const coll = collection(this.firestore, "lists");
 
         const newList = {
@@ -176,6 +254,11 @@ export class ListManagerBase extends ResourceManagerBase {
         this.addListLocally(ref.id);
     }
 
+    /**
+     * Retrieve list data from the DB based on provided ID.
+     * @param listId
+     * @returns Promise that resolves with list data or null if not found.
+     */
     async getListData(listId: string): Promise<List | null> {
         const coll = collection(this.firestore, "lists");
         const listRef = doc(coll, listId);
@@ -191,7 +274,13 @@ export class ListManagerBase extends ResourceManagerBase {
         return { ...data, id: snap.id } as List;
     }
 
-    async setListData(listId: string, data: List) {
+    /**
+     * Updates list data in the DB.
+     * @param listId ID of the list to update.
+     * @param data New list data.
+     * @returns A promise that resolves when the data of the list is updated.
+     */
+    async setListData(listId: string, data: List): Promise<void> {
         const coll = collection(this.firestore, "lists");
         const listRef = doc(coll, listId);
 
@@ -200,26 +289,37 @@ export class ListManagerBase extends ResourceManagerBase {
         const inAvailableLists = this.availableLists.find((list) => list.id === listId);
         inAvailableLists && Object.assign(inAvailableLists, data);
 
+        // Questionable, but leaving it here to not break the apps.
         this.options.onSelectedListDataChange?.(data);
+
         this.options.onAvailableListsChange?.(this.availableLists);
     }
 
+    /**
+     * Creates a copy of a list in the DB.
+     * @param list The list data to duplicate.
+     */
     async duplicateList(list: List) {
         const coll = collection(this.firestore, "lists");
-    
+
         const { id, ...newList } = {
             ...list,
             listTitle: list.listTitle,
             code: new Date().getTime() % 10000,
         };
-    
+
         const ref = await addDoc(coll, newList as List);
-    
+
         // Add the new list locally
         this.addListLocally(ref.id);
     }
 
-    async #pushSelectedListData() {
+    /**
+     * Push the data of the currently selected list to the DB.
+     *
+     * @returns A promise that resolves when the data is successfully pushed to the DB.
+     */
+    async #pushSelectedListData(): Promise<void> {
         if (!this.selectedListId) {
             throw new Error("No list selected");
         }
@@ -227,6 +327,10 @@ export class ListManagerBase extends ResourceManagerBase {
         await this.setListData(this.selectedListId, this.selectedListData);
     }
 
+    /**
+     * Delete a list from the DB.
+     * @param listId The ID of the list to delete from the DB.
+     */
     async deleteList(listId: string) {
         const coll = collection(this.firestore, "lists");
         const listRef = doc(coll, listId);
@@ -234,8 +338,21 @@ export class ListManagerBase extends ResourceManagerBase {
         await deleteDoc(listRef);
     }
 
+    // A list of in-list-items to that are to be added to the list in bulk
+    // from the add-items screen.
     itemsToAdd: InListItem[] = [];
 
+    /**
+     * Add an item to the list of in-list-items that will be added to the list once the user commits
+     * adding the items. Either itemID or custom name need to be provided, never both. Providing a
+     * custom name will result in a custom item being added to the list.
+     *
+     * Make sure to call `commitAddingItems` to save the changes to the DB.
+     *
+     * @param itemId ID of the item to add from the `items` collection. (This is not an ID of in-list-item)
+     * @param customName
+     * @returns The new in-list-item
+     */
     addItemToList(itemId: string | null, customName: string | null): InListItem {
         if (itemId && customName) {
             throw new Error("Cannot provide both itemId and name");
@@ -258,21 +375,41 @@ export class ListManagerBase extends ResourceManagerBase {
         return newItem;
     }
 
+    /**
+     * Remove an item from the list of items being added to the currently selected list.
+     * @param inListItemId
+     */
     removeItemToAdd(inListItemId: number) {
         this.itemsToAdd = this.itemsToAdd.filter((item) => item.id !== inListItemId);
         this.options.onItemsToAddChange?.(this.itemsToAdd);
     }
 
+    /**
+     * Remove all items from the list of items being added to the currently selected list.
+     */
     clearItemsToAdd() {
         this.itemsToAdd = [];
         this.options.onItemsToAddChange?.(this.itemsToAdd);
     }
 
+    /**
+     * Clear the list of items being added to a list and add a single new item to the list.
+     * Make sure to call `commitAddingItems` to save the changes to the DB.
+     * @param itemId
+     * @param customName
+     */
     setItemToAdd(itemId: string | null, customName: string | null) {
         this.itemsToAdd = [];
         this.addItemToList(itemId, customName);
     }
 
+    /**
+     * Saves all in-list-items that are currently in `itemsToAdd` to the DB, to
+     * the currently selected list and clears the `itemsToAdd` list.
+     *
+     * @throws When no list is selected or currently selected list data is not fetched yet.
+     * @returns A promise that resolves when the changes are saved in the DB.
+     */
     async commitAddingItems(): Promise<void> {
         const listData = this.selectedListData;
 
@@ -307,6 +444,12 @@ export class ListManagerBase extends ResourceManagerBase {
         this.refreshSelectedListData();
     }
 
+    /**
+     * Returns the amount of an item in the currently selected list as a string composing of the amount
+     * and the unit.
+     * @param itemId The ID of the an item to retrieve its amount on the currently selected list.
+     * @returns A string composed of the amount and the unit.
+     */
     getAmountOnList(itemId: string): string {
         const listData = this.selectedListData;
 
@@ -328,6 +471,8 @@ export class ListManagerBase extends ResourceManagerBase {
         return totalAmount + " " + itemsOnList[0].itemUnit;
     }
 
+    // The following functions smartly increase or decrease the amounts of in-list-items
+    // based on their unit.
     #increaseInListItemAmount(inListItem: InListItem) {
         if (typeof inListItem.itemAmount === "string") {
             throw new Error("Cannot increase amount of custom amount item");
@@ -374,6 +519,10 @@ export class ListManagerBase extends ResourceManagerBase {
         return item;
     }
 
+    /**
+     * Smartly increase the amount of an in-list-item in the `itemsToAdd` array.
+     * @param inListItemId
+     */
     increaseAmountToAdd(inListItemId: number) {
         const item = this.#findItemToAdd(inListItemId);
 
@@ -381,6 +530,10 @@ export class ListManagerBase extends ResourceManagerBase {
         this.options.onItemsToAddChange?.(this.itemsToAdd);
     }
 
+    /**
+     * Smartly decrease the amount of an in-list-item in the `itemsToAdd` array.
+     * @param inListItemId
+     */
     decreaseAmountToAdd(inListItemId: number) {
         const item = this.#findItemToAdd(inListItemId);
 
@@ -388,6 +541,12 @@ export class ListManagerBase extends ResourceManagerBase {
         this.options.onItemsToAddChange?.(this.itemsToAdd);
     }
 
+    /**
+     * Set the amount of an in-list-item in the `itemsToAdd` array.
+     * @param inListItemId
+     * @param amount Either a number or a string. A string denotes a custom amount.
+     * @param unit The unit in case amount is a number, otherwise set to 'custom'.
+     */
     setAmountToAdd(inListItemId: number, amount: number | string, unit: ItemAmountUnit) {
         const item = this.#findItemToAdd(inListItemId);
 
@@ -411,6 +570,12 @@ export class ListManagerBase extends ResourceManagerBase {
         return item;
     }
 
+    /**
+     * Set the amount of an in-list-item in the currently selected list.
+     * @param inListItemId
+     * @param amount Either a number or a string. A string denotes a custom amount.
+     * @param unit The unit in case amount is a number, otherwise set to 'custom'.
+     */
     async setItemAmountInSelected(inListItemId: number, amount: number | string, unit: ItemAmountUnit) {
         const item = this.#findInSelectedListItem(inListItemId);
 
@@ -420,6 +585,10 @@ export class ListManagerBase extends ResourceManagerBase {
         await this.#pushSelectedListData();
     }
 
+    /**
+     * Smartly increase the amount of an in-list-item on the currently selected list.
+     * @param inListItemId
+     */
     async increaseItemAmountInSelected(inListItemId: number) {
         const item = this.#findInSelectedListItem(inListItemId);
 
@@ -428,6 +597,10 @@ export class ListManagerBase extends ResourceManagerBase {
         await this.#pushSelectedListData();
     }
 
+    /**
+     * Smartly decrease the amount of an in-list-item on the currently selected list.
+     * @param inListItemId
+     */
     async decreaseItemAmountInSelected(inListItemId: number) {
         const item = this.#findInSelectedListItem(inListItemId);
 
@@ -436,6 +609,12 @@ export class ListManagerBase extends ResourceManagerBase {
         await this.#pushSelectedListData();
     }
 
+    /**
+     * Toggle the checked state of an item in a list and push the changes to the DB.
+     * @param listId
+     * @param inListItemId
+     * @returns A promise that resolves when the changes are pushed to the DB.
+     */
     async toggleItemChecked(listId: string, inListItemId: number): Promise<void> {
         const data = await this.getListData(listId);
         const item = data.listItems.find((item) => item.id === inListItemId);
@@ -458,9 +637,16 @@ export class ListManagerBase extends ResourceManagerBase {
         await this.setListData(listId, data);
     }
 
+    // Used for undo actions.
     lastDeletedItems: InListItem[] = [];
     lastDeletedListId: string | null = null;
 
+    /**
+     * Deletes all checked items from a list and pushes the changes to the DB.
+     * And remembers the list ID in case the user wants to undo the action.
+     * @param listId
+     * @returns A promise that resolves when the changes have been pushed to the DB.
+     */
     async deleteAllCheckedItems(listId: string): Promise<void> {
         const data = await this.getListData(listId);
         const checkedOffItems = data.listItems.filter((item) => item.itemChecked);
@@ -473,6 +659,10 @@ export class ListManagerBase extends ResourceManagerBase {
         await this.setListData(listId, data);
     }
 
+    /**
+     * Restore lastly deleted items from a list and push the changes to the DB.
+     * @returns A promise that resolves when changes have been pushed to the DB.
+     */
     async undoDelete(): Promise<void> {
         const data = await this.getListData(this.lastDeletedListId);
 
@@ -482,8 +672,15 @@ export class ListManagerBase extends ResourceManagerBase {
         await this.setListData(this.lastDeletedListId, data);
     }
 
+    // For undo action
     lastDeletedItem: InListItem | null = null;
 
+    /**
+     * Delete an item from a list, push changes to DB and remeber it for undoing later.
+     * @param listId
+     * @param inListItemId
+     * @returns A promise that resolves when changes have been pushed to the DB.
+     */
     async deleteItemFromList(listId: string, inListItemId: number): Promise<void> {
         const data = await this.getListData(listId);
 
@@ -494,7 +691,12 @@ export class ListManagerBase extends ResourceManagerBase {
         await this.setListData(listId, data);
     }
 
-    async addRecentlyUsedItemToAddedItems(item: RecentlyUsedItem) {
+    /**
+     * Convenience function which takes a RecentlyUsedItem and adds it to the list of items to add
+     * to the currently selected list.
+     * @param item
+     */
+    async addRecentlyUsedItemToAddedItems(item: RecentlyUsedItem): Promise<void> {
         const newItem = this.addItemToList(item.itemId, null);
 
         newItem.itemAmount = item.amount;
@@ -505,7 +707,13 @@ export class ListManagerBase extends ResourceManagerBase {
         console.log("Added recently used item to added items: ", item);
     }
 
-    async setListTitle(listId: string, newName: string) {
+    /**
+     * Set a new title of a list and push the changes to the DB.
+     * @param listId
+     * @param newName
+     * @returns A promise resolving when changes have been writeen to the DB.
+     */
+    async setListTitle(listId: string, newName: string): Promise<void> {
         const data = await this.getListData(listId);
 
         data.listTitle = newName;
@@ -513,7 +721,13 @@ export class ListManagerBase extends ResourceManagerBase {
         await this.setListData(listId, data);
     }
 
-    async importList(code: number) {
+    /**
+     * Find a list in the DB with the provided code, add it locally and set it as
+     * the selected list.
+     * @param code
+     * @returns A promise that resolves when the list is added locally and is set as selected.
+     */
+    async importList(code: number): Promise<void> {
         const coll = collection(this.firestore, "lists");
 
         const q = query(coll, where("code", "==", code));
