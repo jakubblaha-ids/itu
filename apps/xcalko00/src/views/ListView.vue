@@ -25,17 +25,12 @@ const editItemModal = ref(false);
 const shareListModal = ref(false);
 const newUnit = ref('pcs');
 
-const code = ref(Math.floor(Math.random() * 1000000));
+const code = ref(0);
 
-const selectedItemId = ref(0);
 var newItem: InListItem = {id: 0, customItemName: "", itemAmount: 0, itemChecked: false, itemId: "", itemUnit: ("" as "g"), itemCheckedByUsername: ""};
 const sortOrder = ref('Name');
 
-const filter = ref('');
-const filterItems = ref<Item[]>([]);
 var newName: string = '';
-const newAmount = ref(0);
-var text: string = '1';
 
 const props = defineProps<{
     id: string;
@@ -53,7 +48,7 @@ function editListModal() {
 }
 
 function openAddItemModal() {
-    addItemModal.value = true;
+  router.push(`/additem/${props.id}`);
 }
 
 async function deleteList(){
@@ -69,43 +64,30 @@ function closeModal() {
     editModal.value = false;
 }
 
-function closeAddItemModal(){
-  listManager.clearItemsToAdd();
-  addItemModal.value = false;
-  filter.value = '';
-}
+// function closeAddItemModal(){
+//   listManager.clearItemsToAdd();
+//   addItemModal.value = false;
+//   filter.value = '';
+// }
 
 onMounted(async () => {
   if (listManager) {
     list.value = await listManager.getListData(props.id);
+    if(list.value){
+      code.value = list.value.code;
+    }
   }
 });
 
-async function addItem() {
-  listManager.commitAddingItems();
-  list.value = await listManager.getListData(props.id); 
-  addItemModal.value = false;
-  filter.value = '';
-}
 
-async function toBeAdded(item: Item){
-  listManager.selectedListData = list.value;
-  listManager.selectedListId = props.id;
-  let newitem = listManager.addItemToList(null, item.name);
-  filterItems.value = itemManager.getAvailableItems(filter.value);
-  if (filterItems.value.length === 0) {
-    filterItems.value = [{id: "", name: filter.value} as Item];
-  }
-  selectedItemId.value = newitem.id;
-}
-
-async function checkItem(item: InListItem) {
-  
+function checkItem(item: InListItem) {  
   listManager.toggleItemChecked(props.id, item.id);
 }
 
 function onItemClick(item: InListItem) {
   newItem = {id: item.id, customItemName: item.customItemName, itemAmount: item.itemAmount, itemChecked: item.itemChecked, itemId: item.itemId, itemUnit: item.itemUnit, itemCheckedByUsername: item.itemCheckedByUsername}; 
+  if(item.itemId && !item.customItemName)  
+    newItem.customItemName = itemManager.getNameOfitemId(item.itemId);
   editItemModal.value = true;
 }
 
@@ -134,11 +116,18 @@ const sorted = computed(() => {
     });
   } else if (sortOrder.value === 'Name') {
     return list.value?.listItems.sort((a, b) => {
-      if(!a.customItemName || !b.customItemName){ //check to silence warning
+      if(!a.itemId || !b.itemId){ //check to silence warning
         return 0;
       }
-      let nameA = a.customItemName.toUpperCase();
-      let nameB = b.customItemName.toUpperCase();
+      let nameA = itemManager.getNameOfitemId(a.itemId).toUpperCase();
+      if(nameA == "UNKNOWN ITEM" && a.customItemName){
+        nameA = a.customItemName.toUpperCase();
+      }
+      let nameB = itemManager.getNameOfitemId(b.itemId).toUpperCase();
+      if(nameB == "UNKNOWN ITEM" && b.customItemName){
+        nameB = b.customItemName.toUpperCase();
+      }
+      console.log(nameA + " " + nameB);
       return nameA < nameB ? -1 : 1;
     });
   } else {
@@ -147,33 +136,61 @@ const sorted = computed(() => {
 });
 
 function setSortOption(option: string){
+  console.log(option);
   sortOrder.value = option;
 }
 
-watch(newAmount, async () => {
-  if (list.value) {
-    listManager.setAmountToAdd(selectedItemId.value, newAmount.value, newUnit.value as ItemAmountUnit);
+// watch(newAmount, async () => {
+//   if (list.value) {
+//     listManager.setAmountToAdd(selectedItemId.value, newAmount.value, newUnit.value as ItemAmountUnit);
+//   }
+// });
+
+// watch(filter, async () => {
+//   if (filter.value.length > 0) {
+//     filterItems.value = itemManager.getAvailableItems(filter.value);
+//     if (filterItems.value.length === 0) {
+//       filterItems.value = [{id: "", name: filter.value} as Item];
+//     }
+//   } else {
+//     filterItems.value = [];
+//   }
+// });
+
+// const selected = (item: Item): boolean => {
+//   return listManager.isToBeAdded(item.name);
+// }
+
+// function onInput(event: Event) {
+//   text = (event.target as HTMLInputElement).value;
+//   newAmount.value = parseInt(text);
+// }
+
+const getColor = (item: InListItem) => {
+  let cat = itemManager.getCategoryNameOfItemId(item.itemId);
+  console.log(cat);
+  switch(cat){
+    case "Fruits":
+      return "bg-fruits";
+    case "Vegetables":
+      return "bg-vegetables";
+    case "Dairy":
+      return "bg-dairy";
+    case "Meat":
+      return "bg-meat";
+    case "Bread":
+      return "bg-bread";
+    case "Sweets":
+      return "bg-sweets";
+    case "Drinks":
+      return "bg-drinks";
+    case "Spices":
+      return "bg-spices";
+    case "Other":
+      return "bg-other";
+    default:
+      return "bg-other";
   }
-});
-
-watch(filter, async () => {
-  if (filter.value.length > 0) {
-    filterItems.value = itemManager.getAvailableItems(filter.value);
-    if (filterItems.value.length === 0) {
-      filterItems.value = [{id: "", name: filter.value} as Item];
-    }
-  } else {
-    filterItems.value = [];
-  }
-});
-
-const selected = (item: Item): boolean => {
-  return listManager.isToBeAdded(item.name);
-}
-
-function onInput(event: Event) {
-  text = (event.target as HTMLInputElement).value;
-  newAmount.value = parseInt(text);
 }
 
 function onShareClick() {
@@ -192,9 +209,18 @@ async function shareList(){
   shareListModal.value = false;
 }
 
-function setAmountUnit(option: string): void {
-  newUnit.value = option;
-  listManager.setAmountToAdd(selectedItemId.value, newAmount.value, (option as ItemAmountUnit));
+// function setAmountUnit(option: string): void {
+//   newUnit.value = option;
+//   listManager.setAmountToAdd(selectedItemId.value, newAmount.value, (option as ItemAmountUnit));
+// }
+
+async function uncheckAll(){
+  if(list.value){
+    for (let item of list.value?.listItems){
+      item.itemChecked = false;
+    }
+  }
+  await listManager.uncheckAllItems(props.id);
 }
 
 </script>
@@ -202,25 +228,31 @@ function setAmountUnit(option: string): void {
 <template>
   <div>
     <ListHeader :list="list" :sort-order="sortOrder" :set-sort-option="setSortOption" :go-back="goBack" :delete-list="deleteList" :on-share-click="onShareClick" :edit-list-modal="editListModal"/>
-    <div class="padtop">
+    <div class="flex flex-col mb-4">
       <ul>
-        Not checked items
+        <p class="mx-2 text-gray-500 mb-2">Not checked items</p>
         <div v-for="item in sorted" :key="item.id">    
-            <li class="item" v-if="!item.itemChecked">
+            <li class="flex flex-row rounded-lg mx-2 shadow justify-between py-1" :class="`${getColor(item)}`" v-if="!item.itemChecked">
               <ItemRow :item="item" :on-item-click="onItemClick" :check-item="checkItem"/>
             </li>
         </div>
-        Checked items
+        <div class="flex flex-row justify-between mt-5 mb-2">
+          <p class="mx-2 text-gray-500">Checked items</p>
+          <p class="mx-2 text-gray-500 cursor-pointer" @click="uncheckAll()">Uncheck all</p>
+        </div>
         <div v-for="item in list?.listItems" :key="item.id" >
-          <li class="checkeditem" v-if="item.itemChecked">
+          <li class="flex flex-row rounded-lg mx-2 shadow py-1 bg-lightgray" v-if="item.itemChecked">
             <ItemRow :item="item" :on-item-click="onItemClick" :check-item="checkItem"/>
           </li>
         </div>
       </ul>
     </div>
-    <div class="bottomactionbar">
-        <button class="bottombutton" @click="openAddItemModal">+</button>     
+    <div class="flex flex-row bg-primary justify-around fixed bottom-0 left-0 right-0">
+      <svg class="w-12 h-12 cursor-pointer m-4 text-white" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-slot="icon" @click="openAddItemModal">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+      </svg>   
     </div>
+
 
     <div v-if="editModal" class="modal-mask">
       <div class="modal-wrapper">
@@ -240,52 +272,18 @@ function setAmountUnit(option: string): void {
         </div>
       </div>
     </div>
-    <div v-if="addItemModal" class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container" ref="target">
-          <div class="modal-head">
-            <slot name="header">Add item</slot>
-          </div>
-          <div class="filter-input">
-            <input v-model="filter">
-          </div>
-          <div class="modal-body">
-            <ul>
-              <div class="clickable" v-for="item in filterItems" :key="item.id">
-                <li v-if="!selected(item)" @click="toBeAdded(item)">
-                  <div>
-                    {{ item.name }}
-                  </div>
-                </li>
-                <li v-else class="checked">
-                  <div @click="toBeAdded(item)">
-                    {{ item.name }}
-                  </div>
-                  <input placeholder="1" @input="onInput" />
-                  <AmountUnitDropdown :return-option="setAmountUnit"/>
-                </li>
-              </div>
-            </ul>
-          </div>
-          <div class="modal-footer">
-            <slot name="footer">
-                <button @click="closeAddItemModal()">close</button>
-                <button @click="addItem()">OK</button>
-            </slot>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div v-if="editItemModal" class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container" ref="target">
           <div class="modal-head">
             <slot name="header">Edit item</slot>
           </div>
-          <div class="modal-body">
-            <input v-model="newItem.customItemName" class="modal-input">
-            <InputAmount :title="'Amount'" v-model:new-amount="newItem.itemAmount" v-model:new-unit="newItem.itemUnit"/>
+          <div class="flex flex-col mx-3 mt-2">
+            <label for="name" class="text-gray-500">{{ 'Name' }}</label>
+            <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
+              <input v-model="newItem.customItemName" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6">
+            </div>
+            <InputAmount :title="'Amount'" v-model:new-amount="newItem.itemAmount" v-model:new-unit="newItem.itemUnit" :selected="newItem.itemUnit"/>
           </div>
           
           <div class="modal-footer">
@@ -315,8 +313,8 @@ function setAmountUnit(option: string): void {
           </div>
         </div>
       </div>
-    </div> 
-  </div>
+    </div>
+  </div> 
 </template>
 
 <style>
@@ -432,10 +430,12 @@ a {
   flex-direction: column;
   padding-top: 0;
   margin: 0;
+  margin-top: 9rem;
   padding: 20px 20px;
   display: flex;
   max-height: calc(80vh - 150px);
   overflow-y: auto;
+
 }
 
 .modal-body ul {
