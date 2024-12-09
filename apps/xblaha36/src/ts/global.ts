@@ -1,3 +1,5 @@
+// Jakub Blaha, xblaha36
+
 import { writable } from 'svelte/store';
 import { ItemManager } from './ItemManager';
 import { ListManager } from './ListManager';

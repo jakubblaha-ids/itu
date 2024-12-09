@@ -1,3 +1,9 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+Component for buttons used in the left menu.
+-->
+
 <script lang="ts">
 	export let title: string;
 	export let icon;

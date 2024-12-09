@@ -1,14 +1,34 @@
+<!--
+Jakub Blaha, xblaha36
+
+A special list of items. There will always be one highlighted item.
+Which item is highlighted depends on the scroll position of the container.
+The top-most visible element will always be highlighted first.
+-->
+
 <script lang="ts" generics="T extends {id: string | number}">
-	import { createEventDispatcher, onMount, tick } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 
 	interface Props {
 		items?: T[];
+
+		// Index of highlighted item. Not intended for controlling the highlight, only for listening.
 		highlightIndex?: number;
+
+		// Currently highlighted item object. Do not set, readonly.
 		highlightItem?: T | null;
+
+		// The list is divided into two sections. Unchecked item (or search results)
+		// and checked items (or items already on list when used to display search results)
 		bottomSectionTitle: string;
+
+		// Snippet to render a single item.
 		itemRenderer: (item: T, highlighted: boolean, scrollToItem: () => void) => any;
+
+		// A function which will be called for every item and needs to return whether
+		// the item is in the bottom section or not.
 		isItemInBottomSection: (item: T) => boolean;
 	}
 
@@ -58,6 +78,7 @@
 		items = [...topSection, ...bottomSection];
 	}
 
+	// Will sort items to top and bottom section whenever the items change.
 	$effect(() => {
 		items && sortItems();
 	});

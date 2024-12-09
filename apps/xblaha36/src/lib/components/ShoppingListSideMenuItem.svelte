@@ -1,3 +1,9 @@
+<!--
+Jakub Blaha, xblaha36
+
+A component used to display individual lists in the right side-menu.
+-->
+
 <script lang="ts">
 	export let title: string;
 	export let newItems: number;

@@ -1,3 +1,10 @@
+<!--
+Jakub Blaha, xblaha36
+
+Modal menu with list actions, sorting and username (+edit) displayed
+on the left of the screen upon clicking the left navigation bar menu button.
+-->
+
 <script lang="ts">
 	import Bin from '$icons/bin.icon.svelte';
 	import Duplicate from '$icons/duplicate.icon.svelte';

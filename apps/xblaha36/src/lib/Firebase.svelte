@@ -1,3 +1,10 @@
+<!--
+Jakub Blaha, xblaha36
+
+Component to be imported in a layout. Initializes firebase and
+managers from the backend serving as interface to firestore.
+-->
+
 <script lang="ts">
 	import { itemManager, listManager } from '$ts/global';
 	import { initializeApp } from 'firebase/app';

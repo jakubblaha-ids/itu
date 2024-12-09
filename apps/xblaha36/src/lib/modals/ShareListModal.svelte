@@ -1,3 +1,10 @@
+<!--
+Jakub Blaha, xblaha36
+
+A modal drawer displaying the code and URL of the currently selected list
+for sharing.
+-->
+
 <script lang="ts">
 	import { page } from '$app/stores';
 	import Button from '$lib/components/Button.svelte';

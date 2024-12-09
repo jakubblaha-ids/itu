@@ -1,3 +1,10 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+A modal used to display a message that the user can dismiss
+by clicking on a button.
+-->
+
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Button from '$lib/components/Button.svelte';

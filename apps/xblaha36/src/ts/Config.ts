@@ -1,3 +1,6 @@
+// Jakub Blaha, xblaha36
+// Saves app config (only item sorting for now) in local storage.
+
 import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 

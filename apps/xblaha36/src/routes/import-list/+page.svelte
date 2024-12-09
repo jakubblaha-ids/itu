@@ -1,3 +1,10 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+Access this route with a list code in the `code` URL parameter to import
+a shopping list.
+-->
+
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';

@@ -1,3 +1,9 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+The content of the drawer for adding an item.
+-->
+
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import Back from '$icons/back.icon.svelte';
@@ -19,6 +25,7 @@
 	let showSearchModal = $state(false);
 	// let showRecentlyUsed = $state(true);
 
+	// Recetly used items will only display items are are not already on the list
 	let inListIds = $derived(listManager.selectedListData?.listItems.map((i) => i.itemId) || []);
 	let ignoredIds = $derived([...inListIds]);
 	let renderedRecentlyUsedItems = $derived(
@@ -39,6 +46,7 @@
 </script>
 
 <div class="flex flex-col h-full z-0 relative overflow-hidden">
+	<!-- Card displaying the item being added -->
 	<div
 		class="bg-light shadow-lg rounded-xl py-4 mx-4 mt-4 flex flex-col mb-6 items-center font-semibold h-40 justify-center"
 	>
@@ -58,6 +66,7 @@
 		</div>
 	</div>
 
+	<!-- Section with recently used items -->
 	<div
 		class="bg-darkest px-3 flex text-left items-center border-b border-darkest py-2 text-gray-200 font-semibold rounded-t-lg"
 	>

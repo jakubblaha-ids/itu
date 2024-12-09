@@ -1,3 +1,9 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+Generic app-themed button.
+-->
+
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 

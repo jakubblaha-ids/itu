@@ -1,6 +1,13 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+A small wide button absolutely positioned above the app navigation bar. Used for
+Undo and Delete checked-off functionality.
+-->
+
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import type { Component, SvelteComponent } from 'svelte';
+	import type { Component } from 'svelte';
 
 	interface Props {
 		onclick: () => void;

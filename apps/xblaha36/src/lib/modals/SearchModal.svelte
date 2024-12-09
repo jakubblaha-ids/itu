@@ -1,3 +1,9 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+A modal with a search input used for searching in a predefined list of items.
+-->
+
 <script lang="ts">
 	import Back from '$icons/back.icon.svelte';
 	import { createEventDispatcher, onMount } from 'svelte';
@@ -24,6 +30,7 @@
 
 	let initialViewportHeight: number | null = 0;
 
+	// Focus the input and display keyboard when the component appears.
 	onMount(() => {
 		input.focus();
 
@@ -45,6 +52,8 @@
 	}
 
 	let highlightItem: Item | null = null;
+
+	// On screen keyboard shown
 	let oskShown = false;
 
 	function showOsk() {
@@ -53,6 +62,7 @@
 </script>
 
 <div class="h-full bg-darkest flex flex-col z-40 relative">
+	<!-- Search input -->
 	<input
 		bind:this={input}
 		type="text"
@@ -102,10 +112,12 @@
 	{/if}
 
 	<BottomNavContainer>
+		<!-- Back button -->
 		<button onclick={() => dispatch('back-click')}>
 			<Back />
 		</button>
 
+		<!-- Add custom item button -->
 		<button
 			class="font-medium"
 			onclick={() => {
@@ -116,6 +128,7 @@
 			Custom
 		</button>
 
+		<!-- Add first item in results list button -->
 		<button disabled={!highlightItem || filtItems.length < 1} onclick={addHighlightedOrCustomItem}>
 			<div class="w-6">
 				<Check />
@@ -123,6 +136,8 @@
 		</button>
 	</BottomNavContainer>
 
+	<!-- Button to focus input and show onscreen input so that the user doesn't need to reach
+	 with their thumb to the top of the screen. -->
 	{#if !oskShown}
 		<FloatingButton class="bg-lighter" onclick={showOsk}>
 			<Search />

@@ -1,3 +1,10 @@
+<!--
+Jakub Blaha, xblaha36
+
+Wrapper around currently selected list, QuantityChangeBar and modal
+for adding an item.
+-->
+
 <script lang="ts">
 	import Plus from '$icons/plus.icon.svelte';
 	import Undo from '$icons/undo.icon.svelte';
@@ -47,6 +54,7 @@
 </script>
 
 <div class="h-full flex flex-col duration-200 flex-grow overflow-hidden">
+	<!-- List title -->
 	<input
 		class="bg-darker text-2xl py-4 text-center outline-none"
 		bind:value={titleValue}

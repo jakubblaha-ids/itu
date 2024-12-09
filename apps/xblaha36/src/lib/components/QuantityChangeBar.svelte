@@ -1,3 +1,10 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+Container with +/- buttons to edit item quantity and
+a scrollable list of predefined amounts to choose from.
+-->
+
 <script lang="ts">
 	import Minus from '$icons/minus.icon.svelte';
 	import Plus from '$icons/plus.icon.svelte';
@@ -50,6 +57,7 @@
 		<div class="text-gray-200 font-semibold rounded-t-lg py-2 pl-3 bg-darkest">Quantity</div>
 	{/if}
 
+	<!-- Minus and plus buttons -->
 	<div id="large-btn-container" class="flex w-full px-2 gap-x-2 pt-2 justify-center h-16">
 		<button
 			class="bg-gradient-to-l from-light to-darker flex justify-end items-center px-8 disabled:opacity-10 rounded flex-grow"
@@ -68,6 +76,7 @@
 		</button>
 	</div>
 
+	<!-- Scrollable container with predefined item amounts -->
 	<div class="relative">
 		<div
 			id="shortcut-btn-container"
@@ -107,6 +116,7 @@
 	</div>
 </div>
 
+<!-- Custom entity modal -->
 {#if showTextPromptModal}
 	<TextPromptModal
 		placeholder="Enter custom quantity..."

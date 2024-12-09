@@ -1,3 +1,12 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+Base modal drawer.
+
+aboveKeyboard can be set to decrease the drawer height
+when keyboard is displayed.
+-->
+
 <script lang="ts">
 	import { screenHeight } from '$ts/global';
 	import type { Snippet } from 'svelte';
@@ -5,6 +14,8 @@
 
 	let {
 		title,
+
+		// Set to true to decrease drawer height when displayed above keyboard.
 		aboveKeyboard = false,
 		children
 	}: { title: string; aboveKeyboard?: boolean; children: Snippet } = $props();

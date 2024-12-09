@@ -1,3 +1,12 @@
+<!--
+Jakub Blaha, xblaha36
+
+Represents item on a shopping list. Swiping left on the component
+will make the edit quantity button visible. Swiping right on the component
+will make the delete button visible. Tapping/clicking on the component will
+toggle the `checked` property.
+-->
+
 <script lang="ts">
 	import Bin from '$icons/bin.icon.svelte';
 	import Edit from '$icons/edit.icon.svelte';
@@ -70,6 +79,7 @@
 >
 	<div class="flex py-4 px-4 w-full flex-shrink-0">
 		<div class="flex-grow">
+			<!-- Item name -->
 			<div
 				class="duration-100 font-semibold text-lg"
 				style="transform: translateX({showButton === 'delete' ? translateX : 0}px);"
@@ -78,6 +88,7 @@
 				{item.customItemName || itemManager?.getNameOfitemId(item.itemId!)}
 			</div>
 
+			<!-- Item category -->
 			<div class="text-xs">
 				{itemManager.getCategoryNameOfItemId(item.itemId)}
 			</div>
@@ -87,6 +98,7 @@
 			class="duration-100 px-2 flex items-center gap-x-4"
 			style="transform: translateX({showButton === 'edit' ? translateX : 0}px);"
 		>
+			<!-- Item amount -->
 			<div>
 				{item.itemAmount}
 				{#if typeof item.itemAmount === 'number'}
@@ -95,6 +107,7 @@
 				{/if}
 			</div>
 
+			<!-- Checked by user -->
 			<div class="">
 				{#if item.itemCheckedByUsername}
 					<div
@@ -113,9 +126,9 @@
 				class:!w-[50%]={checked}
 			></div>
 		</div>
-		<!-- <div class="text-xl absolute left-0">✓</div> -->
 	</div>
 
+	<!-- Delete button -->
 	<button
 		on:click|stopPropagation={() => {
 			dispatch('delete-click', { item });
@@ -127,6 +140,7 @@
 		<Bin />
 	</button>
 
+	<!-- Edit button -->
 	<button
 		on:click|stopPropagation={() => {
 			dispatch('edit-click');

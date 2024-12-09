@@ -1,3 +1,10 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+Readonly input elemet with a copy button. The input content will
+be copied to clipboard upon clicking the clipboard icon.
+-->
+
 <script lang="ts">
 	import Copy from '$icons/copy.icon.svelte';
 

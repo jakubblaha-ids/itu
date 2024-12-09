@@ -1,3 +1,9 @@
+<!--
+Jakub Blaha, xblaha36
+
+The fragment displayed when the user first opens the app or when no lists are imported.
+-->
+
 <script lang="ts">
 	import Plus from '$icons/plus.icon.svelte';
 	import { listManager } from '$ts/global';

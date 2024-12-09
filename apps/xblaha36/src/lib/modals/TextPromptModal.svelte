@@ -1,3 +1,10 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+A modal drawer asking the user for a string input. Used for editing username
+and setting custom item amount.
+-->
+
 <script lang="ts">
 	import Cancel from '$icons/cancel.icon.svelte';
 	import Check from '$icons/check.icon.svelte';
@@ -32,6 +39,7 @@
 
 <Modal {title} aboveKeyboard>
 	<div class="px-4 py-4 w-full flex flex-col gap-y-3 items-center">
+		<!-- Search term input -->
 		<input
 			bind:this={input}
 			bind:value
@@ -41,6 +49,7 @@
 		/>
 
 		<div class="w-full flex justify-end gap-x-3">
+			<!-- Cancel button -->
 			<button
 				onclick={goBack}
 				class="py-8 rounded-lg font-semibold w-32 shadow-lg flex items-center justify-center gap-x-2 bg-light"
@@ -50,6 +59,7 @@
 				</div>
 			</button>
 
+			<!-- Confirm button -->
 			<button
 				disabled={!isValid}
 				onclick={() => onConfirm(value)}

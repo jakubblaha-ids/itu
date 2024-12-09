@@ -1,3 +1,9 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+App layout.
+-->
+
 <script lang="ts">
 	import Firebase from '$lib/Firebase.svelte';
 	import { itemManager, screenHeight } from '$ts/global';

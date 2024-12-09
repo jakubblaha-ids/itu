@@ -1,3 +1,9 @@
+<!--
+Jakub Blaha, xblaha36
+
+Container around navigation buttons at the bottom of the app.
+-->
+
 <div
 	id="bottom-nav"
 	class="bg-darker h-32 grid grid-cols-3 p-2 gap-x-2 shadow-[0_0_12px] shadow-black/30 flex-shrink-0"

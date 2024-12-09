@@ -1,3 +1,9 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+Button absolutely positioned to be above the app navigation bar.
+-->
+
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { fade } from 'svelte/transition';

@@ -1,3 +1,10 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+An item button to be displayed in the result list while searching
+for an item.
+-->
+
 <script lang="ts">
 	import Back from '$icons/back.icon.svelte';
 	import type { Item } from 'backend';

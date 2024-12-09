@@ -1,3 +1,11 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+Modal menu with added shared lists. Number of unchecked items
+is displayed on each list button. List names that don't have any unchecked
+items in them are crossed off.
+-->
+
 <script lang="ts">
 	import type { List } from 'backend';
 	import ShoppingListSideMenuItem from './ShoppingListSideMenuItem.svelte';

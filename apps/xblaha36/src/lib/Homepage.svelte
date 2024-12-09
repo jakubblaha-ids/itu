@@ -1,3 +1,9 @@
+<!-- 
+Jakub Blaha, xblaha36
+
+Wrapper around MainListScreen, bottom navigation and menus.
+-->
+
 <script lang="ts">
 	import Check from '$icons/check.icon.svelte';
 	import Lists from '$icons/lists.icon.svelte';
