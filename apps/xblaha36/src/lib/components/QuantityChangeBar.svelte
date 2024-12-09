@@ -58,7 +58,10 @@ a scrollable list of predefined amounts to choose from.
 	{/if}
 
 	<!-- Minus and plus buttons -->
-	<div id="large-btn-container" class="flex w-full px-2 gap-x-2 pt-2 justify-center h-16">
+	<div
+		id="large-btn-container"
+		class="flex w-full px-2 gap-x-2 pt-2 justify-center h-16 flex-grow-0"
+	>
 		<button
 			class="bg-gradient-to-l from-light to-darker flex justify-end items-center px-8 disabled:opacity-10 rounded flex-grow"
 			disabled={cannotDecrease || isCustomAmount || disabled}
@@ -95,7 +98,7 @@ a scrollable list of predefined amounts to choose from.
 						inListItem.itemAmount === q.amount &&
 						inListItem.itemUnit === q.unit}
 				>
-					{q.amount + q.unit}
+					{q.amount + ' ' + q.unit}
 				</button>
 			{/each}
 		</div>

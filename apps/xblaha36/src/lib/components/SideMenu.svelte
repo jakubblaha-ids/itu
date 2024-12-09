@@ -66,7 +66,6 @@ on the left of the screen upon clicking the left navigation bar menu button.
 			}}
 			highlight={$config.sorting === 'category'}
 			title="Sort by category"
-			icon={Share}
 		/>
 		<MenuButton
 			on:click={() => {
@@ -75,7 +74,6 @@ on the left of the screen upon clicking the left navigation bar menu button.
 			}}
 			highlight={$config.sorting === 'alpha'}
 			title="Sort alphabetically"
-			icon={Import}
 		/>
 	</div>
 </div>

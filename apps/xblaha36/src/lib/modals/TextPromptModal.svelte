@@ -16,6 +16,7 @@ and setting custom item amount.
 		goBack: () => void;
 		validator?: (value: string) => boolean;
 		title: string;
+		initialValue?: string;
 		placeholder?: string;
 	}
 
@@ -23,11 +24,12 @@ and setting custom item amount.
 		onConfirm,
 		goBack,
 		title,
+		initialValue = '',
 		placeholder = '',
 		validator = (v) => v.length > 0
 	}: Props = $props();
 
-	let value = $state('');
+	let value = $state(initialValue);
 	let isValid = $derived(validator(value));
 
 	let input: HTMLInputElement;

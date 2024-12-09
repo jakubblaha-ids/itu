@@ -6,7 +6,7 @@ Component for buttons used in the left menu.
 
 <script lang="ts">
 	export let title: string;
-	export let icon;
+	export let icon = null;
 	export let highlight = false;
 </script>
 

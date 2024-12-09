@@ -110,6 +110,7 @@ Wrapper around MainListScreen, bottom navigation and menus.
 			showUsernameDrawer = false;
 		}}
 		goBack={() => (showUsernameDrawer = false)}
+		initialValue={userManager.getUsername()}
 	/>
 {/if}
 

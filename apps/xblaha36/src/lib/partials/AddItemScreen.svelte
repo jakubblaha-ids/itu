@@ -48,7 +48,7 @@ The content of the drawer for adding an item.
 <div class="flex flex-col h-full z-0 relative overflow-hidden">
 	<!-- Card displaying the item being added -->
 	<div
-		class="bg-light shadow-lg rounded-xl py-4 mx-4 mt-4 flex flex-col mb-6 items-center font-semibold h-40 justify-center"
+		class="bg-light shadow-lg rounded-xl py-4 mx-4 mt-4 flex flex-col mb-6 items-center font-semibold flex-grow justify-center"
 	>
 		<div class="text-2xl font-black">
 			{#if itemToAdd?.itemId}

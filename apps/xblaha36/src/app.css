@@ -2,18 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	font-family: 'Inknut Antiqua';
+	font-size: 14px;
+}
+
 button {
-  @apply enabled:active:brightness-90 duration-100 disabled:opacity-50 disabled:!brightness-100;
+	@apply enabled:active:brightness-90 duration-100 disabled:opacity-50 disabled:!brightness-100;
 }
 
 @layer utilities {
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .no-scrollbar {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
-  }
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.no-scrollbar {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
 }
