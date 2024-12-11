@@ -6,10 +6,12 @@
         activeModal.set(null);
     }
 
-    let ModalComponent: Component | null = $state(null);
+    let ModalComponent: any | null = $state(null);
 
     onMount(() => {
         activeModal.subscribe((value) => {
+            if(value == 'add-item') return;
+            
             if(value == null) {
                 document.body.style.overflow = "auto";
                 ModalComponent = null;

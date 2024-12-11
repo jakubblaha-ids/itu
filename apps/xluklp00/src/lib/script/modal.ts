@@ -8,7 +8,7 @@ export type ModalName = 'import' | 'user' | 'menu' | 'add-item' | null;
 
 export const activeModal: Writable<ModalName> = writable(null);
 
-export const NameToModal: Record<Exclude<ModalName, null>, Component | null> = {
+export const NameToModal: Record<Exclude<ModalName, null | 'add-item'>, any | null> = {
     'import': ImportModal,
     'user': UserModal,
     'menu': MenuModal
