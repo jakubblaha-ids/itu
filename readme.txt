@@ -29,6 +29,40 @@ Struktrua apps/xcalko00:
 Struktrua apps/xkocit00:
 
 Struktrua apps/xluklp00:
+├── lib                                 
+│   ├── components                      svelte komponenty využívané v aplikaci
+│   │   ├── AddItemDrawer.svelte 
+│   │   ├── CodeInput.svelte
+│   │   ├── DataReload.svelte
+│   │   ├── ItemCard.svelte
+│   │   ├── ListCard.svelte
+│   │   ├── Loader.svelte
+│   │   ├── Navbar.svelte
+│   │   ├── StringListItem.svelte
+│   │   ├── UnitAmountInput.svelte
+│   │   └── modals                      modální okna a podobné svelte komponenty ve vlastní složce
+│   │       ├── ImportModal.svelte
+│   │       ├── MenuModal.svelte
+│   │       ├── Modal.svelte
+│   │       ├── ModalRenderer.svelte
+│   │       └── UserModal.svelte
+│   ├── icons                           ikony jako svelte komponenty využívané v aplikaci
+│   └── script                          složka obsahující všechny typescript soubory pro oddělení definic od GUI
+│       ├── ItemManager.ts              obsahuje třídu ItemManager, která dědí z ItemManagerBase
+│       ├── ListManager.ts              obsahuje třídu ListManager, která dědí z ListManagerBase
+│       ├── UserManager.ts              obsahuje třídu UserManager, která dědí z UserManagerBase
+│       ├── drawer.ts                   obsahuje definice typů pro přidávání položek do seznamu
+│       ├── index.ts                    obsahuje inicializaci firebase a BE manager tříd
+│       ├── listSort.ts                 obsahuje definice typů a konstant pro řazení seznamů
+│       └── modal.ts                    obsahuje definice typů, svelte storů a record pro funkčnost modálních oken a podobných částí aplikace
+└── routes                              složka definující strukturu stránek aplikace
+    ├── +layout.svelte                  základní wrapper pro všechny stránky aplikace
+    ├── +page.svelte                    hlavní stránka, pouze routuje na jiné
+    └── lists                           
+        ├── +page.svelte                stránka /lists zobrazující seznamy uživatele
+        └── [list]                      dynamická stránka /lists/[list] zobrazující jednotlivý seznam
+            ├── +page.server.ts         kód který běží na serveru při přístupu na stránku, dodává data o seznamu GUI
+            └── +page.svelte            přebírá data o seznamu a zobrazuje seznam
 
 Backend:
 - Backend je koncipován jako node balíček obsahující třídy ItemManagerBase, ListManagerBase,
