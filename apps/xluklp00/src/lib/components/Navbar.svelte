@@ -1,3 +1,6 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Navigation bar -->
+
 <script lang="ts">
 	import { onNavigate } from "$app/navigation";
 	import { page } from "$app/stores";

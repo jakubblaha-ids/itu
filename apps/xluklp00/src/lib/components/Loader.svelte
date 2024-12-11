@@ -1,3 +1,6 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Loading spinner component -->
+
 <script lang="ts">
     import { Circle2 } from 'svelte-loading-spinners';
 </script>

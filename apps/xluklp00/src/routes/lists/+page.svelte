@@ -1,3 +1,5 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Displays lists -->
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import ArrowUp from '$icons/ArrowUp.svelte';
@@ -11,6 +13,7 @@
 
     const { lists, selectedListIdStore } = listManager;
 
+    // creates a new list and redirects to it
     async function createNewList() {
         await listManager.createList();
         const listId = $selectedListIdStore;

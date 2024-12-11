@@ -1,3 +1,6 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Component for displaying a list item as a string -->
+
 <script lang="ts">
 	import { itemManager } from "$lib/script";
 	import type { InListItem } from "backend";

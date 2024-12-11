@@ -1,3 +1,6 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Drawer for adding items to a list -->
+
 <script lang="ts">
 	import Check from "$icons/Check.svelte";
 	import ChevronRight from "$icons/ChevronRight.svelte";

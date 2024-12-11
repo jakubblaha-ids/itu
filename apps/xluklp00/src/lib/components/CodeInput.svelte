@@ -1,3 +1,6 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Code input component -->
+
 <script lang="ts">
 	import { onMount } from "svelte";
 

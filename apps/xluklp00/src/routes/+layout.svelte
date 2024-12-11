@@ -1,3 +1,5 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+
 <script lang="ts">
 	import '../app.css';
 	import DataReload from '$lib/components/DataReload.svelte';

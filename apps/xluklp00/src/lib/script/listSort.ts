@@ -1,3 +1,6 @@
+// author: Pavel Lukl, xluklp00
+// defines types and constants for list sorting
+
 export const listSortOptions = {
     "alpha": "Alphabetical",
     "category": "Category"
