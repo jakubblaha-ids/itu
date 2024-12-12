@@ -9,6 +9,10 @@
 	let { children } = $props();
 </script>
 
+<svelte:head>
+	<title>Shopli!</title>
+</svelte:head>
+
 <DataReload />
 
 <div class="w-full h-[90vh]">
