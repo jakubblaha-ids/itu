@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { InListItem } from 'backend'; // Ensure this path is correct
+import { ItemInList } from '../../../services/item-manager.service';
 
 @Component({
   selector: 'app-item-card',
@@ -7,7 +7,7 @@ import { InListItem } from 'backend'; // Ensure this path is correct
   styleUrls: ['./item-card.component.css'],
 })
 export class ItemCardComponent {
-  @Input() item: InListItem = {
+  @Input() item: ItemInList = {
     id: 0,
     itemId: null,
     customItemName: null,
@@ -15,6 +15,7 @@ export class ItemCardComponent {
     itemUnit: 'pcs',
     itemChecked: false,
     itemCheckedByUsername: '',
+    cathegory: 'custom',
   };
 
   @Output() editItem = new EventEmitter<void>();

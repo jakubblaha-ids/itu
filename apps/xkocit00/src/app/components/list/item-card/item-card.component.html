@@ -8,7 +8,7 @@
 
 <mat-card class="p-2 rounded-card background-secondary" (click)="onCheckItem()">
   <div class="flex justify-between items-center">
-    <div class="flex pl-3 gap-3 w-44">
+    <div class="flex pl-3 gap-3 min-w-36">
       <div class="flex items-center justify-center">
         <mat-slide-toggle
           [checked]="item.itemChecked"
@@ -18,18 +18,24 @@
         </mat-slide-toggle>
       </div>
 
-      <div class="w-full">
-        <div class="w-full text-center">
+      <div>
+        <div class="w-full text-center relative flex gap-1">
           <b>{{ item.customItemName || item.itemId }}</b>
+          <span class="text-xs mt-auto mb-auto">
+            {{ item.cathegory }}
+          </span>
         </div>
         <div class="w-full text-center">
-          {{ item.itemAmount }} {{ item.itemUnit }}
+          {{ item.itemAmount }}
+          {{ item.itemUnit == "custom" ? "" : item.itemUnit }}
         </div>
       </div>
     </div>
 
-    <div *ngIf="item.itemCheckedByUsername">
-      Bought by: {{ item.itemCheckedByUsername }}
+    <div class="place-self-end h-full">
+      <div *ngIf="item.itemCheckedByUsername" class="w-full text-center">
+        <b>{{ item.itemCheckedByUsername }}</b>
+      </div>
     </div>
 
     <div class="flex gap-2">

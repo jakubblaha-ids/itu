@@ -26,11 +26,11 @@ export class CreateListDialogComponent {
   ) {
     this.form = this.fb.group({
       listTitle: [
-        '',
+        'New List',
         [
           Validators.required,
           Validators.minLength(3),
-          this.titleValidator.bind(this),
+          // this.titleValidator.bind(this),
         ],
       ],
     });

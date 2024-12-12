@@ -3,7 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { InListItem, List } from 'backend'; // Ensure this path is correct
-import { ItemManagerService } from '../../services/item-manager.service';
+import {
+  ItemInList,
+  ItemManagerService,
+} from '../../services/item-manager.service';
 import {
   CreateItemDialogComponent,
   DialogData,
@@ -17,7 +20,7 @@ import { ConfiramtionDialogComponent } from '../confiramtion-dialog/confiramtion
 })
 export class ListComponent implements OnInit {
   listId!: string;
-  items: InListItem[] = [];
+  items: ItemInList[] = [];
   public sorting: string = 'alphabetically';
 
   constructor(
@@ -124,11 +127,11 @@ export class ListComponent implements OnInit {
     this.loadItems();
   }
 
-  get checkedItems(): InListItem[] {
+  get checkedItems(): ItemInList[] {
     return this.items.filter((item) => item.itemChecked);
   }
 
-  get uncheckedItems(): InListItem[] {
+  get uncheckedItems(): ItemInList[] {
     return this.items.filter((item) => !item.itemChecked);
   }
 
@@ -141,7 +144,18 @@ export class ListComponent implements OnInit {
         ),
       );
     } else if (value === 'byCategory') {
-      // Implement sorting by category if needed
+      this.items.sort((a, b) => {
+        if (a.cathegory < b.cathegory) {
+          return -1;
+        } else if (a.cathegory > b.cathegory) {
+          return 1;
+        } else {
+          // Categories are the same, sort by name
+          return (a.customItemName ?? a.itemId ?? '').localeCompare(
+            b.customItemName ?? b.itemId ?? '',
+          );
+        }
+      });
     }
   }
 
@@ -150,8 +164,8 @@ export class ListComponent implements OnInit {
       .open(ConfiramtionDialogComponent, {
         width: '350px',
         data: {
-          title: 'Delete all checked items',
-          message: 'Are you sure you want to delete all checked items?',
+          header: 'Delete all checked items',
+          warning: 'Are you sure you want to delete all checked items?',
         },
       })
       .afterClosed()

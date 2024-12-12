@@ -1,18 +1,18 @@
 .form-container {
     display: flex;
     flex-direction: column;
-    gap: 16px; /* Adjust the gap as needed */
+    gap: 16px; 
   }
   
   .form-row {
     display: flex;
     flex-direction: row;
-    gap: 16px; /* Adjust the gap as needed */
+    gap: 16px; 
   }
   
   .form-field {
     flex: 1;
-    min-width: 50% /* Adjust the minimum width as needed */
+    min-width: calc(50% - 16px) 
   }
   
   .full-width {

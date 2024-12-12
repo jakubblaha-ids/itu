@@ -102,8 +102,8 @@ export class ListOfListsComponent implements OnInit {
   }
 
   public shareList(list: List): void {
-    this.clipboard.copy(list.id);
-    this.snackBar.open('List ID copied to clipboard', 'Close', {
+    this.clipboard.copy(list.code.toString());
+    this.snackBar.open('List code copied to clipboard', 'Close', {
       duration: 2000,
     });
     console.log('Share list ' + list);
@@ -113,7 +113,7 @@ export class ListOfListsComponent implements OnInit {
     const dialogRef = this.dialog.open(CreateListDialogComponent, {
       width: '350px',
       data: {
-        listTitle: '',
+        listTitle: 'New List',
         isEdit: false,
         existingTitles: this.lists.map((item) => item.listTitle),
       } as ListDialogData,

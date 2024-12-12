@@ -59,7 +59,7 @@
     </mat-form-field>
   </form>
 </div>
-<div mat-dialog-actions>
+<div mat-dialog-actions align="end">
   <button mat-button (click)="onNoClick()">Cancel</button>
   <button mat-button (click)="onCreateClick()" [disabled]="form.invalid">
     {{ data.isEdit ? "Edit" : "Create" }}

@@ -4,26 +4,22 @@ import { ListManagerService } from './list-manager.service'; // Ensure this path
 import { UserManagerService } from './user-manager.service';
 import { BehaviorSubject } from 'rxjs';
 
+export interface ItemInList extends InListItem {
+  cathegory: string;
+}
 @Injectable({
   providedIn: 'root',
 })
 export class ItemManagerService {
   private itemManager: ItemManagerBase;
-  private itemsSource = new BehaviorSubject<InListItem[]>([]);
+  private itemsSource = new BehaviorSubject<ItemInList[]>([]);
   public items$ = this.itemsSource.asObservable();
-  private recentlyUsedItems: Item[] = [];
 
   constructor(
     private listManagerService: ListManagerService,
     private userManagerService: UserManagerService,
   ) {
     this.itemManager = new ItemManagerBase();
-    this.itemManager.getRecentlyUsedItems().forEach((item: any) => {
-      // TODO: fix
-      // let it: Item = { id: item.itemId, categoryName: item };
-      this.itemManager.getNameOfitemId(item.itemId);
-      // this.recentlyUsedItems.push(item);
-    });
   }
 
   getManager(): ItemManagerBase {
@@ -34,7 +30,27 @@ export class ItemManagerService {
     const listData = await this.listManagerService
       .getManager()
       .getListData(listId);
-    this.itemsSource.next(listData ? listData.listItems : []);
+    await this.itemManager.refreshAvailableItems();
+
+    let listItems = listData?.listItems as ItemInList[];
+
+    listItems.forEach((element) => {
+      if (!element.customItemName) {
+        console.log(element);
+        element.customItemName = this.itemManager.getNameOfitemId(
+          element.itemId ?? '',
+        );
+      }
+    });
+
+    listItems.forEach((element) => {
+      if (!element.cathegory) {
+        element.cathegory = this.itemManager.getCategoryNameOfItemId(
+          element.itemId ?? '',
+        );
+      }
+    });
+    this.itemsSource.next(listItems ? listItems : []);
   }
 
   async addItemToList(listId: string, item: InListItem): Promise<void> {

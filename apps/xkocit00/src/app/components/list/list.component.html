@@ -27,14 +27,17 @@
   </div>
 
   <div class="flex justify-between items-center">
-    <button
-      mat-fab
-      class="fixed bottom-10 right-10 translate-x-10 translate-y-10"
-      style="background-color: #65558f; color: white"
-      (click)="deleteSelected()"
-    >
-      <mat-icon>delete</mat-icon>
-    </button>
+    <div>
+      <button
+        mat-fab
+        class="fixed bottom-10 right-10 translate-x-10 translate-y-10"
+        style="background-color: #65558f; color: white"
+        (click)="deleteSelected()"
+        *ngIf="checkedItems.length > 0"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
     <button
       mat-fab
       class="fixed bottom-10 right-10 translate-x-10 translate-y-10"
