@@ -1,14 +1,19 @@
+// author: Pavel Lukl, xluklp00
+// defines the ListManager class
+
 import { ItemManagerBase, ListManagerBase, UserManagerBase, type InListItem, type ItemAmountUnit, type List, type ListManagerBaseOptions } from "backend";
 import { get, writable } from "svelte/store";
 import { defaultListSortDir, defaultListSortType, type ListSortDir, type ListSortType } from "./listSort";
 import { itemManager } from ".";
 
+// compare function for sorting
 function cmpName(a: InListItem, b: InListItem, dir: ListSortDir) {
     if((a.customItemName || itemManager.getNameOfitemId(a.itemId!)) < (b.customItemName || itemManager.getNameOfitemId(b.itemId!))) return dir === 'asc' ? -1 : 1;
     if((a.customItemName || itemManager.getNameOfitemId(a.itemId!)) > (b.customItemName || itemManager.getNameOfitemId(b.itemId!))) return dir === 'asc' ? 1 : -1;
     return 0;
 }
 
+// compare function for sorting
 function cmpCategory(a: InListItem, b: InListItem, dir: ListSortDir) {
     const aCat = itemManager.getCategoryNameOfItemId(a.itemId);
     const bCat = itemManager.getCategoryNameOfItemId(b.itemId);
@@ -20,10 +25,15 @@ function cmpCategory(a: InListItem, b: InListItem, dir: ListSortDir) {
 }
 
 export class ListManager extends ListManagerBase {
+    // svelte store for lists
     lists = writable<List[]>([]);
+    // svelte store for selected list
     selectedList = writable<List | null>(null);
+    // svelte store for selected list id
     selectedListIdStore = writable<string>("null");
+    // svelte store for selected list sort type
     selectedListSortType = writable<ListSortType>(defaultListSortType);
+    // svelte store for selected list
     selectedListSortDir = writable<ListSortDir>(defaultListSortDir);
     
     constructor(itemManager: ItemManagerBase, userManager: UserManagerBase, options: ListManagerBaseOptions = {}
@@ -33,6 +43,7 @@ export class ListManager extends ListManagerBase {
             onAvailableListsChange: (lists) => {
                 this.lists.set(lists);
             },
+            // automatically sort selected list when it changes
             onSelectedListDataChange: (list) => {
                 if(!list) {
                     this.selectedList.set(null);
@@ -64,7 +75,7 @@ export class ListManager extends ListManagerBase {
         });
     }
     
-
+    // sorts the selected list
     sortSelectedList(type: ListSortType, dir: ListSortDir) {
         this.selectedListSortType.set(type);
         this.selectedListSortDir.set(dir);
@@ -75,6 +86,7 @@ export class ListManager extends ListManagerBase {
         this.options.onSelectedListDataChange?.(list);
     }
 
+    // edit item in list
     async editItem(list: List, id: number, amount: number | string, unit: ItemAmountUnit): Promise<void> {
 		let item = list.listItems.find((item) => item.id === id);
         if(!item) return;

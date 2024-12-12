@@ -1,3 +1,5 @@
+// author: Pavel Lukl, xluklp00
+// defines supporting types for the drawer component
 import type { Item, ItemAmountUnit, RecentlyUsedItem } from "backend";
 
 export type ItemToAdd = {

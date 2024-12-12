@@ -1,3 +1,6 @@
+// author: Pavel Lukl, xluklp00
+// initializes the firebase app and managers
+
 import { ItemManager } from './ItemManager';
 import { ListManager } from './ListManager';
 import { UserManager } from './UserManager';

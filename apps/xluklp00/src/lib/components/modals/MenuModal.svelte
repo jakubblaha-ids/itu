@@ -1,3 +1,6 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Menu modal used on the list detail page -->
+
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import Bin from "$icons/Bin.svelte";

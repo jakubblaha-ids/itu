@@ -1,6 +1,9 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Modal for changing the username -->
+
 <script lang="ts">
 	import Check from "$icons/Check.svelte";
-import { userManager } from "$lib/script";
+    import { userManager } from "$lib/script";
 	import { onMount } from "svelte";
 	import Modal from "./Modal.svelte";
 

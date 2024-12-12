@@ -1,3 +1,6 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Component for inputting the amount of units of an item -->
+
 <script lang="ts">
 	import { fade } from "svelte/transition";
 

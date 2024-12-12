@@ -1,3 +1,5 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Modal for importing a list using a code -->
 <script lang="ts">
 	import { listManager } from "$lib/script";
 	import { slide } from "svelte/transition";

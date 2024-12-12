@@ -1,3 +1,6 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Partial component which displays an item in a list -->
+
 <script lang="ts">
 	import type { InListItem } from "backend";
 	import StringListItem from "./StringListItem.svelte";

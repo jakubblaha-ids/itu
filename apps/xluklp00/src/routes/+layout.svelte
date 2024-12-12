@@ -1,3 +1,5 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+
 <script lang="ts">
 	import '../app.css';
 	import DataReload from '$lib/components/DataReload.svelte';
@@ -6,6 +8,10 @@
 
 	let { children } = $props();
 </script>
+
+<svelte:head>
+	<title>Shopli!</title>
+</svelte:head>
 
 <DataReload />
 

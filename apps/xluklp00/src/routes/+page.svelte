@@ -1,3 +1,5 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Redirects to last selected list or all lists on mount -->
 <script lang="ts">
 	import { goto } from '$app/navigation';
   import Loader from '$lib/components/Loader.svelte';

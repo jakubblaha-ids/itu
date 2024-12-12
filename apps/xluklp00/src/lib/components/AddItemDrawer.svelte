@@ -1,3 +1,6 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Drawer for adding items to a list -->
+
 <script lang="ts">
 	import Check from "$icons/Check.svelte";
 	import ChevronRight from "$icons/ChevronRight.svelte";
@@ -124,7 +127,7 @@
                 </button>
             </div>
 
-            {#if localDrawerState.recentlyUsedItems.length > 0}
+            {#if localDrawerState.recentlyUsedItems.filter((i) => !idsInList.includes(i.itemId)).length > 0}
                 <div class="flex flex-col w-full">
                     <div class="text-gray">Recently Used</div>
                     <div class="flex gap-2 overflow-auto overflow-y-hidden w-full px-2 py-1">

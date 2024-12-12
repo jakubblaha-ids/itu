@@ -1,3 +1,6 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Base modal component -->
+
 <script lang="ts">
 	import Cross from "$icons/Cross.svelte";
     import type { Snippet } from "svelte";

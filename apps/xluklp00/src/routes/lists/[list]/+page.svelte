@@ -1,3 +1,6 @@
+<!-- Author: Pavel Lukl, xluklp00 -->
+<!-- Displays list details -->
+
 <script lang="ts">
 	import ArrowDown from "$icons/ArrowDown.svelte";
 	import Bin from "$icons/Bin.svelte";
@@ -15,6 +18,7 @@
 	import { flip } from "svelte/animate";
 	import { fade, fly, slide } from "svelte/transition";
 
+    // get list data
     let { data }: { data: List } = $props();
     const { selectedList } = listManager;
 
