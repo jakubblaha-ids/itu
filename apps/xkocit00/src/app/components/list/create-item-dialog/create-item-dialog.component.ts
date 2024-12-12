@@ -13,6 +13,11 @@ export interface DialogData {
   isEdit: boolean;
 }
 
+/**
+ * Create item dialog component
+ *
+ * @author Tomáš Kocí
+ */
 @Component({
   selector: 'app-create-item-dialog',
   templateUrl: './create-item-dialog.component.html',

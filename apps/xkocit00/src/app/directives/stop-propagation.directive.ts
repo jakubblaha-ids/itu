@@ -1,5 +1,12 @@
 import { Directive, HostListener } from '@angular/core';
 
+/**
+ * Directive to stop propagation of the event
+ * Used to prevent the click event from bubbling up the DOM tree
+ * and being caught by parent elements
+ *
+ * @author Tomáš Kocí
+ */
 @Directive({
   selector: '[appStopPropagation]',
 })

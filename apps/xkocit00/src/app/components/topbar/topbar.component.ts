@@ -1,6 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { UserManagerService } from '../../services/user-manager.service';
 
+/**
+ * Topbar component
+ *
+ * @author Tomáš Kocí
+ */
 @Component({
   selector: 'app-topbar',
   templateUrl: './topbar.component.html',

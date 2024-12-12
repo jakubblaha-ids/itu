@@ -10,6 +10,11 @@ export interface ListDialogData {
   existingTitles: string[];
 }
 
+/**
+ * Dialog for creating a new list
+ *
+ * @author Tomáš Kocí
+ */
 @Component({
   selector: 'app-create-list-dialog',
   templateUrl: './create-list-dialog.component.html',

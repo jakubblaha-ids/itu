@@ -36,7 +36,6 @@ import { SettingsDialogComponent } from './components/topbar/settings-dialog/set
 import { ItemManagerService } from './services/item-manager.service';
 import { ListManagerService } from './services/list-manager.service';
 import { ResourceManagerService } from './services/resource-manager.service';
-import { AuthService } from './services/auth.service';
 import { UserManagerService } from './services/user-manager.service';
 
 @NgModule({
@@ -77,7 +76,6 @@ import { UserManagerService } from './services/user-manager.service';
     ListManagerService,
     ItemManagerService,
     ResourceManagerService,
-    AuthService,
     UserManagerService,
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,

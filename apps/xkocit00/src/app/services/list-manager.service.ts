@@ -4,6 +4,11 @@ import { ItemManagerService } from './item-manager.service';
 import { UserManagerService } from './user-manager.service';
 import { BehaviorSubject } from 'rxjs';
 
+/**
+ * Service for managing lists wraps the ListManagerBase
+ *
+ * @author Tomáš Kocí
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -11,7 +16,7 @@ export class ListManagerService {
   private listManager: ListManagerBase;
   private availableLists: List[] = [];
   private avaliableListsSource = new BehaviorSubject<List[]>(
-    this.availableLists
+    this.availableLists,
   );
   public availableLists$ = this.avaliableListsSource.asObservable();
 
@@ -27,7 +32,7 @@ export class ListManagerService {
           this.onSelectedListDataChange(listData),
         onAvailableListsChange: (lists: List[]) =>
           this.onAvailableListsChange(lists),
-      }
+      },
     );
   }
 

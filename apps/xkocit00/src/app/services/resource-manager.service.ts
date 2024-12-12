@@ -11,6 +11,12 @@ const firebaseConfig = {
   appId: '1:83924909024:web:4bec0e1d9bcdd1956f8985',
 };
 
+/**
+ * Service for managing resources wraps the Firebase Firestore
+ *
+ * @author Tomáš Kocí
+ */
+
 @Injectable({
   providedIn: 'root',
 })

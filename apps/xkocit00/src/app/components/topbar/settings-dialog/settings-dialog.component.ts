@@ -6,6 +6,11 @@ export interface SettingsDialogData {
   name: string;
 }
 
+/**
+ * Dialog for settings allows user to change his name
+ *
+ * @author Tomáš Kocí
+ */
 @Component({
   selector: 'app-settings-dialog',
   templateUrl: './settings-dialog.component.html',

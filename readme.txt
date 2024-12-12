@@ -27,6 +27,11 @@ src
 Struktrua apps/xcalko00:
 
 Struktrua apps/xkocit00:
+├── src
+│   ├── app ----------------------------------- angular root adresář, základní modul, definice navigace
+│   │   ├── components  ----------------------- použité UI komponenty
+│   │   ├── services    ----------------------- angular služby pro práci s daty
+│   │   ├── directives  ----------------------- jediná použitá custom directive(zabaleno do adresáře pouze pro clean code)
 
 Struktrua apps/xluklp00:
 ├── lib                                 

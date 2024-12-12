@@ -7,6 +7,12 @@ import { BehaviorSubject } from 'rxjs';
 export interface ItemInList extends InListItem {
   cathegory: string;
 }
+
+/**
+ * Service for managing items wraps the ItemManagerBase
+ *
+ * @author Tomáš Kocí
+ */
 @Injectable({
   providedIn: 'root',
 })

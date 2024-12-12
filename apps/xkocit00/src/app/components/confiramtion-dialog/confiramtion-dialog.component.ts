@@ -6,6 +6,11 @@ export interface ConfirmationDialogData {
   warning: string;
 }
 
+/**
+ * Generic component for confirmation dialog
+ *
+ * @author Tomáš Kocí
+ */
 @Component({
   selector: 'app-confiramtion-dialog',
   templateUrl: './confiramtion-dialog.component.html',
@@ -14,7 +19,7 @@ export interface ConfirmationDialogData {
 export class ConfiramtionDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ConfiramtionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData,
   ) {}
 
   onCancelClick(): void {

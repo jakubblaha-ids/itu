@@ -1,6 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ItemInList } from '../../../services/item-manager.service';
 
+/**
+ * Component for displaying item within a shopping list
+ *
+ * @author Tomáš Kocí
+ */
 @Component({
   selector: 'app-item-card',
   templateUrl: './item-card.component.html',

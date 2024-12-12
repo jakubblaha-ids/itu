@@ -8,6 +8,11 @@ import {
 } from '@angular/core';
 import { List } from 'backend';
 
+/**
+ * Component for displaying a signle shopping list
+ *
+ * @author Tomáš Kocí
+ */
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',

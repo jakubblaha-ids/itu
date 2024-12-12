@@ -13,6 +13,11 @@ import {
 } from './create-item-dialog/create-item-dialog.component';
 import { ConfiramtionDialogComponent } from '../confiramtion-dialog/confiramtion-dialog.component';
 
+/**
+ * Shopping list component
+ *
+ * @author Tomáš Kocí
+ */
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',

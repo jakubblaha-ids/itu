@@ -3,6 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserManagerBase } from 'backend'; // Ensure this path is correct
 import { SettingsDialogComponent } from '../components/topbar/settings-dialog/settings-dialog.component';
 
+/**
+ * Service for managing user wraps the UserManagerBase
+ *
+ * @author Tomáš Kocí
+ */
+
 @Injectable({
   providedIn: 'root',
 })

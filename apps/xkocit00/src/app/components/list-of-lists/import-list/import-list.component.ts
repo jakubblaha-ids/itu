@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+/**
+ * Dialog for importing list
+ *
+ * @author Tomáš Kocí
+ */
 @Component({
   selector: 'app-import-list',
   templateUrl: './import-list.component.html',

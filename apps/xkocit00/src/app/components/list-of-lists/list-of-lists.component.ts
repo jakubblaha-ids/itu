@@ -12,6 +12,11 @@ import {
 import { ImportListComponent } from './import-list/import-list.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+/**
+ * Main page component displaying all available shopping lists
+ *
+ * @author Tomáš Kocí
+ */
 @Component({
   selector: 'app-list-of-lists',
   templateUrl: './list-of-lists.component.html',
