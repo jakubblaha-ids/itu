@@ -1,22 +1,33 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { type Item } from 'backend';
 
 const open = ref(true)
 const text = ref('1')
-const newAmount = ref(0); 
+const newAmount = ref(0) 
 const amountUnit = ref('pcs');
 const customAmountUnit = ref('');
 
 const props = defineProps<{
-    name: string;
-    amount: number,
-    item: Item | undefined,
+    name: string | null;
+    amount: number | string,
     unit: string;
     close(unit: string, amount:number): void;
-    cancel(item: Item): void;
+    cancel():void;
+    delete():void;
 }>()
+
+onMounted(() => {
+    text.value = props.amount.toString();
+    if(typeof props.amount == 'number'){
+        newAmount.value = props.amount;
+    }
+    else{
+        newAmount.value = parseInt(props.amount);
+    }
+    amountUnit.value = props.unit;
+    console.log(amountUnit.value)
+});
 
 function onInput(event: Event) {
   text.value = (event.target as HTMLInputElement).value;
@@ -40,13 +51,7 @@ const setAmount = (amount: number):void => {
 const saveAndClose = (): void =>{
     if(amountUnit.value == 'custom')
         amountUnit.value = customAmountUnit.value;
-    console.log(amountUnit.value)
     props.close(amountUnit.value, newAmount.value);
-    open.value = false;
-}
-
-const cancel = (item:Item): void => {
-    props.cancel(item);
     open.value = false;
 }
 
@@ -55,9 +60,6 @@ const cancel = (item:Item): void => {
 <template>
     <TransitionRoot as="template" :show="open">
         <Dialog class="fixed inset-0 z-[9999] flex items-end justify-center" @close="open = false">
-        <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
-          <div class="fixed inset-0 bg-gray-500/75 transition-opacity" />
-        </TransitionChild>
   
         <div class="fixed w-full m-0 justify-around">
           <div class="flex min-h-full items-end justify-center text-center z-10 w-full m-0">
@@ -94,11 +96,6 @@ const cancel = (item:Item): void => {
                         </div>
                       </div>
                         <div class="flex flex-row justify-center mt-3 gap-5">
-                            <!-- <button @click="undoAddAmount" type="button" class="mr-5 text-black hover:text-white border border-blue-700 hover:bg-primary focus:ring-4 focus:outline-none focus:ring-blue-300 font-light rounded-lg text-xs px-1  text-center me-1 mb-1 dark:border-primary dark:text-primary dark:hover:text-white dark:hover:bg-primary dark:focus:ring-primary">
-                                <svg class="h-4 w-4" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-slot="icon">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"></path>
-                                </svg>
-                            </button> -->
                             <div class="flex flex-row">
                                 <button @click="setAmount(-1)" type="button" class="text-black  border border-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-light rounded-lg text-xs px-1  text-center me-1 mb-1 dark:border-primary dark:text-primary dark:hover:text-white dark:hover:bg-primary dark:focus:ring-primary">-1</button> 
                                 <button @click="setAmount(-10)" type="button" class="text-black  border border-black  focus:ring-4 focus:outline-none focus:ring-blue-300 font-light rounded-lg text-xs px-1  text-center me-1 mb-1 dark:border-primary dark:text-primary dark:hover:text-white dark:hover:bg-primary dark:focus:ring-primary">-10</button>
@@ -114,8 +111,9 @@ const cancel = (item:Item): void => {
 
                   </div>
                 </div>
-                <div class="bg-gray-50 px-auto py-3 sm:flex sm:flex-row-reverse sm:px-6 flex flex-row gap-5 justify-center">
-                    <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white mx-4 px-3 py-2 text-sm font-semibold text-primary shadow-sm ring-1 ring-inset ring-primary hover:bg-gray-50 sm:mt-0 sm:w-auto" @click="cancel(props.item!)" ref="cancelButtonRef">Cancel</button>
+                <div class="bg-gray-50 px-auto py-3 sm:flex sm:flex-row-reverse sm:px-6 flex flex-row gap-5 justify-around">
+                    <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-red mx-4 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-red hover:bg-red-50 sm:mt-0 sm:w-auto" @click="props.delete" ref="cancelButtonRef">Delete</button>
+                    <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white mx-4 px-3 py-2 text-sm font-semibold text-primary shadow-sm ring-1 ring-inset ring-primary hover:bg-gray-50 sm:mt-0 sm:w-auto" @click="props.cancel" ref="cancelButtonRef">Cancel</button>
                     <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-primary mx-4 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-primary hover:bg-gray-50 sm:mt-0 sm:w-auto" @click="saveAndClose" ref="cancelButtonRef">OK</button> 
                 </div>
               </DialogPanel>

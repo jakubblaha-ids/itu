@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
-import AmountUnitDropdown from '@/components/AmountUnitDropdown.vue';
 
 const props = defineProps<{
     title: string;

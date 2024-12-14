@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { type InListItem } from 'backend';
-import { ref, defineProps, onMounted, inject } from 'vue';
+import { ref, onMounted, inject } from 'vue';
 import { type ItemManager } from '@/managers/ItemManager';
-import { userManager } from '@/managers/list';
+import type { UserManager } from '@/managers/UserManager';
 
 const itemManager = inject('itemManager') as ItemManager;
+const userManager = inject('userManager') as UserManager;
 
 const name = ref('')
-const checkedByUser = ref('')
+const checkedByUser = ref(userManager.getUsername());
+const category = ref('')
 
 const props = defineProps<{
     item: InListItem;
@@ -23,6 +25,10 @@ onMounted(() => {
             if(props.item.customItemName)
                 name.value = props.item.customItemName;
         }
+        category.value = itemManager.getCategoryNameOfItemId(props.item.itemId);
+    }
+    else{
+        name.value = props.item.customItemName!;
     }
 });
 
@@ -34,8 +40,8 @@ const check = (item: InListItem) => {
 </script>
 
 <template>
-    <div class="flex" @click="onItemClick(item)">
-        <div>{{ name }}</div>
+    <div class="flex flex-col" @click="onItemClick(item)">
+        <div class="text-xs">{{ name }}</div>
     </div>
     <div class="flex flex-row grid-cols-2 gap-4">
         <div class="shadow bg-mypink bg-opacity-30 rounded-2xl .gap-20 justify-start" v-if="item.itemChecked">

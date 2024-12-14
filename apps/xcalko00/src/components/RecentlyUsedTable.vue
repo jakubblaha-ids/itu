@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref, inject, onMounted } from 'vue';
 import { type RecentlyUsedItem } from 'backend';
-import { type List } from 'backend';
-import { defineProps } from 'vue';
-import { on } from 'devextreme/events';
 import { ItemManager } from '@/managers/ItemManager';
 import RecentlyAdded from '@/components/RecentlyAdded.vue';
 
@@ -24,7 +21,7 @@ onMounted(async () => {
 
 
 <template>
-    <p class="text-gray-500">Recently used items</p>
+    <!-- <p class="text-gray-500">Recently used items</p> -->
     <div class="grid grid-cols-2 gap-1 hover:cursor-pointer">
         <template v-for="item in recentlyUsedItems" :key="item.itemId">
                 <RecentlyAdded :item="item" @click="props.toBeAdded(item)"/>
