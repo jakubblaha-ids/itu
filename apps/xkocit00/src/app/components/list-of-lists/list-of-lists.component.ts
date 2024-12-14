@@ -40,15 +40,22 @@ export class ListOfListsComponent implements OnInit {
   }
 
   public resetList(list: List): void {
-    this.dialog.open(ConfiramtionDialogComponent, {
-      data: {
-        header: 'Reset list',
-        warning:
-          'Are you sure you want to reset the list ' +
-          list.listTitle +
-          '? All items will be marked as unchecked.',
-      },
-    });
+    this.dialog
+      .open(ConfiramtionDialogComponent, {
+        data: {
+          header: 'Reset list',
+          warning:
+            'Are you sure you want to reset the list ' +
+            list.listTitle +
+            '? All items will be marked as unchecked.',
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.listManager.resetList(list.id);
+        }
+      });
   }
 
   public viewList(list: List): void {
@@ -65,7 +72,6 @@ export class ListOfListsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('Delete list ' + list.id);
         this.listManager.deleteList(list.id);
       }
     });
@@ -101,7 +107,7 @@ export class ListOfListsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.listManager.createList(result.listTitle);
+        this.listManager.copyList(list, result.listTitle);
       }
     });
   }
@@ -111,7 +117,6 @@ export class ListOfListsComponent implements OnInit {
     this.snackBar.open('List code copied to clipboard', 'Close', {
       duration: 2000,
     });
-    console.log('Share list ' + list);
   }
 
   public async addList(): Promise<void> {
@@ -126,7 +131,6 @@ export class ListOfListsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
-        console.log('Create list', result);
         await this.listManager.createList(result.listTitle);
       }
     });
@@ -140,7 +144,6 @@ export class ListOfListsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.listManager.importList(Number(result.uid));
-        console.log('Import list with UID', result.uid);
         // Handle the imported list using the UID
       }
     });

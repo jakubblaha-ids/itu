@@ -73,7 +73,6 @@ export class ListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(async (result) => {
       if (result) {
-        console.log(result);
         const newItem: InListItem = {
           id: new Date().getTime(),
           itemId: null,

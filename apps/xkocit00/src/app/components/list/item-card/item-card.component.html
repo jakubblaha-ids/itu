@@ -18,16 +18,20 @@
         </mat-slide-toggle>
       </div>
 
-      <div>
-        <div class="w-full text-center relative flex gap-1">
-          <b>{{ item.customItemName || item.itemId }}</b>
+      <div class="flex flex-row gap-1">
+        <div>
+          <div class="w-full text-center">
+            <b>{{ item.customItemName || item.itemId }}</b>
+          </div>
+          <div class="w-full text-center">
+            {{ item.itemAmount }}
+            {{ item.itemUnit == "custom" ? "" : item.itemUnit }}
+          </div>
+        </div>
+        <div>
           <span class="text-xs mt-auto mb-auto">
             {{ item.cathegory }}
           </span>
-        </div>
-        <div class="w-full text-center">
-          {{ item.itemAmount }}
-          {{ item.itemUnit == "custom" ? "" : item.itemUnit }}
         </div>
       </div>
     </div>

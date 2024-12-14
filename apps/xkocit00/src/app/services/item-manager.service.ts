@@ -42,7 +42,6 @@ export class ItemManagerService {
 
     listItems.forEach((element) => {
       if (!element.customItemName) {
-        console.log(element);
         element.customItemName = this.itemManager.getNameOfitemId(
           element.itemId ?? '',
         );
@@ -64,8 +63,6 @@ export class ItemManagerService {
       .getManager()
       .getListData(listId);
     if (listData) {
-      console.log(listData);
-      console.log('Adding item to list:', item);
       listData.listItems.push(item);
       await this.listManagerService.getManager().setListData(listId, listData);
     }

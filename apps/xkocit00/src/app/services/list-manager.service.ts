@@ -41,28 +41,41 @@ export class ListManagerService {
   }
 
   private onSelectedListChange(listId: string): void {
-    console.log('Selected list ID changed to:', listId);
     // Update state or perform other actions
   }
 
   private onSelectedListDataChange(listData: List): void {
-    console.log('Selected list data:', listData);
     // Update state or perform other actions
   }
 
   private onAvailableListsChange(lists: List[]): void {
     this.availableLists = lists;
     this.avaliableListsSource.next(this.availableLists);
-    console.log('Available lists:', lists);
     // Update state or perform other actions
   }
 
   public async createList(name: string): Promise<void> {
     await this.listManager.createList();
+
     const newListId = localStorage.getItem('lastSelectedList');
-    console.log('New list ID from create:', newListId);
     if (newListId != null) {
       await this.listManager.setListTitle(newListId, name);
+    }
+
+    this.listManager.refreshAvailableLists();
+  }
+
+  public async copyList(list: List, listNewName: string): Promise<void> {
+    await this.listManager.createList();
+
+    const newListId = localStorage.getItem('lastSelectedList');
+    if (newListId != null) {
+      await this.listManager.setListTitle(newListId, listNewName);
+      let listData = await this.listManager.getListData(newListId);
+      if (listData != null) {
+        listData.listItems = list.listItems;
+        await this.listManager.setListData(newListId, listData);
+      }
     }
     this.listManager.refreshAvailableLists();
   }
@@ -78,8 +91,6 @@ export class ListManagerService {
   }
 
   public async importList(code: number): Promise<void> {
-    console.log('Importing list with code:', code);
-    console.log(typeof code);
     await this.listManager.importList(code);
     this.listManager.refreshAvailableLists();
   }
@@ -87,5 +98,22 @@ export class ListManagerService {
   public async setListTitle(listId: string, title: string): Promise<void> {
     await this.listManager.setListTitle(listId, title);
     this.listManager.refreshAvailableLists();
+  }
+
+  public async resetList(listId: string): Promise<void> {
+    // get list items
+    const listItems = await this.listManager.getListData(listId);
+    if (listItems == null) {
+      return;
+    }
+
+    // reset list items
+    listItems?.listItems.forEach((item) => {
+      if (item.itemChecked) {
+        item.itemChecked = false;
+        item.itemCheckedByUsername = '';
+      }
+    });
+    this.getManager().setListData(listId, listItems);
   }
 }

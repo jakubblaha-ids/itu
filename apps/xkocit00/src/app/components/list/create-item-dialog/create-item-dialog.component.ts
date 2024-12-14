@@ -45,7 +45,6 @@ export class CreateItemDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.originalName = JSON.parse(JSON.stringify(this.data.name));
-    console.log(this.data);
     if (this.data.isEdit) {
       let type: string = this.data.quantityType;
       let customQuantity: string = '';
@@ -76,7 +75,6 @@ export class CreateItemDialogComponent implements OnInit {
       if (this.form.value.quantityType === 'custom') {
         this.form.value.quantityType = this.form.value.customQuantityType;
       }
-      console.log(this.form.value);
       this.dialogRef.close(this.form.value);
     }
   }

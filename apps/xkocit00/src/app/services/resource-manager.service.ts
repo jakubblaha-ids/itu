@@ -26,12 +26,10 @@ export class ResourceManagerService {
 
   constructor() {
     if (!getApps().length) {
-      console.log('Initializing Firebase app');
       this.firebaseApp = initializeApp(firebaseConfig);
     } else {
       this.firebaseApp = getApp();
     }
-    console.log(getApp());
     this.firestore = getFirestore(this.firebaseApp);
   }
 

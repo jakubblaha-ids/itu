@@ -22,7 +22,6 @@ export class TopbarComponent {
   }
 
   public navigateToSettings(): void {
-    console.log('Navigate to settings');
     this.userManager.openSettings();
     // Navigate to the settings page
   }
