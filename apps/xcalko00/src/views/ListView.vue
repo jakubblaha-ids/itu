@@ -4,47 +4,39 @@ import { useRouter } from 'vue-router';
 import { type List, type Item, type InListItem, type ItemAmountUnit } from 'backend';
 import type { ListManager } from '@/managers/ListManager';
 import type { ItemManager } from '@/managers/ItemManager';
-import type { UserManager } from '@/managers/UserManager';
-import Dropdown from '@/components/Dropdown.vue';
-import AmountUnitDropdown from '@/components/AmountUnitDropdown.vue';
-import InputAmount from '@/components/Input.vue';
-
+import { VueDraggableNext } from 'vue-draggable-next';
 import ListHeader from '@/components/ListsActionMenu.vue';
-import { defineProps } from 'vue';
 import ItemRow from '@/components/ItemRow.vue';
+import EditItem from '@/components/EditItem.vue';
+import ModalWindow from '@/components/ModalWindow.vue';
+import ShareModal from '@/components/ShareModal.vue';
+import { userManager } from '@/managers/list';
 
 const listManager = inject('listManager') as ListManager;
 const itemManager = inject('itemManager') as ItemManager;
-const userManager = inject('userManager') as UserManager;
 const list = reactive(ref<List | null>(null));
-const items = ref<InListItem[]>([]);
 const router = useRouter();
 const editModal = ref(false);
-const addItemModal = ref(false);
 const editItemModal = ref(false);
 const shareListModal = ref(false);
-const newUnit = ref('pcs');
+const isDrawerOpen = ref(false);
+const categories = ref(['']);
 
 const code = ref(0);
 
 var newItem: InListItem = {id: 0, customItemName: "", itemAmount: 0, itemChecked: false, itemId: "", itemUnit: ("" as "g"), itemCheckedByUsername: ""};
 const sortOrder = ref('Name');
-
-var newName: string = '';
+const newName = ref('')
 
 const props = defineProps<{
     id: string;
 }>();
 
 async function saveListTitle(){
-    await listManager.setListTitle(props.id, newName);
-    list.value = await listManager.getListData(props.id);
-    closeModal();
-    newName = '';
-}
-
-function editListModal() {
-    editModal.value = true;
+  if(list.value?.listTitle)
+    list.value.listTitle = newName.value;
+    editModal.value = false;
+  await listManager.setListTitle(props.id, newName.value);
 }
 
 function openAddItemModal() {
@@ -60,16 +52,6 @@ function goBack() {
     router.push('/');
 }
 
-function closeModal() {
-    editModal.value = false;
-}
-
-// function closeAddItemModal(){
-//   listManager.clearItemsToAdd();
-//   addItemModal.value = false;
-//   filter.value = '';
-// }
-
 onMounted(async () => {
   if (listManager) {
     list.value = await listManager.getListData(props.id);
@@ -77,10 +59,12 @@ onMounted(async () => {
       code.value = list.value.code;
     }
   }
+  categories.value = listManager.getCategories(list.value!);
 });
 
 
-function checkItem(item: InListItem) {  
+function checkItem(item: InListItem) { 
+  item.itemCheckedByUsername = userManager.getUsername(); 
   listManager.toggleItemChecked(props.id, item.id);
 }
 
@@ -91,28 +75,27 @@ function onItemClick(item: InListItem) {
   editItemModal.value = true;
 }
 
-function closeEditItem(){
-  editItemModal.value = false;
-}
-
-async function saveEditItem(){
+async function saveEditItem(unit: string, amount:number){
   if(list.value){
-    listManager.editItem(list.value, newItem.customItemName, newItem.itemAmount, newItem.id, newItem.itemUnit);
+    listManager.editItem(list.value, newItem.customItemName, amount, newItem.id, unit as ItemAmountUnit);
   }
   list.value = await listManager.getListData(props.id);
   editItemModal.value = false;
 }
 
-function setUnit(option: string){
-  newUnit.value = option;
-}
-
 const sorted = computed(() => {
   if (sortOrder.value === 'Category') {
     return list.value?.listItems.sort((a, b) => {
-      let catA = itemManager.getCategoryNameOfItemId(a.itemId).toUpperCase();
-      let catB = itemManager.getCategoryNameOfItemId(b.itemId).toUpperCase();
-      return catA < catB ? -1 : 1;
+      let catA = itemManager.getCategoryNameOfItemId(a.itemId);
+      let catB = itemManager.getCategoryNameOfItemId(b.itemId);
+
+      let indexA = categories.value.indexOf(catA);
+      let indexB = categories.value.indexOf(catB);
+
+      if (indexA === -1) indexA = Infinity;
+      if (indexB === -1) indexB = Infinity;
+
+      return indexA < indexB ? -1 : 1;
     });
   } else if (sortOrder.value === 'Name') {
     return list.value?.listItems.sort((a, b) => {
@@ -127,7 +110,6 @@ const sorted = computed(() => {
       if(nameB == "UNKNOWN ITEM" && b.customItemName){
         nameB = b.customItemName.toUpperCase();
       }
-      console.log(nameA + " " + nameB);
       return nameA < nameB ? -1 : 1;
     });
   } else {
@@ -136,83 +118,38 @@ const sorted = computed(() => {
 });
 
 function setSortOption(option: string){
-  console.log(option);
   sortOrder.value = option;
 }
 
-// watch(newAmount, async () => {
-//   if (list.value) {
-//     listManager.setAmountToAdd(selectedItemId.value, newAmount.value, newUnit.value as ItemAmountUnit);
-//   }
-// });
-
-// watch(filter, async () => {
-//   if (filter.value.length > 0) {
-//     filterItems.value = itemManager.getAvailableItems(filter.value);
-//     if (filterItems.value.length === 0) {
-//       filterItems.value = [{id: "", name: filter.value} as Item];
-//     }
-//   } else {
-//     filterItems.value = [];
-//   }
-// });
-
-// const selected = (item: Item): boolean => {
-//   return listManager.isToBeAdded(item.name);
-// }
-
-// function onInput(event: Event) {
-//   text = (event.target as HTMLInputElement).value;
-//   newAmount.value = parseInt(text);
-// }
 
 const getColor = (item: InListItem) => {
   let cat = itemManager.getCategoryNameOfItemId(item.itemId);
   console.log(cat);
   switch(cat){
-    case "Fruits":
-      return "bg-fruits";
-    case "Vegetables":
-      return "bg-vegetables";
-    case "Dairy":
-      return "bg-dairy";
-    case "Meat":
-      return "bg-meat";
-    case "Bread":
-      return "bg-bread";
-    case "Sweets":
-      return "bg-sweets";
-    case "Drinks":
-      return "bg-drinks";
-    case "Spices":
-      return "bg-spices";
-    case "Other":
-      return "bg-other";
+    // case "Fruits":
+    //   return "bg-fruits";
+    // case "Vegetables":
+    //   return "bg-vegetables";
+    // case "Dairy":
+    //   return "bg-dairy";
+    // case "Meat":
+    //   return "bg-meat";
+    // case "Bread":
+    //   return "bg-bread";
+    // case "Sweets":
+    //   return "bg-sweets";
+    // case "Drinks":
+    //   return "bg-drinks";
+    // case "Spices":
+    //   return "bg-spices";
+    // case "Other":
+    //   return "bg-other";
+    // case "Grains":
+    //   return "bg-grains";
     default:
       return "bg-other";
   }
 }
-
-function onShareClick() {
-  shareListModal.value = true;
-}
-
-function closeShareModal() {
-  shareListModal.value = false;
-}
-
-async function shareList(){
-  if(list.value){
-    list.value.code = code.value;
-    await listManager.setListData(list.value.id, list.value);
-  } 
-  shareListModal.value = false;
-}
-
-// function setAmountUnit(option: string): void {
-//   newUnit.value = option;
-//   listManager.setAmountToAdd(selectedItemId.value, newAmount.value, (option as ItemAmountUnit));
-// }
 
 async function uncheckAll(){
   if(list.value){
@@ -223,12 +160,21 @@ async function uncheckAll(){
   await listManager.uncheckAllItems(props.id);
 }
 
+async function deleteItem(){
+  await listManager.deleteItemFromList(props.id, newItem.id);
+  list.value = await listManager.getListData(props.id);
+  editItemModal.value = false;
+}
+
 </script>
 
 <template>
-  <div>
-    <ListHeader :list="list" :sort-order="sortOrder" :set-sort-option="setSortOption" :go-back="goBack" :delete-list="deleteList" :on-share-click="onShareClick" :edit-list-modal="editListModal"/>
-    <div class="flex flex-col mb-4">
+  <div :class="`${(isDrawerOpen || editItemModal || editModal || shareListModal) ? 'opacity-10 bg-lightgray' : ''}`">
+    <ListHeader :list="list" :sort-order="sortOrder" :set-sort-option="setSortOption" :go-back="goBack" :delete-list="deleteList" :on-share-click="() => {shareListModal = true;}" :edit-list-modal="() => {editModal = true}" :open-sort-options="() => {isDrawerOpen = true}"/>
+    <div v-if="sorted?.length == 0" class="flex items-center justify-center mt-32 text-gray-500">
+      <p>No items in list yet</p>
+    </div>
+    <div v-else class="flex flex-col mb-4">
       <ul>
         <p class="mx-2 text-gray-500 mb-2">Not checked items</p>
         <div v-for="item in sorted" :key="item.id">    
@@ -236,7 +182,7 @@ async function uncheckAll(){
               <ItemRow :item="item" :on-item-click="onItemClick" :check-item="checkItem"/>
             </li>
         </div>
-        <div class="flex flex-row justify-between mt-5 mb-2">
+        <div class="flex flex-row justify-between mt-2 mb-2">
           <p class="mx-2 text-gray-500">Checked items</p>
           <p class="mx-2 text-gray-500 cursor-pointer" @click="uncheckAll()">Uncheck all</p>
         </div>
@@ -247,74 +193,61 @@ async function uncheckAll(){
         </div>
       </ul>
     </div>
-    <div class="flex flex-row bg-primary justify-around fixed bottom-0 left-0 right-0">
-      <svg class="w-12 h-12 cursor-pointer m-4 text-white" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-slot="icon" @click="openAddItemModal">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
-      </svg>   
-    </div>
-
-
-    <div v-if="editModal" class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container" ref="target">
-          <div class="modal-head">
-            <slot name="header">Edit list</slot>
-          </div>
-          <div class="modal-body">
-            <input placeholder="new name" v-model="newName" />
-          </div>
-          <div class="modal-footer">
-            <slot name="footer">
-                <button @click="closeModal()">close</button>
-                <button @click="saveListTitle">save</button>
-            </slot>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-if="editItemModal" class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container" ref="target">
-          <div class="modal-head">
-            <slot name="header">Edit item</slot>
-          </div>
-          <div class="flex flex-col mx-3 mt-2">
-            <label for="name" class="text-gray-500">{{ 'Name' }}</label>
-            <div class="flex items-center rounded-md bg-white pl-3 outline outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
-              <input v-model="newItem.customItemName" class="block min-w-0 grow py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline focus:outline-0 sm:text-sm/6">
-            </div>
-            <InputAmount :title="'Amount'" v-model:new-amount="newItem.itemAmount" v-model:new-unit="newItem.itemUnit" :selected="newItem.itemUnit"/>
-          </div>
-          
-          <div class="modal-footer">
-            <slot name="footer">
-              <button @click="closeEditItem()">close</button>
-              <button @click="saveEditItem()">save</button>
-            </slot>
-          </div>
-        </div>
+    <div class="flex justify-center">
+      <div class="flex flex-row shadow-lg bg-primary justify-center fixed bottom-0 rounded-full mb-3">
+        <svg class="w-8 h-8 cursor-pointer m-2 text-white" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-slot="icon" @click="openAddItemModal">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+        </svg>   
       </div>
     </div>
     
-    <div v-if="shareListModal" class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container" ref="target">
-          <div class="modal-head">
-            <slot name="header">Import list</slot>
-          </div>
-          <div class="modal-body">
-            <input v-model="code">
-          </div>
-          <div class="modal-footer">
-            <slot name="footer">
-                <button @click="closeShareModal()">close</button>
-                <button @click="shareList()">share</button>
-            </slot>
-          </div>
+    <div v-if="editModal" >
+      <ModalWindow :open="editModal" :title="'Edit list'" v-on:close="editModal = false">
+        <input placeholder="new name" v-model="newName" /> 
+
+        <template #buttons>
+          <button class="mt-3 inline-flex w-full justify-center rounded-md bg-white mx-4 px-3 py-2 text-xs font-semibold text-primary shadow-sm ring-1 ring-inset ring-primary hover:bg-gray-50 sm:mt-0 sm:w-auto"  @click="() => {editModal = false}">Close</button>
+          <button class="mt-3 inline-flex w-full justify-center rounded-md bg-primary mx-4 px-3 py-2 text-xs font-semibold text-white shadow-sm ring-1 ring-inset ring-primary hover:bg-gray-50 sm:mt-0 sm:w-auto"  @click="saveListTitle">Save</button> 
+        </template>
+      </ModalWindow>
+    </div>
+    <div v-if="editItemModal" >
+      <EditItem :name="newItem.customItemName" :amount="newItem.itemAmount" :unit="newItem.itemUnit" :close="saveEditItem" :cancel="() => {editItemModal = false}" :delete="deleteItem" />
+    </div>
+    
+    <div v-if="shareListModal" >
+      <ShareModal :open="true" :title="'Share list'" :readonly="true" @close="shareListModal = false" :code="list!.code" />
+    </div>
+  </div>
+  <div v-if="isDrawerOpen" class="fixed inset-0 z-50 bg-gray-500 bg-opacity-50 flex justify-end">
+      <div class="bg-white w-80 h-full p-4 shadow-lg flex flex-col">
+        <h2 class="text-lg mb-4 ml-4 mt-2 text-sm">Sort categories</h2>
+
+        <div class="flex-grow flex items-center justify-center">
+          <VueDraggableNext v-model="categories" class="dragArea list-group w-full" :list="categories" @change="">
+            <div
+              class="flex justify-start list-group-item bg-lightgray m-1 py-1 px-3 rounded-md text-center"
+              v-for="element in categories"
+              :key="element.toString">
+              <p class="">{{ element }}</p>
+            </div>
+          </VueDraggableNext>
+        </div>
+
+        <div class="bg-gray-50 px-auto py-3 sm:flex sm:flex-row-reverse sm:px-6 flex flex-row gap-1 justify-center">
+          <button 
+            type="button" 
+            class="mt-3 inline-flex w-full justify-center rounded-md bg-primary mx-4 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-primary hover:bg-gray-50 sm:mt-0 sm:w-auto"
+            @click="isDrawerOpen = false" 
+            ref="cancelButtonRef">
+            OK
+          </button>
         </div>
       </div>
-    </div>
-  </div> 
+</div>
+
+
+
 </template>
 
 <style>
@@ -430,7 +363,7 @@ a {
   flex-direction: column;
   padding-top: 0;
   margin: 0;
-  margin-top: 9rem;
+  margin-top: 10rem;
   padding: 20px 20px;
   display: flex;
   max-height: calc(80vh - 150px);
