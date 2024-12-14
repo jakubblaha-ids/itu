@@ -7,7 +7,7 @@ export class ItemManager extends ItemManagerBase {
         var recentlyUsed: RecentlyUsedItem[] = [];
         for (const item of items) {
             recentlyUsed.push({
-                itemId: item.itemId.replace("_custom_", ""),
+                itemId: (item.itemId ? item.itemId.replace("_custom_", "") : ''),
                 amount: item.amount,
                 unit: item.unit,
                 timestamp: item.timestamp,

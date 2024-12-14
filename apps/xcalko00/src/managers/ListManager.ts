@@ -2,6 +2,7 @@ import { ListManagerBase, type ListManagerBaseOptions } from 'backend';
 import type { InListItem, ItemAmountUnit, ItemManagerBase, List, RecentlyUsedItem, UserManagerBase } from 'backend';
 import { ref, inject } from 'vue';
 import type { ItemManager } from '@/managers/ItemManager';
+import { itemManager } from './list';
 
 export class ListManager extends ListManagerBase {
     constructor(
@@ -150,5 +151,15 @@ export class ListManager extends ListManagerBase {
 				await this.toggleItemChecked(list.id, item.id);
 			}
 		}
+	}
+
+	getCategories(list: List): string[]{
+		var categories: string[] = [];
+		for(const item of list.listItems){
+			let cat = itemManager.getCategoryNameOfItemId(item.itemId);
+			if(!categories.includes(cat))
+				categories.push(cat);
+		}
+		return categories;
 	}
 }	
