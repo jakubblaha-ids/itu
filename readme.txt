@@ -84,3 +84,5 @@ Backend:
 - Backend je koncipován jako node balíček obsahující třídy ItemManagerBase, ListManagerBase,
 ResourceManagerBase a UserManagerBase. Tyto třídy jsou rozhraním k firebase, kde jsou data uložena.
 Tento balíček je nainstalován do jednotlivých FE a jednotlivé FE implementace používají tyto třídy.
+
+Zdrojové soubory pro backend jsou v packages/backend/src.
