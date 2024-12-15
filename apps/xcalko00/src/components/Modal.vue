@@ -24,9 +24,13 @@ const props = defineProps<{
  * 
  * @param event event cought from input form as text and parsed as integer as new amount of the item 
  */
-function onInput(event: Event) {
-  text.value = (event.target as HTMLInputElement).value;
-  newAmount.value = parseInt(text.value);
+ function onInput(event: Event) {
+  const inputElement = event.target as HTMLInputElement;
+
+  inputElement.value = inputElement.value.replace(/\D/g, '');
+
+  text.value = inputElement.value;
+  newAmount.value = parseInt(text.value) || 1; 
 }
 
 const setAmountUnit = (unit: string):void => {
@@ -36,7 +40,7 @@ const setAmountUnit = (unit: string):void => {
 const setAmount = (amount: number):void => {
     newAmount.value += amount;
     if(newAmount.value <= 0){
-        newAmount.value = 0;
+        newAmount.value = 1;
         text.value = '1';
         return;
     }
@@ -44,6 +48,8 @@ const setAmount = (amount: number):void => {
 }
 
 const saveAndClose = (): void =>{
+    if(newAmount.value <= 0)
+        newAmount.value = 1;
     if(amountUnit.value == 'custom')
         amountUnit.value = customAmountUnit.value;
     props.close(amountUnit.value, newAmount.value);
