@@ -1,3 +1,6 @@
+<!-- Autor: Veronika Calkovska (xcalko00) 
+     Brief: Page for concrete list -->
+
 <script setup lang="ts">
 import { ref, inject, onMounted, watch, computed, reactive } from 'vue';
 import { useRouter } from 'vue-router';
@@ -83,6 +86,10 @@ async function saveEditItem(unit: string, amount:number){
   editItemModal.value = false;
 }
 
+/**
+ * "sorted" is array of items in list that need to be computed according to more options of sorting the list
+ * sorting is processed here because the view does not effect the data in database
+ */
 const sorted = computed(() => {
   if (sortOrder.value === 'Category') {
     return list.value?.listItems.sort((a, b) => {
@@ -124,7 +131,6 @@ function setSortOption(option: string){
 
 const getColor = (item: InListItem) => {
   let cat = itemManager.getCategoryNameOfItemId(item.itemId);
-  console.log(cat);
   switch(cat){
     // case "Fruits":
     //   return "bg-fruits";
@@ -178,7 +184,7 @@ async function deleteItem(){
       <ul>
         <p class="mx-2 text-gray-500 mb-2">Not checked items</p>
         <div v-for="item in sorted" :key="item.id">    
-            <li class="flex flex-row rounded-lg mx-2 shadow justify-between py-1" :class="`${getColor(item)}`" v-if="!item.itemChecked">
+            <li class="flex flex-row rounded-lg mx-2 shadow justify-between py-1" :class="`${getColor(item)}`" v-if="!item.itemChecked" @click="onItemClick(item)">
               <ItemRow :item="item" :on-item-click="onItemClick" :check-item="checkItem"/>
             </li>
         </div>
@@ -187,7 +193,7 @@ async function deleteItem(){
           <p class="mx-2 text-gray-500 cursor-pointer" @click="uncheckAll()">Uncheck all</p>
         </div>
         <div v-for="item in list?.listItems" :key="item.id" >
-          <li class="flex flex-row rounded-lg mx-2 shadow py-1 bg-lightgray" v-if="item.itemChecked">
+          <li class="flex flex-row rounded-lg mx-2 shadow py-1 bg-lightgray" v-if="item.itemChecked" @click="onItemClick(item)">
             <ItemRow :item="item" :on-item-click="onItemClick" :check-item="checkItem"/>
           </li>
         </div>
@@ -263,112 +269,15 @@ async function deleteItem(){
   cursor: pointer;
 }
 
-.itemdata{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 90%;
-}
-
-.checkeditem{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid rgba(111, 139, 141, 1);
-  background-color: rgba(237, 237, 237, 1);
-  color: black;
-  cursor: pointer;
-}
-
-.buttonplus {
-    border: none;
-    margin: 0 0.5rem;
-    cursor: pointer;
-    font-size: 2rem;
-    background-color: rgba(111, 139, 141, 1); 
-    color: white;
-    flex: 1;
-    /* 
-  padding: 1rem;
-  margin: 0; 
-   width: 15rem;
-  position: fixed;
-  bottom: 0rem;  */
-}
-
-.actionmenu {
-  display: flex;
-  font-size: 2rem;
-  background-color: rgba(111, 139, 141, 1);
-  color: white;
-  /* padding: 1rem;
-  margin: 0; */
-  border: none;
-  cursor: pointer;
-  width: 15rem;
-  position: fixed;
-  bottom: 0rem;
-}
-
-.padtop {
-  padding-top: 50px;
-}
-
-a {
-  text-decoration: none;
-  color: black;
-}
-
-.container {
-  width:  15rem;
-}
-.modal-mask {
-  position: fixed;
-  z-index: 1000;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-.modal-container { 
-  width: 90%;
-  max-width: 400px;
-  max-height: 400px;
-  margin: 170px auto;
-  /* padding: 20px 20px; */
-  background-color: #fff;
-  border-radius: 2px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-head{
-  font-size: 1.7rem;
-  background-color: rgba(111, 139, 141, 1);
-  color: white;
-  margin: 0;
-  position: top;
-  text-align: center;
-}
-
 .modal-body{
   flex-direction: column;
   padding-top: 0;
   margin: 0;
   margin-top: 10rem;
-  padding: 20px 20px;
+  padding: 20px; 
   display: flex;
-  max-height: calc(80vh - 150px);
+  max-height: calc(90vh - 150px);
   overflow-y: auto;
-
 }
 
 .modal-body ul {
@@ -377,108 +286,11 @@ a {
   list-style: none; 
 }
 
-.modal-footer{
-  position: sticky;
-  bottom: 0;
-  display: flex;
-  justify-content: space-around;
-  padding: 15px;
-  background-color: white;
-} 
-
-.modal-input {
-  padding: 10 20px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  /* width: 100%; */
-  box-sizing: border-box;
-}
-
-.modalmenu{
-  display: flex;
-  justify-content: space-around;
-}
-
-.filter-input{
-  padding: 20px 20px;
-  z-index: 10;
-}
-
-.content{
-  max-height: calc(80vh - 150px);
-  overflow-y: auto;
-  padding: 20px 20px;
-}
 
 .icon{
   width: 2rem;
   height: 2rem;
   cursor: pointer;
-}
-.smallicon{
-  width: 1rem;
-  height: 1rem;
-  cursor: pointer;
-}
-
-.editmenu{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  padding: 0 20px;
-  background-color:rgba(186, 211, 212, 1);
-  color: black;
-  padding: 0.5rem;
-  margin-top: 9rem;
-  position: fixed;
-  align-items: center;
-  left: 0;
-  width: 100%;
-  height: 50px;
-  z-index: 1000;
-}
-.top{
-  font-size: 2rem;
-  background-color: rgba(111, 139, 141, 1);
-  color: white;
-  margin-bottom: 30px;
-  position: fixed;
-}
-
-.clickable{
-  cursor: pointer;
-}
-
-.checked{
-  cursor: pointer;
-  background-color: rgba(237, 237, 237, 1);
-}
-
-.amount{
-  width: 4rem;
-}
-.itemamount{
-  font-size: 0.85rem;
-}
-
-.sort{
-  display: flex;
-  justify-content: center;
-  align-items: start;
-  vertical-align: middle;
-  gap: 0.4rem;
-  border: none;
-  background-color: rgba(186, 211, 212, 1);
-}
-.topicons{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.7rem;
-  border: none;
-  background-color: rgba(186, 211, 212, 1);
 }
 
 .list-enter-active,

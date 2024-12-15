@@ -1,3 +1,5 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+
 <script setup lang="ts">
 import { ref, inject, onMounted, reactive, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -56,6 +58,13 @@ const selected = (item: Item): boolean => {
   return false;
 }
 
+/**
+ * Function adds item that is to be added in the list
+ * object of type InListItem needs to be created so it can be added in the list
+ * Item is added in the list after commiting!!
+ * 
+ * @param item  item ti be added in the list
+ */
 async function toBeAdded(item: Item){
   let newitem: InListItem;
   if (item.id == "") {
@@ -67,13 +76,9 @@ async function toBeAdded(item: Item){
     openAddOptions.value = true;
     return; 
   }
-  // else{
     newitem = listManager.addItemToList(item.id, null);
     filterItems.value = itemManager.getAvailableItems(filter.value);
     selectedItemId.value = newitem.id;
-  // }
-  if(newitem.itemId)
-    console.log(itemManager.getNameOfitemId(newitem.itemId) + ' kategorie ' + itemManager.getCategoryNameOfItemId(newitem.itemId));
 
   ok.value = item.id;
   name.value = item.name;
@@ -81,6 +86,12 @@ async function toBeAdded(item: Item){
   openAddOptions.value = true;
 }
 
+/**
+ * Function sets amount and amount unit to the item that is to be added in the list
+ * 
+ * @param unit set unit of item to be added
+ * @param amount set amount of item to be added
+ */
 const closeAddOptions = (unit: string, amount: number):void =>{
   newUnit.value = unit;
   newAmount.value = amount;
@@ -91,16 +102,21 @@ const closeAddOptions = (unit: string, amount: number):void =>{
 }
 
 function recentlyUsedToBeAdded(item:RecentlyUsedItem) {
-  console.log(item);
   listManager.recentlyUsedToBeAdded(item.itemId, item.amount, item.unit);
 }
 
+/**
+ * Watching the change of newAmount so it can be set in the selected item to be added
+ */
 watch(newAmount, async () => {
   if (list.value) {
     listManager.setAmountToAdd(selectedItemId.value, newAmount.value, newUnit.value as ItemAmountUnit);
   }
 });
 
+/**
+ * Commiting all items (with new amounts and units) that are to be added and adding them in the list
+ */
 function saveAndClose(){
   listManager.commitAddingItems();
   filter.value = '';
@@ -111,6 +127,12 @@ function clicked(item: Item){
   return ok.value == item.id;
 }
 
+/**
+ * Funtion removes item from list of items that are to be added in the list
+ * If this item is not to be added but is already in the list, it removes it from the list
+ * 
+ * @param item item to be removed from list of items to be added or from the list
+ */
 async function remove(item: Item){
   openAddOptions.value = false;
   for(const itemtoadd of list.value!.listItems){
@@ -151,6 +173,9 @@ async function remove(item: Item){
   ok.value = '';
 }
 
+/**
+ * Closing view for adding items and removing all items from list of items to be added
+ */
 function close(){
   for(const itemtoadd of listManager.itemsToAdd)
     listManager.removeItemToAdd(itemtoadd.id);
@@ -158,6 +183,12 @@ function close(){
   router.push(`/list/${props.id}`);
 }
 
+/**
+ * Watching filter variable so available items corresponding to the filter can be showed
+ * If there is no available item corresponding to the filter, new item is created - this allows user to easily add "his own"
+ * items that are not offered 
+ * !! creating propably should have been in the ItemManager.ts
+ */
 watch(filter, async () => {
   if (filter.value.length > 0) {
     show.value = ''
@@ -189,8 +220,8 @@ watch(filter, async () => {
             </div>
         </div>
         <ul class="flex flex-row mt-2 gap-6 mb-0 pb-0 z-500">
-          <b-link class="" :class="`${(show == 'recently') ? '' : 'text-gray'}`" href="#" @click="() => {show = 'recently'; filter = ''}">Recently used items</b-link>
-          <b-link class="" :class="`${(show == 'all') ? '' : 'text-gray'}`" href="#" @click="() => {show = 'all'; filter = ''}">All items</b-link>
+          <p class="" :class="`${(show == 'recently') ? '' : 'text-gray'}`" href="#" @click="() => {show = 'recently'; filter = ''}">Recently used items</p>
+          <p class="" :class="`${(show == 'all') ? '' : 'text-gray'}`" href="#" @click="() => {show = 'all'; filter = ''}">All items</p>
         </ul>
     </div>
     <div class="modal-body">
@@ -275,11 +306,5 @@ watch(filter, async () => {
 </template>
 
 <style>
-
-.filter-input{
-    display: flex;
-    justify-content: center;
-    margin-top: 5rem;
-}
 
 </style>

@@ -1,3 +1,5 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+
 <script setup lang="ts">
 import { ref, inject, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
@@ -17,7 +19,7 @@ const userName = ref(userManager.getUsername());
 
 const router = useRouter();
 
-async function loadLists() {
+async function loadLists(){
   if (listManager) {
     await listManager.refreshAvailableLists(); 
     lists.value = listManager.availableLists;  
@@ -164,22 +166,16 @@ li {
   color: black;
 }
 
-/* li .listinfo{
+li .listinfo{
   display: flex;
   flex-direction: column; 
   flex-grow: 1;
   margin: 1
-} */
+}
 
 li .text{
   font-size: 1.2rem;
   
-}
-
-li .itemsleft{
-  font-size: 0.9rem;
-  margin-top: 0.2rem;
-  display: block;
 }
 
 
@@ -189,7 +185,7 @@ li .itemsleft{
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 5rem;
+  height: 3rem;
   padding: 2px;
   display: flex;
   justify-content: space-around;
@@ -197,18 +193,4 @@ li .itemsleft{
   z-index: 5;
 }
 
- .bottombutton {
-  background-color: rgba(111, 139, 141, 1);
-  color: white; 
-  font-size: 3rem;
-  font-weight: lighter;
-  border: none;
-  cursor: pointer;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 </style>
