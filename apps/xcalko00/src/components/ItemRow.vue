@@ -1,3 +1,5 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+
 <script setup lang="ts">
 import { type InListItem } from 'backend';
 import { ref, onMounted, inject } from 'vue';
@@ -40,16 +42,16 @@ const check = (item: InListItem) => {
 </script>
 
 <template>
-    <div class="flex flex-col" @click="onItemClick(item)">
-        <div class="text-xs">{{ name }}</div>
-    </div>
-    <div class="flex flex-row grid-cols-2 gap-4">
-        <div class="shadow bg-mypink bg-opacity-30 rounded-2xl .gap-20 justify-start" v-if="item.itemChecked">
-            <div class="px-2 text-amount" >{{ checkedByUser }}</div>
+        <div class="flex flex-col">
+            <div class="text-xs">{{ name }}</div>
         </div>
-        <div class="flex flex-row gap-3 justify-around">
-            <div class="text-amount">{{ item.itemAmount + " " + item.itemUnit }}</div>
-            <input class="mt-1" type="checkbox" id="checkbox" v-model="item.itemChecked" v-on:click="check(item)"/>
+        <div class="flex flex-row grid-cols-2 gap-4 z-50">
+            <div   class="shadow bg-mypink bg-opacity-30 rounded-2xl .gap-20 justify-start" v-if="item.itemChecked">
+                <div class="px-2 text-amount" >{{ checkedByUser }}</div>
+            </div>
+            <div class="flex flex-row gap-3 justify-around">
+                <div class="text-amount">{{ item.itemAmount + " " + item.itemUnit }}</div>
+                <input class="mt-1 z-60" type="checkbox" id="checkbox" v-model="item.itemChecked" @click.stop="check(item)"/>
+            </div>
         </div>
-    </div>
 </template>

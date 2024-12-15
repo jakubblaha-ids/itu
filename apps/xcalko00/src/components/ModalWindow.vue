@@ -1,3 +1,5 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+
 <script setup lang="ts">
 import { TransitionRoot, Dialog, DialogPanel, DialogTitle, TransitionChild } from "@headlessui/vue";
 

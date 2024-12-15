@@ -1,3 +1,5 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+
 <script setup lang="ts">
 import { ref, inject, onMounted } from 'vue';
 import { type RecentlyUsedItem } from 'backend';
@@ -21,7 +23,6 @@ onMounted(async () => {
 
 
 <template>
-    <!-- <p class="text-gray-500">Recently used items</p> -->
     <div class="grid grid-cols-2 gap-1 hover:cursor-pointer">
         <template v-for="item in recentlyUsedItems" :key="item.itemId">
                 <RecentlyAdded :item="item" @click="props.toBeAdded(item)"/>

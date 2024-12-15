@@ -1,9 +1,10 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+
 <script setup lang="ts">
 import Dropdown from '@/components/Dropdown.vue';
 import { type List } from 'backend';
 import { ref, onMounted } from 'vue';
 
-const editTitle = ref(false);
 const title = ref('');
 
 const props = defineProps<{
@@ -53,9 +54,6 @@ onMounted(() => {
                 <svg class="w-4 h-4 cursor-pointer" data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" @click="onShareClick">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"></path>
                 </svg>
-                <!-- <svg class="w-4 h-4 cursor-pointer" data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" @click="editListModal">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"></path>
-                </svg> -->
             </div>
         </div>
     </div>
@@ -64,10 +62,10 @@ onMounted(() => {
 </template>
 
 <style>
-.sort-options{
+/* .sort-options{
     width: 1rem;
     height: 1rem;
     cursor: pointer;    
     padding-top: 0.1rem;
-}
+} */
 </style>

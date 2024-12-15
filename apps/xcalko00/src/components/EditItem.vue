@@ -1,3 +1,5 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
@@ -25,19 +27,35 @@ onMounted(() => {
     else{
         newAmount.value = parseInt(props.amount);
     }
-    amountUnit.value = props.unit;
-    console.log(amountUnit.value)
+    if(props.unit != 'pcs' && props.unit != 'ml' && props.unit != 'g'){
+        amountUnit.value = 'custom';
+        customAmountUnit.value = props.unit;
+    }
 });
 
+/**
+ * 
+ * @param event event cought from input form as text and parsed as integer as new amount of the item 
+ */
 function onInput(event: Event) {
   text.value = (event.target as HTMLInputElement).value;
   newAmount.value = parseInt(text.value);
 }
 
+/**
+ * Editing amount unit of item
+ * 
+ * @param unit new unit of item 
+ */
 const setAmountUnit = (unit: string):void => {
     amountUnit.value = unit
 }
 
+/**
+ * Editing amount of item 
+ * 
+ * @param amount new amount of item 
+ */
 const setAmount = (amount: number):void => {
     newAmount.value += amount;
     if(newAmount.value <= 0){
@@ -48,6 +66,9 @@ const setAmount = (amount: number):void => {
     text.value = newAmount.value.toString();
 }
 
+/**
+ * Saving changes and closing modal window
+ */
 const saveAndClose = (): void =>{
     if(amountUnit.value == 'custom')
         amountUnit.value = customAmountUnit.value;

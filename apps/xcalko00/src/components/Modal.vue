@@ -1,5 +1,7 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { type Item } from 'backend';
 
@@ -18,6 +20,10 @@ const props = defineProps<{
     cancel(item: Item): void;
 }>()
 
+/**
+ * 
+ * @param event event cought from input form as text and parsed as integer as new amount of the item 
+ */
 function onInput(event: Event) {
   text.value = (event.target as HTMLInputElement).value;
   newAmount.value = parseInt(text.value);
@@ -40,7 +46,6 @@ const setAmount = (amount: number):void => {
 const saveAndClose = (): void =>{
     if(amountUnit.value == 'custom')
         amountUnit.value = customAmountUnit.value;
-    console.log(amountUnit.value)
     props.close(amountUnit.value, newAmount.value);
     open.value = false;
 }
@@ -94,11 +99,6 @@ const cancel = (item:Item): void => {
                         </div>
                       </div>
                         <div class="flex flex-row justify-center mt-3 gap-5">
-                            <!-- <button @click="undoAddAmount" type="button" class="mr-5 text-black hover:text-white border border-blue-700 hover:bg-primary focus:ring-4 focus:outline-none focus:ring-blue-300 font-light rounded-lg text-xs px-1  text-center me-1 mb-1 dark:border-primary dark:text-primary dark:hover:text-white dark:hover:bg-primary dark:focus:ring-primary">
-                                <svg class="h-4 w-4" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-slot="icon">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"></path>
-                                </svg>
-                            </button> -->
                             <div class="flex flex-row">
                                 <button @click="setAmount(-1)" type="button" class="text-black  border border-black focus:ring-4 focus:outline-none focus:ring-blue-300 font-light rounded-lg text-xs px-1  text-center me-1 mb-1 dark:border-primary dark:text-primary dark:hover:text-white dark:hover:bg-primary dark:focus:ring-primary">-1</button> 
                                 <button @click="setAmount(-10)" type="button" class="text-black  border border-black  focus:ring-4 focus:outline-none focus:ring-blue-300 font-light rounded-lg text-xs px-1  text-center me-1 mb-1 dark:border-primary dark:text-primary dark:hover:text-white dark:hover:bg-primary dark:focus:ring-primary">-10</button>

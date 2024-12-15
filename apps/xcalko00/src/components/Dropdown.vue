@@ -1,3 +1,5 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+
 <script setup lang="ts">
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/24/solid'
@@ -34,7 +36,7 @@ const props = defineProps<{
   </template>
 
 <style>
-.sortoptions {
+/* .sortoptions {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,7 +45,7 @@ const props = defineProps<{
   background-color: rgba(186, 211, 212, 1);
   font-size: 1rem;
   vertical-align: middle;
-}
+} */
 
 
 </style>

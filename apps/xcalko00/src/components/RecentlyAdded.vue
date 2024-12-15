@@ -1,3 +1,5 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+
 <script setup lang="ts">
 
 import { ref, inject, onMounted } from 'vue';
@@ -25,24 +27,10 @@ onMounted(async () => {
 const selected = (): Boolean => {
     if(props.item.itemId){
     var selectedItem = listManager.isToBeAdded(props.item.itemId, null);
-    console.log(selectedItem);
     if (selectedItem) {
-      // selectedItemId.value = selectedItem.id;
-      // newAmount.value = parseInt(selectedItem.itemAmount?.toString() as string);
-      // newUnit.value = selectedItem.itemUnit;
       return true;
     } 
   }
-//   if(item.name){
-//     var selectedItem = listManager.isToBeAdded(null, props.item.);
-//     console.log(selectedItem);
-//     if (selectedItem) {
-//       // selectedItemId.value = selectedItem.id;
-//       // newAmount.value = parseInt(selectedItem.itemAmount?.toString() as string);
-//       // newUnit.value = selectedItem.itemUnit;
-//       return true;
-//     } 
-//   }
   return false;
 }
 

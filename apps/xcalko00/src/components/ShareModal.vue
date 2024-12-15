@@ -1,3 +1,5 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+ 
 <script setup lang="ts">
 import ModalWindow from "./ModalWindow.vue";
 
