@@ -1,6 +1,9 @@
+/**
+ * Autor: Veronika Calkovska (xcalko00)
+ */
+
 import { ListManagerBase, type ListManagerBaseOptions } from 'backend';
 import type { InListItem, ItemAmountUnit, ItemManagerBase, List, RecentlyUsedItem, UserManagerBase } from 'backend';
-import { ref, inject } from 'vue';
 import type { ItemManager } from '@/managers/ItemManager';
 import { itemManager } from './list';
 
@@ -16,6 +19,9 @@ export class ListManager extends ListManagerBase {
 	
 	listsWithAmountOfUncheckedItems: { [key: string]: number } = {};
 
+	/**
+	 * Function to compute amounts of not checked items in the lists
+	 */
 	computeAmount():void{
 		const lists = this.availableLists;
 		for (let index = 0; index < lists.length; index++) {
@@ -31,28 +37,33 @@ export class ListManager extends ListManagerBase {
 				return 0;
 			}
 			num = list.listItems.filter((item) => !item.itemChecked).length;
-			console.log(num);
+
 			if (num === undefined) {
 				return 0;
 			}
-			console.log("vracim " + num);
+
 			return num;
 			});
-			console.log(num);
+
 		return num;
 	}
 
+	/**
+	 * Function checks if item is in the list of items to be added 
+	 * 
+	 * @param itemId id of item
+	 * @param itemName name of item 
+	 * @returns 
+	 */
 	isToBeAdded(itemId: string|null, itemName: string|null): InListItem | null {
 		if(itemId){
 			for(const item of this.selectedListData?.listItems || []){
 				if(item.itemId === itemId){
-					console.log("found" + item.itemId);
 					return item;
 				}
 			}
 			for (const item of this.itemsToAdd) {
 				if (item.itemId === itemId) {
-					console.log("found" + item.itemId);
 					return item;
 				}
 			}
@@ -60,13 +71,11 @@ export class ListManager extends ListManagerBase {
 		if(itemName){
 			for(const item of this.selectedListData?.listItems || []){
 				if(item.customItemName === itemName){
-					console.log("found" + item.customItemName);
 					return item;
 				}
 			}
 			for (const item of this.itemsToAdd) {
 				if (item.customItemName === itemName) {
-					console.log("found" + item.customItemName);
 					return item;
 				}
 			}
@@ -74,6 +83,15 @@ export class ListManager extends ListManagerBase {
 		return null;
 	}
 
+	/**
+	 * Function edits item in the list with new parameters
+	 * 
+	 * @param list list where item is to be edited
+	 * @param newName new name of item
+	 * @param newAmount new amount of item
+	 * @param id id of item to be edited
+	 * @param unit new unit of item
+	 */
 	async editItem(list: List, newName: string | null, newAmount: number | string, id: number, unit: ItemAmountUnit): Promise<void> {
 		var newItem = list.listItems.find((item) => item.id === id);
 		newItem!.customItemName = newName;
@@ -95,6 +113,13 @@ export class ListManager extends ListManagerBase {
 		return 'pcs';
 	}
 
+	/**
+	 * Adds recently used item in the list of items to be added
+	 * 
+	 * @param itemId 
+	 * @param amount 
+	 * @param unit 
+	 */
 	recentlyUsedToBeAdded(itemId: string, amount: number|string, unit: ItemAmountUnit): void {
 		if(itemId.startsWith("_custom_")){
 			itemId = itemId.replace("_custom_", "");
@@ -153,6 +178,11 @@ export class ListManager extends ListManagerBase {
 		}
 	}
 
+	/**
+	 * 
+	 * @param list 
+	 * @returns array of all categories that are in the list
+	 */
 	getCategories(list: List): string[]{
 		var categories: string[] = [];
 		for(const item of list.listItems){

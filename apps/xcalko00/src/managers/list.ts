@@ -1,3 +1,7 @@
+/**
+ * Autor: Veronika Calkovska (xcalko00)
+ */
+
 import { ItemManager } from './ItemManager';
 import { ListManager } from './ListManager';
 import { UserManager } from './UserManager';

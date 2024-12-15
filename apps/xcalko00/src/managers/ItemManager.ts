@@ -1,3 +1,7 @@
+/**
+ * Autor: Veronika Calkovska (xcalko00)
+ */
+
 import { ItemManagerBase, type InListItem, type ItemAmountUnit, type RecentlyUsedItem } from 'backend';
 
 export class ItemManager extends ItemManagerBase { 
