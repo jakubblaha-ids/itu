@@ -25,6 +25,17 @@ src
                                   jejich funkcionalitu na svelte stores
 
 Struktrua apps/xcalko00:
+src
+├── views  ---------------------- stranky
+│   ├── ListsView.vue 
+│   ├── ListView.vue
+│   └── AddItemView.vue
+├── components ------------------ komponenty vyuziváne v aplikace
+├── managers -------------------- implementace manageru rozsirujicich tridy z backendu
+├── router 
+│   └── index.ts ---------------- vue router vyuzivany pro navigaci v aplikace, definice stranek a jejich komponent
+├── App.vue --------------------- hlavni aplikace, ktera zobrazuje RouterView 
+├── main.ts --------------------- inicializace aplikace, nastaveni firebase databaze, 
 
 Struktrua apps/xkocit00:
 ├── src
