@@ -1,4 +1,8 @@
-import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
+/**
+ * Autor: Veronika Calkovska (xcalko00)
+ */
+
+import { createRouter, createWebHistory } from 'vue-router'
 import ListsView from '../views/ListsView.vue'
 import ListView from '../views/ListView.vue'
 import AddItemView from '../views/AddItemView.vue'
