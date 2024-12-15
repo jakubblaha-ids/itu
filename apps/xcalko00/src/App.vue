@@ -1,19 +1,12 @@
+<!-- Autor: Veronika Calkovska (xcalko00) -->
+
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import {  RouterView } from 'vue-router'
 
-import { ref } from 'vue'
-
-import ListsView from './views/ListsView.vue';
 </script>
 
-<template>
-     <!-- <Layout>
-        <template #header>
-          <h1 class="nav">Shopping list</h1>
-        </template>
-      </Layout> -->
+<template> 
   <RouterView /> 
-
 </template>
 
 <style scoped>

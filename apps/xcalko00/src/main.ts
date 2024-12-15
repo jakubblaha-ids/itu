@@ -1,3 +1,7 @@
+/**
+ * Autor: Veronika Calkovska (xcalko00)
+ */
+
 import './style.css'
 
 import { createApp } from 'vue'
